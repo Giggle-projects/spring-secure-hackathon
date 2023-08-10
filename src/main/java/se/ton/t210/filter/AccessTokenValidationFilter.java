@@ -1,33 +1,35 @@
 package se.ton.t210.filter;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.filter.OncePerRequestFilter;
-import se.ton.t210.exception.AuthException;
-import se.ton.t210.token.JwtUtils;
-
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.filter.OncePerRequestFilter;
+import se.ton.t210.exception.AuthException;
+import se.ton.t210.token.JwtUtils;
 
-public class TokenValidationFilter extends OncePerRequestFilter {
+// TODO :: filter reissue token
+public class AccessTokenValidationFilter extends OncePerRequestFilter {
+
+    @Value("${auth.jwt.token.access.cookie.key:accessToken}")
+    private String accessTokenCookieKey;
 
     private final JwtUtils jwtUtils;
 
-    private static final String ACCESS_TOKEN = "accessToken";
-
-    public TokenValidationFilter(JwtUtils jwtUtils) {
+    public AccessTokenValidationFilter(JwtUtils jwtUtils) {
         this.jwtUtils = jwtUtils;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String accessToken = getAccessTokenByCookie(request.getCookies());
+            String accessToken = getTokenFromCookies(accessTokenCookieKey, request.getCookies());
             jwtUtils.validateToken(accessToken);
 
         } catch (AuthException e) {
@@ -39,16 +41,15 @@ public class TokenValidationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String getAccessTokenByCookie(Cookie[] cookies) {
-        if (cookies != null) {
-            return Arrays.stream(cookies)
-                    .filter(cookie -> cookie.getName().equals(ACCESS_TOKEN))
-                    .map(Cookie::getValue)
-                    .findFirst()
-                    .orElseThrow(() -> new AuthException(HttpStatus.UNAUTHORIZED, "JWT Token is not found"));
-        } else {
+    private String getTokenFromCookies(String keyName, Cookie[] cookies) {
+        if (cookies == null) {
             throw new AuthException(HttpStatus.UNAUTHORIZED, "Cookie corrupted");
         }
+        return Arrays.stream(cookies)
+                .filter(cookie -> cookie.getName().equals(keyName))
+                .map(Cookie::getValue)
+                .findFirst()
+                .orElseThrow(() -> new AuthException(HttpStatus.UNAUTHORIZED, "JWT Token is not found"));
     }
 
     @Override

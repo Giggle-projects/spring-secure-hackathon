@@ -1,9 +1,11 @@
 package se.ton.t210.dto;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 import se.ton.t210.domain.Member;
 
 import javax.validation.constraints.NotBlank;
+import se.ton.t210.exception.AuthException;
 
 @Getter
 public class SignUpRequest {
@@ -24,6 +26,9 @@ public class SignUpRequest {
         this.username = username;
         this.password = password;
         this.rePassword = rePassword;
+        if(password.equals(rePassword)) {
+            throw new IllegalArgumentException("Invalid request arguments");
+        }
     }
 
     public boolean isValidSignUp() {

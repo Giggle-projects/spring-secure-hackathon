@@ -1,14 +1,14 @@
-package se.ton.t210.token;
+package se.ton.t210.dto;
 
 import lombok.Getter;
 
 @Getter
-public class TokenData {
+public class MemberTokens {
 
     private final String accessToken;
     private final String refreshToken;
 
-    public TokenData(String accessToken, String refreshToken) {
+    public MemberTokens(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }

@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import se.ton.t210.dto.LogInRequest;
 import se.ton.t210.dto.SignUpRequest;
 import se.ton.t210.service.MemberService;
-import se.ton.t210.token.TokenData;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -38,9 +37,7 @@ public class MemberController {
     public ResponseEntity<Void> reissueToken(@CookieValue String accessToken,
                                              @CookieValue String refreshToken,
                                              HttpServletResponse response) {
-        TokenData tokenData = new TokenData(accessToken, refreshToken);
-
-        memberService.reissueToken(tokenData, response);
+        memberService.reissueToken(accessToken, refreshToken, response);
         return ResponseEntity.ok().build();
     }
 }
