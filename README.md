@@ -1,5 +1,17 @@
 ## Spring secure hackathon
 
+### How to run [dev]
+
+#### env container up
+```
+docker-compose -f docker-compose-dev.yaml up -d
+```
+
+#### env container down
+```
+docker-compose -f docker-compose-dev.yaml down
+```
+
 ### [BE - DevOPs]
 1. Access token, Refresh token
 2. TLS setting
