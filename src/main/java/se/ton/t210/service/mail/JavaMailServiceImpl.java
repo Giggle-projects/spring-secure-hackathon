@@ -1,13 +1,13 @@
 package se.ton.t210.service.mail;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import se.ton.t210.dto.Email;
 
-@Profile("prod")
+@ConditionalOnProperty(value = "auth.mail.enable.mode", havingValue = "true")
 @Component
 public class JavaMailServiceImpl implements MailServiceInterface {
 
