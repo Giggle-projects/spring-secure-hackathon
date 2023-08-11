@@ -9,7 +9,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.Duration;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 public class JwtUtils {
@@ -69,7 +68,7 @@ public class JwtUtils {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
-            if(ignoreExpired) {
+            if (ignoreExpired) {
                 return e.getClaims();
             }
             throw new IllegalArgumentException("This is not valid JWT token");
