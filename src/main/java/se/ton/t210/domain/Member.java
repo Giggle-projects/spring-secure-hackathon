@@ -30,6 +30,7 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Enumerated(EnumType.STRING)
     @NotNull
     private ApplicationType applicationType;
 

@@ -1,5 +1,6 @@
 package se.ton.t210.service;
 
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import se.ton.t210.domain.*;
 import se.ton.t210.dto.MonthlyScoresResponse;
@@ -16,9 +17,11 @@ import static java.util.stream.Collectors.groupingBy;
 @Service
 public class ScoreRecordService {
 
+    private final JudgingItemRepository judgingItemRepository;
     private final ScoreRecordRepository scoreRecordRepository;
 
-    public ScoreRecordService(ScoreRecordRepository scoreRecordRepository) {
+    public ScoreRecordService(JudgingItemRepository judgingItemRepository, ScoreRecordRepository scoreRecordRepository) {
+        this.judgingItemRepository = judgingItemRepository;
         this.scoreRecordRepository = scoreRecordRepository;
     }
 
@@ -32,7 +35,10 @@ public class ScoreRecordService {
     public TopMonthlyScoresResponse averageAllScoresByJudgingItem(ApplicationType applicationType, LocalDate date) {
         final Map<Long, Double> top50PScoresByJudgingItem = new HashMap<>();
         final Map<Long, Double> top30PScoresByJudgingItem = new HashMap<>();
-        List<Long> judgingItemIds = null; // applicationType
+        final List<Long> judgingItemIds = judgingItemRepository.findAllByApplicationType(applicationType)
+                .stream()
+                .map(JudgingItem::getId)
+                .collect(Collectors.toList());
         for(Long judgingItemId : judgingItemIds) {
             final List<ScoreRecord> scores = scoreRecordRepository.findAllByJudgingIdAndCreatedAt(judgingItemId, date);
             final int top50PScore = scores.get((scores.size()/2)+1).getScore();
