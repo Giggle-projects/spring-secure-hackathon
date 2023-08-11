@@ -14,8 +14,8 @@ import java.util.Map;
 @Service
 public class MemberTokenService {
 
-    @Value("${auth.jwt.token.payload.username.key:username}")
-    private String tokenPayloadUsernameKey;
+    @Value("${auth.jwt.token.payload.email.key:email}")
+    private String tokenPayloadEmailKey;
 
     @Value("${auth.jwt.token.access.ttl.time:1800}")
     private int accessTokenExpireTime;
@@ -31,11 +31,11 @@ public class MemberTokenService {
         this.tokenCacheRepository = tokenCacheRepository;
     }
 
-    public MemberTokens createTokensByUsername(String username) {
-        final Map<String, Object> tokenPayload = Map.of(tokenPayloadUsernameKey, username);
+    public MemberTokens createTokensByEmail(String email) {
+        final Map<String, Object> tokenPayload = Map.of(tokenPayloadEmailKey, email);
         final String accessToken = jwtUtils.createToken(tokenPayload, accessTokenExpireTime);
         final String refreshToken = jwtUtils.createToken(tokenPayload, refreshTokenExpireTime);
-        tokenCacheRepository.save(new TokenCache(username, accessToken, refreshToken));
+        tokenCacheRepository.save(new TokenCache(email, accessToken, refreshToken));
         return new MemberTokens(accessToken, refreshToken);
     }
 
@@ -47,9 +47,9 @@ public class MemberTokenService {
             throw new AuthException(HttpStatus.UNAUTHORIZED, "Reissue request is invalid");
         }
         final String usernameFromAT = jwtUtils.tokenClaimsFrom(accessToken, true)
-                .get(tokenPayloadUsernameKey, String.class);
+                .get(tokenPayloadEmailKey, String.class);
         final String usernameFromRT = jwtUtils.tokenClaimsFrom(refreshToken, true)
-                .get(tokenPayloadUsernameKey, String.class);
+                .get(tokenPayloadEmailKey, String.class);
         if (!usernameFromAT.equals(usernameFromRT)) {
             throw new AuthException(HttpStatus.UNAUTHORIZED, "Reissue request is invalid");
         }
@@ -59,6 +59,6 @@ public class MemberTokenService {
         if (!tokenCache.getRefreshToken().equals(refreshToken) || !tokenCache.getAccessToken().equals(accessToken)) {
             throw new AuthException(HttpStatus.UNAUTHORIZED, "Reissue request is invalid");
         }
-        return createTokensByUsername(tokenCache.getUsername());
+        return createTokensByEmail(tokenCache.getUsername());
     }
 }

@@ -43,19 +43,19 @@ public class MemberService {
     }
 
     public void signUp(SignUpRequest request, HttpServletResponse response) {
-        if (memberRepository.existsByUsername(request.getUsername())) {
-            throw new AuthException(HttpStatus.CONFLICT, "username is already exists");
+        if (memberRepository.existsByEmail(request.getEmail())) {
+            throw new AuthException(HttpStatus.CONFLICT, "email is already exists");
         }
         final Member member = memberRepository.save(request.toEntity());
-        final MemberTokens tokens = memberTokenService.createTokensByUsername(member.getUsername());
+        final MemberTokens tokens = memberTokenService.createTokensByEmail(member.getEmail());
         responseTokens(response, tokens);
     }
 
     public void signIn(LogInRequest request, HttpServletResponse response) {
-        if (!memberRepository.existsByUsernameAndPassword(request.getUsername(), request.getPassword())) {
+        if (!memberRepository.existsByEmailAndPassword(request.getUsername(), request.getPassword())) {
             throw new AuthException(HttpStatus.UNAUTHORIZED, "The username or password is not valid.");
         }
-        final MemberTokens tokens = memberTokenService.createTokensByUsername(request.getUsername());
+        final MemberTokens tokens = memberTokenService.createTokensByEmail(request.getUsername());
         responseTokens(response, tokens);
     }
 
