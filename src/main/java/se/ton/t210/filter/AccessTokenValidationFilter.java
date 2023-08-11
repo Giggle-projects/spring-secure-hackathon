@@ -1,24 +1,20 @@
 package se.ton.t210.filter;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
 import se.ton.t210.exception.AuthException;
 import se.ton.t210.token.JwtUtils;
 
-// TODO :: filter reissue token
-public class AccessTokenValidationFilter extends OncePerRequestFilter {
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
-    @Value("${auth.jwt.token.access.cookie.key:accessToken}")
-    private String accessTokenCookieKey;
+public class AccessTokenValidationFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
 
@@ -29,16 +25,13 @@ public class AccessTokenValidationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
+            String accessTokenCookieKey = "accessToken";
             String accessToken = getTokenFromCookies(accessTokenCookieKey, request.getCookies());
             jwtUtils.validateToken(accessToken);
 
         } catch (AuthException e) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.getOutputStream().write(e.getMessage().getBytes());
-            return;
+            filterChain.doFilter(request, response);
         }
-
-        filterChain.doFilter(request, response);
     }
 
     private String getTokenFromCookies(String keyName, Cookie[] cookies) {
@@ -54,7 +47,7 @@ public class AccessTokenValidationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        List<String> excludedUrls = List.of("/api/auth/signUp", "/api/auth/signIn", "/api/auth/reissue/token");
+        List<String> excludedUrls = List.of("/api/auth/signUp", "/api/auth/signIn");
         return excludedUrls.stream().anyMatch(request.getRequestURI()::contains);
     }
 }
