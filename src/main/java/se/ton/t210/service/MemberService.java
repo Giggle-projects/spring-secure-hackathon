@@ -15,6 +15,7 @@ import se.ton.t210.service.mail.MailServiceInterface;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.security.SecureRandom;
 
 @Transactional
 @Service
@@ -29,8 +30,8 @@ public class MemberService {
     @Value("${auth.mail.title}")
     private String emailAuthMailTitle;
 
-    @Value("${auth.mail.content}")
-    private String emailAuthMailContent;
+    @Value("${auth.mail.content.header}")
+    private String emailAuthMailContentHeader;
 
     private final MemberRepository memberRepository;
     private final MemberTokenService memberTokenService;
@@ -65,8 +66,23 @@ public class MemberService {
     }
 
     public void sendMail(String userEmail) {
-        Email email = new Email(emailAuthMailTitle, emailAuthMailContent, userEmail);
+        String authCode = createCode();
+        Email email = new Email(emailAuthMailTitle, emailAuthMailContentHeader + authCode, userEmail);
         mailServiceInterface.sendMail(email);
+    }
+
+    private String createCode() {
+        int length = 10;
+        try {
+            SecureRandom secureRandom = new SecureRandom();
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < length; i++) {
+                builder.append(secureRandom.nextInt(10));
+            }
+            return builder.toString();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("email authentication code create error");
+        }
     }
 
     private void responseTokens(HttpServletResponse response, MemberTokens tokens) {

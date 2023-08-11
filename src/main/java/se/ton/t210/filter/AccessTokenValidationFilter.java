@@ -28,6 +28,7 @@ public class AccessTokenValidationFilter extends OncePerRequestFilter {
             String accessTokenCookieKey = "accessToken";
             String accessToken = getTokenFromCookies(accessTokenCookieKey, request.getCookies());
             jwtUtils.validateToken(accessToken);
+            filterChain.doFilter(request, response);
 
         } catch (AuthException e) {
             filterChain.doFilter(request, response);
