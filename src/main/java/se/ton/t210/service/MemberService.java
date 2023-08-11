@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import se.ton.t210.cache.EmailAuthCache;
+import se.ton.t210.cache.EmailAuthCacheRepository;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.MemberRepository;
 import se.ton.t210.dto.Email;
@@ -16,6 +18,7 @@ import se.ton.t210.service.mail.MailServiceInterface;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.security.SecureRandom;
+import java.time.LocalTime;
 
 @Transactional
 @Service
@@ -36,11 +39,13 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberTokenService memberTokenService;
     private final MailServiceInterface mailServiceInterface;
+    private final EmailAuthCacheRepository emailAuthCacheRepository;
 
-    public MemberService(MemberRepository memberRepository, MemberTokenService memberTokenService, MailServiceInterface mailServiceInterface) {
+    public MemberService(MemberRepository memberRepository, MemberTokenService memberTokenService, MailServiceInterface mailServiceInterface, EmailAuthCacheRepository emailAuthCacheRepository) {
         this.memberRepository = memberRepository;
         this.memberTokenService = memberTokenService;
         this.mailServiceInterface = mailServiceInterface;
+        this.emailAuthCacheRepository = emailAuthCacheRepository;
     }
 
     public void signUp(SignUpRequest request, HttpServletResponse response) {
@@ -65,10 +70,11 @@ public class MemberService {
         responseTokens(response, tokens);
     }
 
-    public void sendMail(String userEmail) {
+    public void sendEmailAuthMail(String userEmail) {
         String authCode = createCode();
         Email email = new Email(emailAuthMailTitle, emailAuthMailContentHeader + authCode, userEmail);
         mailServiceInterface.sendMail(email);
+        emailAuthCacheRepository.save(new EmailAuthCache(userEmail, authCode, LocalTime.now()));
     }
 
     @Transactional

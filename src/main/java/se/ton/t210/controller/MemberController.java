@@ -45,8 +45,8 @@ public class MemberController {
     }
 
     @PostMapping("/email")
-    public ResponseEntity<Void> sendAuthEmailMail(@RequestBody EmailRequest email) {
-        memberService.sendMail(email.getEmail());
+    public ResponseEntity<Void> sendEmailAuthMail(@RequestBody EmailRequest email) {
+        memberService.sendEmailAuthMail(email.getEmail());
         return ResponseEntity.ok().build();
     }
 
