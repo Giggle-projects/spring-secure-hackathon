@@ -152,7 +152,6 @@ user_Id
 judgingItem_id
 score
 created_at
-updated_at
 ```
 
 직렬 정보(ApplicationType - enum) J
