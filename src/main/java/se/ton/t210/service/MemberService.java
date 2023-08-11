@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import se.ton.t210.cache.EmailAuthCache;
-import se.ton.t210.cache.EmailAuthCacheRepository;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.MemberRepository;
 import se.ton.t210.dto.Email;
@@ -17,8 +15,6 @@ import se.ton.t210.service.mail.MailServiceInterface;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.security.SecureRandom;
-import java.time.LocalTime;
 
 @Transactional
 @Service
@@ -39,13 +35,13 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberTokenService memberTokenService;
     private final MailServiceInterface mailServiceInterface;
-    private final EmailAuthCacheRepository emailAuthCacheRepository;
+    private final MailAuthService mailAuthService;
 
-    public MemberService(MemberRepository memberRepository, MemberTokenService memberTokenService, MailServiceInterface mailServiceInterface, EmailAuthCacheRepository emailAuthCacheRepository) {
+    public MemberService(MemberRepository memberRepository, MemberTokenService memberTokenService, MailServiceInterface mailServiceInterface, MailAuthService mailAuthService) {
         this.memberRepository = memberRepository;
         this.memberTokenService = memberTokenService;
         this.mailServiceInterface = mailServiceInterface;
-        this.emailAuthCacheRepository = emailAuthCacheRepository;
+        this.mailAuthService = mailAuthService;
     }
 
     public void signUp(SignUpRequest request, HttpServletResponse response) {
@@ -71,13 +67,12 @@ public class MemberService {
     }
 
     public void sendEmailAuthMail(String userEmail) {
-        String authCode = createCode();
+        String authCode = mailAuthService.createAuthCode();
         Email email = new Email(emailAuthMailTitle, emailAuthMailContentHeader + authCode, userEmail);
         mailServiceInterface.sendMail(email);
-        emailAuthCacheRepository.save(new EmailAuthCache(userEmail, authCode, LocalTime.now()));
+        mailAuthService.saveAuthInfoFromEmailAuthMailCache(userEmail, authCode);
     }
 
-    @Transactional
     public void reissuePwd(String email, String newPwd) {
         Member member = memberRepository.findByEmail(email).orElseThrow(() ->
                 new AuthException(HttpStatus.NOT_FOUND, "User is not found"));
@@ -86,20 +81,6 @@ public class MemberService {
         }
         member.reissuePwd(newPwd);
         memberRepository.save(member);
-    }
-
-    private String createCode() {
-        int length = 10;
-        try {
-            SecureRandom secureRandom = new SecureRandom();
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < length; i++) {
-                builder.append(secureRandom.nextInt(10));
-            }
-            return builder.toString();
-        } catch (Exception e) {
-            throw new IllegalArgumentException("email authentication code create error");
-        }
     }
 
     private void responseTokens(HttpServletResponse response, MemberTokens tokens) {

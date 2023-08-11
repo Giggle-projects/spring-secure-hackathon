@@ -2,10 +2,7 @@ package se.ton.t210.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import se.ton.t210.dto.EmailRequest;
-import se.ton.t210.dto.ReissuePwdRequest;
-import se.ton.t210.dto.SignInRequest;
-import se.ton.t210.dto.SignUpRequest;
+import se.ton.t210.dto.*;
 import se.ton.t210.service.MemberService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -44,9 +41,9 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/email")
-    public ResponseEntity<Void> sendEmailAuthMail(@RequestBody EmailRequest email) {
-        memberService.sendEmailAuthMail(email.getEmail());
+    @PostMapping("/send/mail")
+    public ResponseEntity<Void> sendEmailAuthMail(@RequestBody EmailRequest request) {
+        memberService.sendEmailAuthMail(request.getEmail());
         return ResponseEntity.ok().build();
     }
 

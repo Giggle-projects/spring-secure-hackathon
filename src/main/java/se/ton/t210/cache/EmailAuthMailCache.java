@@ -1,21 +1,23 @@
 package se.ton.t210.cache;
 
+import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 import java.time.LocalTime;
 
-@RedisHash(value = "emailAuth", timeToLive = 60 * 5)
-public class EmailAuthCache {
+@Getter
+@RedisHash(value = "signUpEmailAuth", timeToLive = 60 * 5)
+public class EmailAuthMailCache {
 
     @Id
     private final String email;
     private final String authCode;
-    private final LocalTime time;
+    private final LocalTime createTime;
 
-    public EmailAuthCache(String email, String authCode, LocalTime time) {
+    public EmailAuthMailCache(String email, String authCode, LocalTime createTime) {
         this.email = email;
         this.authCode = authCode;
-        this.time = time;
+        this.createTime = createTime;
     }
 }
