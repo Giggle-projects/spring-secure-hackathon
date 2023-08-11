@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.MemberRepository;
 import se.ton.t210.dto.Email;
-import se.ton.t210.dto.LogInRequest;
 import se.ton.t210.dto.MemberTokens;
+import se.ton.t210.dto.SignInRequest;
 import se.ton.t210.dto.SignUpRequest;
 import se.ton.t210.exception.AuthException;
 import se.ton.t210.service.mail.MailServiceInterface;
@@ -52,11 +52,11 @@ public class MemberService {
         responseTokens(response, tokens);
     }
 
-    public void signIn(LogInRequest request, HttpServletResponse response) {
-        if (!memberRepository.existsByEmailAndPassword(request.getUsername(), request.getPassword())) {
+    public void signIn(SignInRequest request, HttpServletResponse response) {
+        if (!memberRepository.existsByEmailAndPassword(request.getEmail(), request.getPassword())) {
             throw new AuthException(HttpStatus.UNAUTHORIZED, "The username or password is not valid.");
         }
-        final MemberTokens tokens = memberTokenService.createTokensByEmail(request.getUsername());
+        final MemberTokens tokens = memberTokenService.createTokensByEmail(request.getEmail());
         responseTokens(response, tokens);
     }
 
@@ -69,6 +69,17 @@ public class MemberService {
         String authCode = createCode();
         Email email = new Email(emailAuthMailTitle, emailAuthMailContentHeader + authCode, userEmail);
         mailServiceInterface.sendMail(email);
+    }
+
+    @Transactional
+    public void reissuePwd(String email, String newPwd) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(() ->
+                new AuthException(HttpStatus.NOT_FOUND, "User is not found"));
+        if (member.getEmail().equals(newPwd)) {
+            throw new IllegalArgumentException("The password you want to change must be different from the previous password.");
+        }
+        member.reissuePwd(newPwd);
+        memberRepository.save(member);
     }
 
     private String createCode() {

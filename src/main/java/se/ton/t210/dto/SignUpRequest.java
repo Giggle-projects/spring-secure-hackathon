@@ -43,16 +43,18 @@ public class SignUpRequest {
         this.rePassword = rePassword;
         this.applicationType = applicationType;
         this.isAgreePersonalInfo = isAgreePersonalInfo;
+    }
 
-        if (password.equals(rePassword)) {
+    public Member toEntity() {
+        return new Member(name, email, password, gender, applicationType, LocalDate.now(), LocalDate.now());
+    }
+
+    public void validateRequest() {
+        if (!password.equals(rePassword)) {
             throw new IllegalArgumentException("Invalid request arguments");
         }
         if (!isAgreePersonalInfo) {
             throw new IllegalArgumentException("Must agree personal Info");
         }
-    }
-
-    public Member toEntity() {
-        return new Member(name, email, password, gender, applicationType, LocalDate.now(), LocalDate.now());
     }
 }

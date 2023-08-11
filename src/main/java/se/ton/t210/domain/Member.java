@@ -58,4 +58,8 @@ public class Member {
                   ApplicationType applicationType, LocalDate createdAt, LocalDate updatedAt) {
         this(null, name, email, password, gender, applicationType, createdAt, updatedAt);
     }
+
+    public void reissuePwd(String newPwd) {
+        this.password = newPwd;
+    }
 }
