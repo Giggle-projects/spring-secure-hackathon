@@ -7,11 +7,7 @@ import java.util.List;
 
 public interface ScoreRecordRepository extends JpaRepository<ScoreRecord, Long> {
 
-//    List<ScoreRecord> findAllByMemberIdAndCreatedAt_Month(Long memberId, LocalDate month);
-//
-//    List<ScoreRecord> findAllByJudgingIdAndCreatedAt_MonthOrderByScore(Long judgingId, LocalDate date);
-//
-    List<ScoreRecord> findAllByMemberId(Long memberId);
+    List<ScoreRecord> findAllByMemberIdAndCreatedAt(Long memberId, LocalDate month);
 
-    List<ScoreRecord> findAllByJudgingIdOrderByScore(Long judgingItemId);
+    List<ScoreRecord> findAllByJudgingIdAndCreatedAt(Long judgingId, LocalDate date);
 }

@@ -23,7 +23,7 @@ public class ScoreRecordService {
     }
 
     public MonthlyScoresResponse averageScoresByJudgingItem(Long memberId, LocalDate date) {
-        final List<ScoreRecord> scores = scoreRecordRepository.findAllByMemberId(memberId);
+        final List<ScoreRecord> scores = scoreRecordRepository.findAllByMemberIdAndCreatedAt(memberId, date);
         final Map<Long, Double> averageScoresByJudgingItem = scores.stream()
             .collect(groupingBy(ScoreRecord::getJudgingId, averagingInt(ScoreRecord::getScore)));
         return MonthlyScoresResponse.listOf(averageScoresByJudgingItem);
@@ -34,7 +34,7 @@ public class ScoreRecordService {
         final Map<Long, Double> top30PScoresByJudgingItem = new HashMap<>();
         List<Long> judgingItemIds = null; // applicationType
         for(Long judgingItemId : judgingItemIds) {
-            final List<ScoreRecord> scores = scoreRecordRepository.findAllByJudgingIdOrderByScore(judgingItemId);
+            final List<ScoreRecord> scores = scoreRecordRepository.findAllByJudgingIdAndCreatedAt(judgingItemId, date);
             final int top50PScore = scores.get((scores.size()/2)+1).getScore();
             final int top30PScore = scores.get((scores.size()/3 * 2)+1).getScore();
             top50PScoresByJudgingItem.put(judgingItemId, (double) top50PScore);
