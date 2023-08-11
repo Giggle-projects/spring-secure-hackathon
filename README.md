@@ -82,9 +82,9 @@ docker-compose -f docker-compose-dev.yaml down
 지원자 직렬
 지원자 키
 지원자 몸무게
-지원자 현재 직렬 현재 점수
-지원자 현재 직렬 최고 점수
-지원자 현재 직렬 종목별 현재 점수
+지원자 현재 직렬 현재 점수 (이 달 평균 점수)
+지원자 현재 직렬 최고 점수 (전체 최고 점수)
+지원자 현재 직렬 종목별 현재 점수 (이 달 종목별 평균 점수)
 지원자 현재 직렬 종목별 예상 점수
 지원자 현재 직렬 종목별 평균 점수
 지원자 현재 직렬 종목별 상위 30퍼 점수
@@ -145,10 +145,10 @@ target_score
 taken_score
 ```
 
-점수 (Score) J
+점수 (ScoreRecord) J
 ```
 ID
-user_Id
+member_id
 judgingItem_id
 score
 created_at

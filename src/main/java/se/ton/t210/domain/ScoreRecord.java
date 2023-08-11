@@ -10,27 +10,27 @@ import java.time.LocalDate;
 
 @Getter
 @Entity
-public class Score {
+public class ScoreRecord {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-    private Long userId;
+    private Long memberId;
     private Long judgingId;
     private int score;
     private final LocalDate createdAt = LocalDate.now();
 
-    public Score() {
+    public ScoreRecord() {
     }
 
-    public Score(Long id, Long userId, Long judgingId, int score) {
+    public ScoreRecord(Long id, Long memberId, Long judgingId, int score) {
         this.id = id;
-        this.userId = userId;
+        this.memberId = memberId;
         this.judgingId = judgingId;
         this.score = score;
     }
 
-    public Score(Long userId, Long judgingId, int score) {
-        this(null, userId, judgingId, score);
+    public ScoreRecord(Long memberId, Long judgingId, int score) {
+        this(null, memberId, judgingId, score);
     }
 }
