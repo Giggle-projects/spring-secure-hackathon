@@ -1,11 +1,14 @@
 package se.ton.t210.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import se.ton.t210.dto.MemberAverageScoresByJudgingItemResponse;
+import se.ton.t210.domain.ApplicationType;
+import se.ton.t210.dto.MonthlyScoresResponse;
+import se.ton.t210.dto.TopMonthlyScoresResponse;
 import se.ton.t210.service.ScoreRecordService;
 
-import java.time.Month;
+import java.time.LocalDate;
 
 @RestController
 public class ScoreRecordController {
@@ -17,8 +20,15 @@ public class ScoreRecordController {
     }
 
     @GetMapping("/api/me/avgScores")
-    public MemberAverageScoresByJudgingItemResponse myScoreRecordResponse(Month month) {
+    public ResponseEntity<MonthlyScoresResponse> myScoreRecordResponse(String yearDate) {
         Long memberId = 1L;
-        return scoreRecordService.averageScoresByJudgingItem(memberId, month);
+        final MonthlyScoresResponse monthlyScoresResponse = scoreRecordService.averageScoresByJudgingItem(memberId, LocalDate.parse(yearDate));
+        return ResponseEntity.ok(monthlyScoresResponse);
+    }
+
+    @GetMapping("/api/me/topScores")
+    public ResponseEntity<TopMonthlyScoresResponse> topScoresRecordResponse(ApplicationType applicationType, String yearDate) {
+        final TopMonthlyScoresResponse topMonthlyScoresResponse = scoreRecordService.averageAllScoresByJudgingItem(applicationType, LocalDate.parse(yearDate));
+        return ResponseEntity.ok(topMonthlyScoresResponse);
     }
 }

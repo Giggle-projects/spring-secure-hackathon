@@ -1,12 +1,13 @@
 package se.ton.t210.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.ton.t210.domain.ScoreRecord;
-import se.ton.t210.domain.ScoreRecordRepository;
-import se.ton.t210.dto.MemberAverageScoresByJudgingItemResponse;
+import se.ton.t210.domain.*;
+import se.ton.t210.dto.MonthlyScoresResponse;
+import se.ton.t210.dto.TopMonthlyScoresResponse;
 
 import java.time.LocalDate;
-import java.time.Month;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,15 +19,31 @@ public class ScoreRecordService {
 
     private final ScoreRecordRepository scoreRecordRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     public ScoreRecordService(ScoreRecordRepository scoreRecordRepository) {
         this.scoreRecordRepository = scoreRecordRepository;
     }
 
-    public MemberAverageScoresByJudgingItemResponse averageScoresByJudgingItem(Long memberId, Month month) {
-        final LocalDate localDate = LocalDate.of(LocalDate.now().getYear(), month, 0);
-        final List<ScoreRecord> scores = scoreRecordRepository.findAllByMemberIdAndCreatedAt_Month(memberId, localDate);
+    public MonthlyScoresResponse averageScoresByJudgingItem(Long memberId, LocalDate date) {
+        final List<ScoreRecord> scores = scoreRecordRepository.findAllByMemberIdAndCreatedAt_Month(memberId, date);
         final Map<Long, Double> averageScoresByJudgingItem = scores.stream()
             .collect(groupingBy(ScoreRecord::getJudgingId, averagingInt(ScoreRecord::getScore)));
-        return MemberAverageScoresByJudgingItemResponse.listOf(averageScoresByJudgingItem);
+        return MonthlyScoresResponse.listOf(averageScoresByJudgingItem);
+    }
+
+    public TopMonthlyScoresResponse averageAllScoresByJudgingItem(ApplicationType applicationType, LocalDate date) {
+        final Map<Long, Double> top50PScoresByJudgingItem = new HashMap<>();
+        final Map<Long, Double> top30PScoresByJudgingItem = new HashMap<>();
+        List<Long> judgingItemIds = null; // applicationType
+        for(Long judgingItemId : judgingItemIds) {
+            final List<ScoreRecord> scores = scoreRecordRepository.findAllByJudgingIdAndCreatedAt_MonthOrderByScore(judgingItemId, date);
+            final int top50PScore = scores.get((scores.size()/2)+1).getScore();
+            final int top30PScore = scores.get((scores.size()/3 * 2)+1).getScore();
+            top50PScoresByJudgingItem.put(judgingItemId, (double) top50PScore);
+            top30PScoresByJudgingItem.put(judgingItemId, (double) top30PScore);
+        }
+        return TopMonthlyScoresResponse.listOf(top50PScoresByJudgingItem, top30PScoresByJudgingItem);
     }
 }
