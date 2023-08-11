@@ -11,7 +11,7 @@ import se.ton.t210.token.JwtUtils;
 import javax.servlet.Filter;
 
 @Configuration
-public class SecurityConfig {
+public class TokenFilterConfig {
 
     @Value("${jwt.secret}")
     private String secret;
@@ -22,19 +22,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    public FilterRegistrationBean<Filter> addAccessTokenFilter() {
+    public FilterRegistrationBean<Filter> addAccessTokenFilter(AccessTokenValidationFilter accessTokenValidationFilter) {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new AccessTokenValidationFilter(jwtProvider()));
-        filterRegistrationBean.setOrder(1);
-        filterRegistrationBean.addUrlPatterns("/*");
+        filterRegistrationBean.setFilter(accessTokenValidationFilter);
+        filterRegistrationBean.addUrlPatterns("/api/me/*");
         return filterRegistrationBean;
     }
 
     @Bean
-    public FilterRegistrationBean<Filter> addRefreshTokenFilter() {
+    public FilterRegistrationBean<Filter> addRefreshTokenFilter(RefreshTokenValidationFilter refreshTokenValidationFilter) {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new RefreshTokenValidationFilter(jwtProvider()));
-        filterRegistrationBean.setOrder(2);
+        filterRegistrationBean.setFilter(refreshTokenValidationFilter);
         filterRegistrationBean.addUrlPatterns("/api/auth/reissue/token");
         return filterRegistrationBean;
     }

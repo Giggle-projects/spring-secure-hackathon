@@ -1,6 +1,5 @@
 package se.ton.t210.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.ton.t210.domain.*;
 import se.ton.t210.dto.MonthlyScoresResponse;
@@ -19,15 +18,12 @@ public class ScoreRecordService {
 
     private final ScoreRecordRepository scoreRecordRepository;
 
-    @Autowired
-    private MemberRepository memberRepository;
-
     public ScoreRecordService(ScoreRecordRepository scoreRecordRepository) {
         this.scoreRecordRepository = scoreRecordRepository;
     }
 
     public MonthlyScoresResponse averageScoresByJudgingItem(Long memberId, LocalDate date) {
-        final List<ScoreRecord> scores = scoreRecordRepository.findAllByMemberIdAndCreatedAt_Month(memberId, date);
+        final List<ScoreRecord> scores = scoreRecordRepository.findAllByMemberId(memberId);
         final Map<Long, Double> averageScoresByJudgingItem = scores.stream()
             .collect(groupingBy(ScoreRecord::getJudgingId, averagingInt(ScoreRecord::getScore)));
         return MonthlyScoresResponse.listOf(averageScoresByJudgingItem);
@@ -38,7 +34,7 @@ public class ScoreRecordService {
         final Map<Long, Double> top30PScoresByJudgingItem = new HashMap<>();
         List<Long> judgingItemIds = null; // applicationType
         for(Long judgingItemId : judgingItemIds) {
-            final List<ScoreRecord> scores = scoreRecordRepository.findAllByJudgingIdAndCreatedAt_MonthOrderByScore(judgingItemId, date);
+            final List<ScoreRecord> scores = scoreRecordRepository.findAllByJudgingIdOrderByScore(judgingItemId);
             final int top50PScore = scores.get((scores.size()/2)+1).getScore();
             final int top30PScore = scores.get((scores.size()/3 * 2)+1).getScore();
             top50PScoresByJudgingItem.put(judgingItemId, (double) top50PScore);

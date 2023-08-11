@@ -3,6 +3,7 @@ package se.ton.t210.token;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import se.ton.t210.exception.AuthException;
 
 import java.nio.charset.StandardCharsets;

@@ -1,11 +1,10 @@
 package se.ton.t210.domain;
 
 import lombok.Getter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Getter
@@ -18,7 +17,7 @@ public class ScoreRecord {
     private Long memberId;
     private Long judgingId;
     private int score;
-    private final LocalDate createdAt = LocalDate.now();
+    private LocalDate createdAt = LocalDate.now();
 
     public ScoreRecord() {
     }
