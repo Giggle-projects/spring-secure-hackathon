@@ -1,21 +1,20 @@
 package se.ton.t210.service;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.MemberRepository;
+import se.ton.t210.dto.Email;
 import se.ton.t210.dto.LogInRequest;
 import se.ton.t210.dto.MemberTokens;
 import se.ton.t210.dto.SignUpRequest;
 import se.ton.t210.exception.AuthException;
-import se.ton.t210.token.JwtUtils;
-import se.ton.t210.token.TokenCache;
-import se.ton.t210.token.TokenCacheRepository;
+import se.ton.t210.service.mail.MailServiceInterface;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 @Transactional
 @Service
@@ -27,12 +26,20 @@ public class MemberService {
     @Value("${auth.jwt.token.refresh.cookie:refreshToken}")
     private String refreshTokenCookieKey;
 
+    @Value("${auth.mail.title}")
+    private String emailAuthMailTitle;
+
+    @Value("${auth.mail.content}")
+    private String emailAuthMailContent;
+
     private final MemberRepository memberRepository;
     private final MemberTokenService memberTokenService;
+    private final MailServiceInterface mailServiceInterface;
 
-    public MemberService(MemberRepository memberRepository, MemberTokenService memberTokenService) {
+    public MemberService(MemberRepository memberRepository, MemberTokenService memberTokenService, MailServiceInterface mailServiceInterface) {
         this.memberRepository = memberRepository;
         this.memberTokenService = memberTokenService;
+        this.mailServiceInterface = mailServiceInterface;
     }
 
     public void signUp(SignUpRequest request, HttpServletResponse response) {
@@ -55,6 +62,11 @@ public class MemberService {
     public void reissueToken(String accessToken, String refreshToken, HttpServletResponse response) {
         final MemberTokens tokens = memberTokenService.reissue(accessToken, refreshToken);
         responseTokens(response, tokens);
+    }
+
+    public void sendMail(String userEmail) {
+        Email email = new Email(emailAuthMailTitle, emailAuthMailContent, userEmail);
+        mailServiceInterface.sendMail(email);
     }
 
     private void responseTokens(HttpServletResponse response, MemberTokens tokens) {

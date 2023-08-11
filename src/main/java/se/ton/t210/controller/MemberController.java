@@ -2,6 +2,7 @@ package se.ton.t210.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import se.ton.t210.dto.EmailRequest;
 import se.ton.t210.dto.LogInRequest;
 import se.ton.t210.dto.SignUpRequest;
 import se.ton.t210.service.MemberService;
@@ -38,6 +39,12 @@ public class MemberController {
                                              @CookieValue String refreshToken,
                                              HttpServletResponse response) {
         memberService.reissueToken(accessToken, refreshToken, response);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/email")
+    public ResponseEntity<Void> sendAuthEmailMail(@RequestBody EmailRequest email) {
+        memberService.sendMail(email.getEmail());
         return ResponseEntity.ok().build();
     }
 }
