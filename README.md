@@ -155,9 +155,8 @@ created_at
 updated_at
 ```
 
-직렬 정보(ApplicationType) J
+직렬 정보(ApplicationType - enum) J
 ```
-id
-name
+standardName
 iconImageUrl (“static/default.jpg”)
 ```
