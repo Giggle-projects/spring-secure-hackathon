@@ -1,4 +1,4 @@
-package se.ton.t210.token;
+package se.ton.t210.cache;
 
 import lombok.Getter;
 import org.springframework.data.annotation.Id;

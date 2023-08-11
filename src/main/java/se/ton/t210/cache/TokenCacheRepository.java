@@ -1,4 +1,4 @@
-package se.ton.t210.token;
+package se.ton.t210.cache;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

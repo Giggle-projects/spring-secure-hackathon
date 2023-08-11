@@ -1,7 +1,8 @@
-package se.ton.t210.token;
+package se.ton.t210.service;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import se.ton.t210.exception.AuthException;
@@ -12,11 +13,12 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.Map;
 
+@Component
 public class JwtUtils {
 
     private final Key key;
 
-    public JwtUtils(String secret) {
+    public JwtUtils(@Value("${jwt.secret}") String secret) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 

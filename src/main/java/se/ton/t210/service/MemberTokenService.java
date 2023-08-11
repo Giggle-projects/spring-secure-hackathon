@@ -5,9 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import se.ton.t210.dto.MemberTokens;
 import se.ton.t210.exception.AuthException;
-import se.ton.t210.token.JwtUtils;
-import se.ton.t210.token.TokenCache;
-import se.ton.t210.token.TokenCacheRepository;
+import se.ton.t210.cache.TokenCache;
+import se.ton.t210.cache.TokenCacheRepository;
 
 import java.util.Map;
 

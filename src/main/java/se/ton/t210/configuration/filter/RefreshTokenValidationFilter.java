@@ -1,38 +1,36 @@
-package se.ton.t210.filter;
+package se.ton.t210.configuration.filter;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
-import se.ton.t210.exception.AuthException;
-import se.ton.t210.token.JwtUtils;
-
+import java.io.IOException;
+import java.util.Arrays;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Arrays;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+import se.ton.t210.exception.AuthException;
+import se.ton.t210.service.JwtUtils;
 
 @Component
-public class AccessTokenValidationFilter extends OncePerRequestFilter {
+public class RefreshTokenValidationFilter extends OncePerRequestFilter {
 
-    @Value("${auth.jwt.token.access.cookie.key:accessToken}")
-    private String accessTokenCookieKey;
+    @Value("${auth.jwt.token.refresh.cookie:refreshToken}")
+    private String refreshTokenCookieKey;
 
     private final JwtUtils jwtUtils;
 
-    public AccessTokenValidationFilter(JwtUtils jwtUtils) {
+    public RefreshTokenValidationFilter(JwtUtils jwtUtils) {
         this.jwtUtils = jwtUtils;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            System.out.println("hihi + " + accessTokenCookieKey);
-            String accessToken = getTokenFromCookies(accessTokenCookieKey, request.getCookies());
-            jwtUtils.validateToken(accessToken);
+            String refreshToken = getTokenFromCookies(refreshTokenCookieKey, request.getCookies());
+            jwtUtils.validateToken(refreshToken);
 
         } catch (AuthException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
