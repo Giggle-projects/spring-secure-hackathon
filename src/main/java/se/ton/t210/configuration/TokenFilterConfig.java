@@ -30,7 +30,7 @@ public class TokenFilterConfig {
     @Bean
     public FilterRegistrationBean<Filter> addAccessTokenFilter() {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new TokenFilter(tokenSecret, accessTokenCookieKey, "accessToken"));
+        filterRegistrationBean.setFilter(new TokenFilter(tokenSecret, accessTokenCookieKey));
         filterRegistrationBean.addUrlPatterns("/api/auth/reissue/token");
         return filterRegistrationBean;
     }
@@ -38,7 +38,7 @@ public class TokenFilterConfig {
     @Bean
     public FilterRegistrationBean<Filter> addRefreshTokenFilter() {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new TokenFilter(tokenSecret, refreshTokenCookieKey, "freshToken"));
+        filterRegistrationBean.setFilter(new TokenFilter(tokenSecret, refreshTokenCookieKey));
         filterRegistrationBean.addUrlPatterns("/api/auth/reissue/token");
         return filterRegistrationBean;
     }
@@ -46,7 +46,7 @@ public class TokenFilterConfig {
     @Bean
     public FilterRegistrationBean<Filter> addEmailTokenFilter() {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new TokenFilter(tokenSecret, emailAuthTokenCookieKey, "emailAuthToken"));
+        filterRegistrationBean.setFilter(new TokenFilter(tokenSecret, emailAuthTokenCookieKey));
         filterRegistrationBean.addUrlPatterns("/api/auth/signUp");
         return filterRegistrationBean;
     }
