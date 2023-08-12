@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class CookieUtils {
 
-    public static void responseTokens(HttpServletResponse response, String cookieKey, String cookieValue) {
+    public static void saveInCookie(HttpServletResponse response, String cookieKey, String cookieValue) {
         loadTokenCookie(response, cookieKey, cookieValue);
     }
 

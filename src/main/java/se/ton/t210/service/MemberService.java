@@ -49,8 +49,7 @@ public class MemberService {
         }
         final Member member = memberRepository.save(request.toEntity());
         final MemberTokens tokens = memberTokenService.createTokensByEmail(member.getEmail());
-        CookieUtils.responseTokens(response, accessTokenCookieKey, tokens.getAccessToken());
-        CookieUtils.responseTokens(response, refreshTokenCookieKey, tokens.getRefreshToken());
+        responseTokens(response, tokens);
     }
 
     public void signIn(SignInRequest request, HttpServletResponse response) {
@@ -58,14 +57,12 @@ public class MemberService {
             throw new AuthException(HttpStatus.UNAUTHORIZED, "The username or password is not valid.");
         }
         final MemberTokens tokens = memberTokenService.createTokensByEmail(request.getEmail());
-        CookieUtils.responseTokens(response, accessTokenCookieKey, tokens.getAccessToken());
-        CookieUtils.responseTokens(response, refreshTokenCookieKey, tokens.getRefreshToken());
+        responseTokens(response, tokens);
     }
 
     public void reissueToken(String accessToken, String refreshToken, HttpServletResponse response) {
         final MemberTokens tokens = memberTokenService.reissue(accessToken, refreshToken);
-        CookieUtils.responseTokens(response, accessTokenCookieKey, tokens.getAccessToken());
-        CookieUtils.responseTokens(response, refreshTokenCookieKey, tokens.getRefreshToken());
+        responseTokens(response, tokens);
     }
 
     public void sendEmailAuthMail(String userEmail) {
@@ -83,5 +80,10 @@ public class MemberService {
         }
         member.reissuePwd(newPwd);
         memberRepository.save(member);
+    }
+
+    private void responseTokens(HttpServletResponse response, MemberTokens tokens) {
+        CookieUtils.saveInCookie(response, accessTokenCookieKey, tokens.getAccessToken());
+        CookieUtils.saveInCookie(response, refreshTokenCookieKey, tokens.getRefreshToken());
     }
 }
