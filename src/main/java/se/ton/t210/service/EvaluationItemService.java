@@ -7,9 +7,11 @@ import se.ton.t210.domain.EvaluationScoreSection;
 import se.ton.t210.domain.EvaluationScoreSectionRepository;
 import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.EvaluationItemNamesResponse;
+import se.ton.t210.dto.EvaluationSectionInfo;
+import se.ton.t210.dto.EvaluationSectionsInfos;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class EvaluationItemService {
@@ -33,5 +35,31 @@ public class EvaluationItemService {
     public List<EvaluationItemNamesResponse> itemNames(ApplicationType applicationType) {
         final List<EvaluationItem> items = evaluationItemRepository.findAllByApplicationType(applicationType);
         return EvaluationItemNamesResponse.listOf(items);
+    }
+
+    public List<List<EvaluationSectionInfo>> getSectionInfos(ApplicationType applicationType) {
+        final List<List<EvaluationSectionInfo>> evaluationSectionsInfos = new ArrayList<>();
+        final List<EvaluationItem> evaluationItems = evaluationItemRepository.findAllByApplicationType(applicationType);
+
+        for(EvaluationItem evaluationItem : evaluationItems) {
+            final List<EvaluationSectionInfo> evaluationSectionInfos = new ArrayList<>();
+            final List<EvaluationScoreSection> sections = evaluationScoreSectionRepository.findAllByEvaluationItemId(evaluationItem.getId());
+            sections.sort(Comparator.comparingInt(EvaluationScoreSection::getSectionBaseScore));
+
+            int prevItemBaseScore = 100;
+            for(EvaluationScoreSection section : sections) {
+                final EvaluationSectionInfo sectionInfo = new EvaluationSectionInfo(
+                    evaluationItem.getId(),
+                    evaluationItem.getName(),
+                    prevItemBaseScore,
+                    section.getSectionBaseScore(),
+                    section.getScore()
+                );
+                evaluationSectionInfos.add(sectionInfo);
+                prevItemBaseScore = section.getSectionBaseScore() -1;
+            }
+            evaluationSectionsInfos.add(evaluationSectionInfos);
+        }
+        return evaluationSectionsInfos;
     }
 }
