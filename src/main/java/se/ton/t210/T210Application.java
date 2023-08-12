@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import se.ton.t210.domain.EvaluationItem;
@@ -21,7 +22,10 @@ public class T210Application {
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(T210Application.class);
         app.setAdditionalProfiles("dev");
-        app.run(args);
+        final ConfigurableApplicationContext run = app.run(args);
+
+        final DummyData bean = run.getBean(DummyData.class);
+        bean.createDummy();
     }
 }
 
