@@ -11,11 +11,11 @@ import se.ton.t210.service.EvaluationScoreRecordService;
 import java.time.LocalDate;
 
 @RestController
-public class ScoreRecordController {
+public class EvaluationScoreRecordController {
 
     private final EvaluationScoreRecordService evaluationScoreRecordService;
 
-    public ScoreRecordController(EvaluationScoreRecordService evaluationScoreRecordService) {
+    public EvaluationScoreRecordController(EvaluationScoreRecordService evaluationScoreRecordService) {
         this.evaluationScoreRecordService = evaluationScoreRecordService;
     }
 
