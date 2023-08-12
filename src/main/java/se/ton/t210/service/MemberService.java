@@ -13,7 +13,6 @@ import se.ton.t210.dto.SignUpRequest;
 import se.ton.t210.exception.AuthException;
 import se.ton.t210.service.mail.MailServiceInterface;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 @Transactional
@@ -50,7 +49,8 @@ public class MemberService {
         }
         final Member member = memberRepository.save(request.toEntity());
         final MemberTokens tokens = memberTokenService.createTokensByEmail(member.getEmail());
-        responseTokens(response, tokens);
+        CookieUtils.responseTokens(response, accessTokenCookieKey, tokens.getAccessToken());
+        CookieUtils.responseTokens(response, refreshTokenCookieKey, tokens.getRefreshToken());
     }
 
     public void signIn(SignInRequest request, HttpServletResponse response) {
@@ -58,12 +58,14 @@ public class MemberService {
             throw new AuthException(HttpStatus.UNAUTHORIZED, "The username or password is not valid.");
         }
         final MemberTokens tokens = memberTokenService.createTokensByEmail(request.getEmail());
-        responseTokens(response, tokens);
+        CookieUtils.responseTokens(response, accessTokenCookieKey, tokens.getAccessToken());
+        CookieUtils.responseTokens(response, refreshTokenCookieKey, tokens.getRefreshToken());
     }
 
     public void reissueToken(String accessToken, String refreshToken, HttpServletResponse response) {
         final MemberTokens tokens = memberTokenService.reissue(accessToken, refreshToken);
-        responseTokens(response, tokens);
+        CookieUtils.responseTokens(response, accessTokenCookieKey, tokens.getAccessToken());
+        CookieUtils.responseTokens(response, refreshTokenCookieKey, tokens.getRefreshToken());
     }
 
     public void sendEmailAuthMail(String userEmail) {
@@ -81,17 +83,5 @@ public class MemberService {
         }
         member.reissuePwd(newPwd);
         memberRepository.save(member);
-    }
-
-    private void responseTokens(HttpServletResponse response, MemberTokens tokens) {
-        loadTokenCookie(response, accessTokenCookieKey, tokens.getAccessToken());
-        loadTokenCookie(response, refreshTokenCookieKey, tokens.getRefreshToken());
-    }
-
-    private void loadTokenCookie(HttpServletResponse response, String key, String value) {
-        final Cookie cookie = new Cookie(key, value);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        response.addCookie(cookie);
     }
 }
