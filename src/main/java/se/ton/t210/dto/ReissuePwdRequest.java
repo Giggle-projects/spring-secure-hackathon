@@ -10,20 +10,10 @@ public class ReissuePwdRequest {
     @NotBlank
     private String password;
 
-    @NotBlank
-    private String rePassword;
-
     public ReissuePwdRequest() {
     }
 
-    public ReissuePwdRequest(String password, String rePassword) {
+    public ReissuePwdRequest(String password) {
         this.password = password;
-        this.rePassword = rePassword;
-    }
-
-    public void validRequest() {
-        if (!password.equals(rePassword)) {
-            throw new IllegalArgumentException("Invalid request arguments");
-        }
     }
 }

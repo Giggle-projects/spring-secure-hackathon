@@ -24,9 +24,6 @@ public class SignUpRequest {
     @NotBlank
     private String password;
 
-    @NotBlank
-    private String rePassword;
-
     private ApplicationType applicationType;
 
     private Boolean isAgreePersonalInfo;
@@ -35,12 +32,11 @@ public class SignUpRequest {
     }
 
     public SignUpRequest(String name, Gender gender, String email, String password,
-                         String rePassword, ApplicationType applicationType, Boolean isAgreePersonalInfo) {
+                         ApplicationType applicationType, Boolean isAgreePersonalInfo) {
         this.name = name;
         this.gender = gender;
         this.email = email;
         this.password = password;
-        this.rePassword = rePassword;
         this.applicationType = applicationType;
         this.isAgreePersonalInfo = isAgreePersonalInfo;
     }
@@ -49,10 +45,7 @@ public class SignUpRequest {
         return new Member(name, email, password, gender, applicationType, LocalDate.now(), LocalDate.now());
     }
 
-    public void validateRequest() {
-        if (!password.equals(rePassword)) {
-            throw new IllegalArgumentException("Invalid request arguments");
-        }
+    public void validateSignUpRequest() {
         if (!isAgreePersonalInfo) {
             throw new IllegalArgumentException("Must agree personal Info");
         }
