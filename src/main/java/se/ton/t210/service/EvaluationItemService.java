@@ -6,12 +6,10 @@ import se.ton.t210.domain.EvaluationItemRepository;
 import se.ton.t210.domain.EvaluationScoreSection;
 import se.ton.t210.domain.EvaluationScoreSectionRepository;
 import se.ton.t210.domain.type.ApplicationType;
-import se.ton.t210.dto.EvaluationItemNamesResponse;
+import se.ton.t210.dto.EvaluationItemResponse;
 import se.ton.t210.dto.EvaluationSectionInfo;
-import se.ton.t210.dto.EvaluationSectionsInfos;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class EvaluationItemService {
@@ -32,9 +30,9 @@ public class EvaluationItemService {
             .orElse(0);
     }
 
-    public List<EvaluationItemNamesResponse> itemNames(ApplicationType applicationType) {
+    public List<EvaluationItemResponse> items(ApplicationType applicationType) {
         final List<EvaluationItem> items = evaluationItemRepository.findAllByApplicationType(applicationType);
-        return EvaluationItemNamesResponse.listOf(items);
+        return EvaluationItemResponse.listOf(items);
     }
 
     public List<List<EvaluationSectionInfo>> getSectionInfos(ApplicationType applicationType) {

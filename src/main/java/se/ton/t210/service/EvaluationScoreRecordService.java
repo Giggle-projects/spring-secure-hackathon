@@ -62,4 +62,8 @@ public class EvaluationScoreRecordService {
         final int count = evaluationItemScoreRecordRepository.countByEvaluationItemIdIn(evaluationIds);
         return new RecordCountResponse(applicationType, count);
     }
+//
+//    public RecordCountResponse myScore(Long id, LocalDate date) {
+//        return evaluationItemScoreRecordRepository.
+//    }
 }

@@ -10,6 +10,8 @@ import se.ton.t210.cache.EmailAuthMailCacheRepository;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.MemberRepository;
 import se.ton.t210.domain.TokenSecret;
+import se.ton.t210.domain.type.ApplicationType;
+import se.ton.t210.dto.ApplicantCountResponse;
 import se.ton.t210.dto.MemberTokens;
 import se.ton.t210.dto.SignInRequest;
 import se.ton.t210.dto.SignUpRequest;
@@ -126,5 +128,10 @@ public class MemberService {
         String emailAuthCode = AuthCodeUtils.generate(authCodeLength);
         mailServiceInterface.sendMail(userEmailAddress, new SignUpAuthMailForm(emailAuthCode));
         emailAuthMailCacheRepository.save(new EmailAuthMailCache(userEmailAddress, emailAuthCode, LocalTime.now()));
+    }
+
+    public ApplicantCountResponse countApplicant(ApplicationType applicationType) {
+        final int count = memberRepository.countByApplicationType(applicationType);
+        return new ApplicantCountResponse(count);
     }
 }

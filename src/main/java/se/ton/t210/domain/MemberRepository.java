@@ -2,6 +2,7 @@ package se.ton.t210.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import se.ton.t210.domain.type.ApplicationType;
 
 import java.util.Optional;
 
@@ -13,4 +14,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByEmailAndPassword(String email, String password);
 
     Optional<Member> findByEmail(String email);
+
+    int countByApplicationType(ApplicationType applicationType);
 }

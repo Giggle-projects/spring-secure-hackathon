@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.domain.type.Gender;
+import se.ton.t210.dto.MemberScoreResponse;
 import se.ton.t210.dto.MonthlyScoresResponse;
 import se.ton.t210.dto.RecordCountResponse;
 import se.ton.t210.dto.TopMonthlyScoresResponse;
@@ -41,4 +42,11 @@ public class EvaluationScoreRecordController {
         final RecordCountResponse countResponse = evaluationScoreRecordService.count(member.getApplicationType());
         return ResponseEntity.ok(countResponse);
     }
+//
+//    @GetMapping("/api/me/scores")
+//    public ResponseEntity<MemberScoreResponse> myScores() {
+//        final Member member = new Member(1l, "name", "email", "password", Gender.MALE, ApplicationType.FireOfficerFemale);
+//        final RecordCountResponse countResponse = evaluationScoreRecordService.myScore(member.getId());
+//        return ResponseEntity.ok(countResponse);
+//    }
 }
