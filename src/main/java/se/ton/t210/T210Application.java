@@ -7,12 +7,11 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import se.ton.t210.domain.EvaluationItem;
-import se.ton.t210.domain.EvaluationItemRepository;
-import se.ton.t210.domain.EvaluationScoreSection;
-import se.ton.t210.domain.EvaluationScoreSectionRepository;
+import se.ton.t210.domain.*;
 import se.ton.t210.domain.type.ApplicationType;
+import se.ton.t210.domain.type.Gender;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @ServletComponentScan
@@ -26,6 +25,7 @@ public class T210Application {
 
         final DummyData bean = run.getBean(DummyData.class);
         bean.createDummy();
+        bean.createDummyUser();
     }
 }
 
@@ -33,10 +33,30 @@ public class T210Application {
 class DummyData {
 
     @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
     EvaluationItemRepository evaluationItemRepository;
 
     @Autowired
     EvaluationScoreSectionRepository evaluationScoreSectionRepository;
+
+    @Autowired
+    EvaluationItemScoreRecordRepository evaluationItemScoreRecordRepository;
+
+    @Transactional
+    public void createDummyUser() {
+        Member user = new Member("user", "dev@gmail.com", "12345", Gender.MALE, ApplicationType.PoliceOfficerMale, LocalDate.now(), LocalDate.now());
+        memberRepository.save(user);
+
+        List<EvaluationItem> allUserApplicationType = evaluationItemRepository.findAllByApplicationType(user.getApplicationType());
+
+        int score = 10;
+        for (EvaluationItem evaluationItem : allUserApplicationType) {
+            evaluationItemScoreRecordRepository.save(new EvaluationItemScoreRecord(user.getId(), evaluationItem.getId(), score));
+            score = score + 10;
+        }
+    }
 
     @Transactional
     public void createDummy() {
@@ -48,7 +68,7 @@ class DummyData {
         final List<EvaluationItem> eilist = List.of(ei1, ei2, ei3, ei4, ei5);
         evaluationItemRepository.saveAll(eilist);
 
-        for(EvaluationItem ei : eilist) {
+        for (EvaluationItem ei : eilist) {
             var ess1 = new EvaluationScoreSection(ei.getId(), 0, 1);
             var ess2 = new EvaluationScoreSection(ei.getId(), 40, 2);
             var ess3 = new EvaluationScoreSection(ei.getId(), 43, 3);
@@ -60,17 +80,17 @@ class DummyData {
             var ess9 = new EvaluationScoreSection(ei.getId(), 64, 5);
             var ess10 = new EvaluationScoreSection(ei.getId(), 68, 5);
             evaluationScoreSectionRepository.saveAll(List.of(
-                    ess1,
-                    ess2,
-                    ess3,
-                    ess4,
-                    ess5,
-                    ess6,
-                    ess7,
-                    ess8,
-                    ess9,
-                    ess10
-                )
+                            ess1,
+                            ess2,
+                            ess3,
+                            ess4,
+                            ess5,
+                            ess6,
+                            ess7,
+                            ess8,
+                            ess9,
+                            ess10
+                    )
             );
         }
 
