@@ -9,14 +9,14 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"*"})
+//@WebFilter(urlPatterns = {"*"})
 public class PageScriptReplacingFilter implements Filter  {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PageScriptReplacingFilter.class);
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        LOGGER.info("Page script replacing filter is on");
+        LOGGER.info("PageScriptReplacingFilter");
         chain.doFilter(new XssCleanHttpRequestWrapper((HttpServletRequest) request), response);
     }
 }

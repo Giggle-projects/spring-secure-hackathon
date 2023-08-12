@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Set;
 
 public class XssCleanHttpRequestWrapper extends HttpServletRequestWrapper {
 

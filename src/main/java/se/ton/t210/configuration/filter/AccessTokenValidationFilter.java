@@ -1,5 +1,7 @@
 package se.ton.t210.configuration.filter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -18,6 +20,8 @@ import java.util.Arrays;
 @Component
 public class AccessTokenValidationFilter extends OncePerRequestFilter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccessTokenValidationFilter.class);
+
     @Value("${auth.jwt.token.access.cookie.key:accessToken}")
     private String accessTokenCookieKey;
 
@@ -29,8 +33,9 @@ public class AccessTokenValidationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        LOGGER.info("AccessTokenValidationFilter");
+
         try {
-            System.out.println("hihi + " + accessTokenCookieKey);
             String accessToken = getTokenFromCookies(accessTokenCookieKey, request.getCookies());
             jwtUtils.validateToken(accessToken);
 

@@ -1,5 +1,7 @@
 package se.ton.t210.configuration.filter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -18,6 +20,8 @@ import java.util.Arrays;
 @Component
 public class EmailTokenValidationFilter extends OncePerRequestFilter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmailTokenValidationFilter.class);
+
     @Value("${auth.jwt.token.email.cookie:emailAuthToken}")
     private String emailAuthTokenCookieKey;
 
@@ -29,6 +33,7 @@ public class EmailTokenValidationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        LOGGER.info("EmailTokenValidationFilter");
         try {
             String emailAuthToken = getTokenFromCookies(emailAuthTokenCookieKey, request.getCookies());
             jwtUtils.validateToken(emailAuthToken);

@@ -7,6 +7,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -16,6 +19,8 @@ import se.ton.t210.service.JwtUtils;
 
 @Component
 public class RefreshTokenValidationFilter extends OncePerRequestFilter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RefreshTokenValidationFilter.class);
 
     @Value("${auth.jwt.token.refresh.cookie:refreshToken}")
     private String refreshTokenCookieKey;
@@ -28,6 +33,7 @@ public class RefreshTokenValidationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        LOGGER.info("RefreshTokenValidationFilter");
         try {
             String refreshToken = getTokenFromCookies(refreshTokenCookieKey, request.getCookies());
             jwtUtils.validateToken(refreshToken);

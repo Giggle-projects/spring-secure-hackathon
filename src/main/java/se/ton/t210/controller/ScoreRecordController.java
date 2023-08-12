@@ -19,6 +19,11 @@ public class ScoreRecordController {
         this.scoreRecordService = scoreRecordService;
     }
 
+    @GetMapping("/api/up")
+    public String up() {
+        return "299";
+    }
+
     @GetMapping("/api/me/avgScores")
     public ResponseEntity<MonthlyScoresResponse> myScoreRecordResponse(String yearDate) {
         Long memberId = 1L;
