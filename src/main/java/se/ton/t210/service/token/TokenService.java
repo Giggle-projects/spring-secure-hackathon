@@ -12,6 +12,7 @@ import se.ton.t210.dto.MemberTokens;
 import se.ton.t210.exception.AuthException;
 import se.ton.t210.utils.auth.AuthCodeUtils;
 
+import java.time.LocalTime;
 import java.util.Map;
 
 @Service
@@ -31,16 +32,10 @@ public class TokenService {
 
     private final TokenSecret tokenSecret;
     private final TokenCacheRepository tokenCacheRepository;
-    private final EmailAuthMailCacheRepository emailAuthMailCacheRepository;
 
-    public TokenService(TokenSecret tokenSecret, TokenCacheRepository tokenCacheRepository, EmailAuthMailCacheRepository emailAuthMailCacheRepository) {
+    public TokenService(TokenSecret tokenSecret, TokenCacheRepository tokenCacheRepository) {
         this.tokenSecret = tokenSecret;
         this.tokenCacheRepository = tokenCacheRepository;
-        this.emailAuthMailCacheRepository = emailAuthMailCacheRepository;
-    }
-
-    public void saveEmailAuthInfoInCache(String email, String emailAuthCode) {
-        emailAuthMailCacheRepository.save(new EmailAuthMailCache(email, emailAuthCode));
     }
 
     public String issueMailToken(String email) {

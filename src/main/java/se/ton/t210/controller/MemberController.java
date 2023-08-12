@@ -22,6 +22,7 @@ public class MemberController {
     public ResponseEntity<Void> signUp(@RequestBody @Valid SignUpRequest request,
                                        @CookieValue String emailAuthToken,
                                        HttpServletResponse response) {
+        System.out.println(emailAuthToken);
         request.validateSignUpRequest();
         memberService.signUp(request, emailAuthToken, response);
         return ResponseEntity.ok().build();

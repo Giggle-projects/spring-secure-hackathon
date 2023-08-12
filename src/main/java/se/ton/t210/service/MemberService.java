@@ -28,6 +28,9 @@ import java.time.LocalTime;
 @Service
 public class MemberService {
 
+    @Value("${auth.jwt.payload.key:email}")
+    private String tokenKey;
+
     @Value("${auth.jwt.token.access.cookie.key:accessToken}")
     private String accessTokenCookieKey;
 
@@ -62,7 +65,7 @@ public class MemberService {
         if (memberRepository.existsByEmail(request.getEmail())) {
             throw new AuthException(HttpStatus.CONFLICT, "Email is already exists");
         }
-        final String emailFromToken = tokenSecret.getPayloadValue(emailAuthTokenCookieKey, emailAuthToken);
+        final String emailFromToken = tokenSecret.getPayloadValue(tokenKey, emailAuthToken);
         if (!request.getEmail().equals(emailFromToken)) {
             throw new AuthException(HttpStatus.FORBIDDEN, "It is different from the previous email information you entered.");
         }
@@ -122,6 +125,6 @@ public class MemberService {
     public void sendEmailAuthMail(String userEmailAddress) {
         String emailAuthCode = AuthCodeUtils.generate(authCodeLength);
         mailServiceInterface.sendMail(userEmailAddress, new SignUpAuthMailForm(emailAuthCode));
-        emailAuthMailCacheRepository.save(new EmailAuthMailCache(userEmailAddress, emailAuthCode));
+        emailAuthMailCacheRepository.save(new EmailAuthMailCache(userEmailAddress, emailAuthCode, LocalTime.now()));
     }
 }
