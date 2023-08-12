@@ -13,7 +13,7 @@ public class AuthCodeUtils {
             }
             return builder.toString();
         } catch (Exception e) {
-            throw new IllegalArgumentException("email authentication code create error");
+            throw new IllegalArgumentException("create auth code error");
         }
     }
 }

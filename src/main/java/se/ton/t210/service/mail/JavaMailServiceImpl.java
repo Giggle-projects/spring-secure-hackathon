@@ -6,15 +6,15 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import se.ton.t210.service.mail.form.Email;
+import se.ton.t210.service.mail.form.MailForm;
 
 @ConditionalOnProperty(value = "auth.mail.enable.mode", havingValue = "true")
 @Async
 @Component
 public class JavaMailServiceImpl implements MailServiceInterface {
 
-    @Value("${auth.mail.fromAddress:cspft@gmail.com}")
-    private String fromAddress;
+    @Value("${auth.mail.fromAddr:cspft@gmail.com}")
+    private String fromAddr;
 
     private final JavaMailSender mailSender;
 
@@ -23,17 +23,17 @@ public class JavaMailServiceImpl implements MailServiceInterface {
     }
 
     @Override
-    public void sendMail(Email email) {
-        sendMail(email, fromAddress);
+    public void sendMail(String userAddr, MailForm form, String fromAddr) {
+        final SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(userAddr);
+        mailMessage.setSubject(form.title());
+        mailMessage.setText(form.body());
+        mailMessage.setFrom(fromAddr);
+        sendMail(mailMessage);
     }
 
-    public void sendMail(Email email, String fromAddress) {
-        final SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(email.getToAddress());
-        mailMessage.setSubject(email.getTitle());
-        mailMessage.setText(email.getContent());
-        mailMessage.setFrom(fromAddress);
-        sendMail(mailMessage);
+    public void sendMail(String userAddr, MailForm form) {
+        sendMail(userAddr, form, fromAddr);
     }
 
     public void sendMail(SimpleMailMessage mailMessage) {

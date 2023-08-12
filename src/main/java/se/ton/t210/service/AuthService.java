@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import se.ton.t210.cache.EmailAuthMailCache;
 import se.ton.t210.cache.EmailAuthMailCacheRepository;
-import se.ton.t210.dto.Email;
 import se.ton.t210.exception.AuthException;
 import se.ton.t210.service.mail.MailServiceInterface;
+import se.ton.t210.service.mail.form.SignUpAuthMailForm;
 import se.ton.t210.service.token.AuthTokenService;
 import se.ton.t210.utils.http.CookieUtils;
 
@@ -27,12 +27,6 @@ public class AuthService {
     @Value("${auth.jwt.token.email.cookie.key:emailAuthToken}")
     private String authTokenCookieKey;
 
-    @Value("${auth.mail.title}")
-    private String emailAuthMailTitle;
-
-    @Value("${auth.mail.content.header}")
-    private String emailAuthMailContentHeader;
-
     private final EmailAuthMailCacheRepository emailAuthMailCacheRepository;
     private final AuthTokenService authTokenService;
     private final MailServiceInterface mailServiceInterface;
@@ -43,11 +37,10 @@ public class AuthService {
         this.mailServiceInterface = mailServiceInterface;
     }
 
-    public void sendEmailAuthMail(String userEmail) {
+    public void sendEmailAuthMail(String userEmailAddress) {
         String authCode = AuthCodeUtils.createAuthNumberCode(authCodeLength);
-        Email email = new Email(emailAuthMailTitle, emailAuthMailContentHeader + authCode, userEmail);
-        mailServiceInterface.sendMail(email);
-        saveAuthInfoFromEmailAuthMailCache(userEmail, authCode);
+        mailServiceInterface.sendMail(userEmailAddress, new SignUpAuthMailForm(authCode));
+        saveAuthInfoFromEmailAuthMailCache(userEmailAddress, authCode);
     }
 
     private void saveAuthInfoFromEmailAuthMailCache(String userEmail, String authCode) {
