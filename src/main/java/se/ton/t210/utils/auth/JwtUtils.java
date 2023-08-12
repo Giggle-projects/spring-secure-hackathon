@@ -1,4 +1,4 @@
-package se.ton.t210.service;
+package se.ton.t210.utils.auth;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -16,15 +16,9 @@ import java.util.Map;
 @Component
 public class JwtUtils {
 
-    private final Key key;
-
-    public JwtUtils(@Value("${jwt.secret}") String secret) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-    }
-
-    public String createToken(Map<String, Object> payloads, int expireTime) {
-        Date now = new Date();
-        Date expiration = new Date(now.getTime() + Duration.ofSeconds(expireTime).toMillis());
+    public static String createToken(Key key, Map<String, Object> payloads, int expireTime) {
+        final Date now = new Date();
+        final Date expiration = new Date(now.getTime() + Duration.ofSeconds(expireTime).toMillis());
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(payloads)
@@ -34,9 +28,9 @@ public class JwtUtils {
                 .compact();
     }
 
-    public boolean isExpired(String token) {
+    public static boolean isExpired(Key key, String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(this.key).build().parseClaimsJws(token).getBody();
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
             return false;
         } catch (ExpiredJwtException e) {
             return true;
@@ -45,7 +39,7 @@ public class JwtUtils {
         }
     }
 
-    public void validateToken(String token) {
+    public static void validate(Key key, String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
@@ -59,11 +53,7 @@ public class JwtUtils {
         }
     }
 
-    public Claims tokenClaimsFrom(String token) {
-        return tokenClaimsFrom(token, false);
-    }
-
-    public Claims tokenClaimsFrom(String token, boolean ignoreExpired) {
+    public static Claims tokenClaimsFrom(Key key, String token, boolean ignoreExpired) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
