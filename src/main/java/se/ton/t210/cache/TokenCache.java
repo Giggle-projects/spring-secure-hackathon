@@ -3,7 +3,10 @@ package se.ton.t210.cache;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.http.HttpStatus;
+import se.ton.t210.exception.AuthException;
 
+import java.time.Duration;
 import java.time.LocalTime;
 
 @Getter
@@ -11,14 +14,23 @@ import java.time.LocalTime;
 public class TokenCache {
 
     @Id
-    private final String username;
+    private final String email;
     private final String accessToken;
     private final String refreshToken;
     private final LocalTime createdTime = LocalTime.now();
 
-    public TokenCache(String username, String accessToken, String refreshToken) {
-        this.username = username;
+    public TokenCache(String email, String accessToken, String refreshToken) {
+        this.email = email;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+    }
+
+    public void validate(String accessToken, String refreshToken, int refreshTokenExpireTime) {
+        final boolean isValid = this.accessToken.equals(accessToken)
+            && this.refreshToken.equals(refreshToken)
+            && Duration.between(this.createdTime, LocalTime.now()).getSeconds() > refreshTokenExpireTime;
+        if(!isValid) {
+            throw new AuthException(HttpStatus.UNAUTHORIZED, "Reissue request is invalid");
+        }
     }
 }

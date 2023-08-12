@@ -1,37 +1,52 @@
 package se.ton.t210.configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import se.ton.t210.configuration.filter.AccessTokenValidationFilter;
-import se.ton.t210.configuration.filter.EmailTokenValidationFilter;
-import se.ton.t210.configuration.filter.RefreshTokenValidationFilter;
+import se.ton.t210.configuration.filter.TokenFilter;
+import se.ton.t210.domain.TokenSecret;
 
 import javax.servlet.Filter;
 
 @Configuration
 public class TokenFilterConfig {
 
-    @Bean
-    public FilterRegistrationBean<Filter> addAccessTokenFilter(AccessTokenValidationFilter accessTokenValidationFilter) {
-        FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(accessTokenValidationFilter);
-        filterRegistrationBean.addUrlPatterns("/api/me/*");
-        return filterRegistrationBean;
+    @Value("${auth.jwt.token.access.cookie.key:accessToken}")
+    private String accessTokenCookieKey;
+
+    @Value("${auth.jwt.token.refresh.cookie:refreshToken}")
+    private String refreshTokenCookieKey;
+
+    @Value("${auth.jwt.token.email.cookie:emailAuthToken}")
+    private String emailAuthTokenCookieKey;
+
+    private final TokenSecret tokenSecret;
+
+    public TokenFilterConfig(TokenSecret tokenSecret) {
+        this.tokenSecret = tokenSecret;
     }
 
     @Bean
-    public FilterRegistrationBean<Filter> addRefreshTokenFilter(RefreshTokenValidationFilter refreshTokenValidationFilter) {
+    public FilterRegistrationBean<Filter> addAccessTokenFilter() {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(refreshTokenValidationFilter);
+        filterRegistrationBean.setFilter(new TokenFilter(tokenSecret, accessTokenCookieKey, "accessToken"));
         filterRegistrationBean.addUrlPatterns("/api/auth/reissue/token");
         return filterRegistrationBean;
     }
 
     @Bean
-    public FilterRegistrationBean<Filter> addEmailTokenFilter(EmailTokenValidationFilter emailTokenValidationFilter) {
+    public FilterRegistrationBean<Filter> addRefreshTokenFilter() {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(emailTokenValidationFilter);
+        filterRegistrationBean.setFilter(new TokenFilter(tokenSecret, refreshTokenCookieKey, "freshToken"));
+        filterRegistrationBean.addUrlPatterns("/api/auth/reissue/token");
+        return filterRegistrationBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean<Filter> addEmailTokenFilter() {
+        FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
+        filterRegistrationBean.setFilter(new TokenFilter(tokenSecret, emailAuthTokenCookieKey, "emailAuthToken"));
         filterRegistrationBean.addUrlPatterns("/api/auth/signUp");
         return filterRegistrationBean;
     }

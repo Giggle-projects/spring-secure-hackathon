@@ -13,11 +13,10 @@ public class EmailAuthMailCache {
     @Id
     private final String email;
     private final String authCode;
-    private final LocalTime createdTime;
+    private final LocalTime createdTime = LocalTime.now();
 
-    public EmailAuthMailCache(String email, String authCode, LocalTime createdTime) {
+    public EmailAuthMailCache(String email, String authCode) {
         this.email = email;
         this.authCode = authCode;
-        this.createdTime = createdTime;
     }
 }
