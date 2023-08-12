@@ -13,7 +13,7 @@ public class AuthTokenService {
     private String tokenPayloadEmailKey;
 
     @Value("${auth.jwt.token.auth.ttl.time:1800}")
-    private int authTokenExpireTime;
+    private int emailAuthTokenExpireTime;
 
     private final JwtUtils jwtUtils;
 
@@ -23,6 +23,6 @@ public class AuthTokenService {
 
     public String createAuthTokenByEmail(String email) {
         final Map<String, Object> tokenPayload = Map.of(tokenPayloadEmailKey, email);
-        return jwtUtils.createToken(tokenPayload, authTokenExpireTime);
+        return jwtUtils.createToken(tokenPayload, emailAuthTokenExpireTime);
     }
 }

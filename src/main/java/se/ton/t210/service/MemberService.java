@@ -32,9 +32,12 @@ public class MemberService {
         this.memberTokenService = memberTokenService;
     }
 
-    public void signUp(SignUpRequest request, HttpServletResponse response) {
+    public void signUp(SignUpRequest request, String tokenEmail, HttpServletResponse response) {
         if (memberRepository.existsByEmail(request.getEmail())) {
-            throw new AuthException(HttpStatus.CONFLICT, "email is already exists");
+            throw new AuthException(HttpStatus.CONFLICT, "Email is already exists");
+        }
+        if (!request.getEmail().equals(tokenEmail)) {
+            throw new AuthException(HttpStatus.FORBIDDEN, "It is different from the previous email information you entered.");
         }
         final Member member = memberRepository.save(request.toEntity());
         final MemberTokens tokens = memberTokenService.createTokensByEmail(member.getEmail());

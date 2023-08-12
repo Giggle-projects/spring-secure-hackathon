@@ -4,6 +4,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import se.ton.t210.configuration.filter.AccessTokenValidationFilter;
+import se.ton.t210.configuration.filter.EmailTokenValidationFilter;
 import se.ton.t210.configuration.filter.RefreshTokenValidationFilter;
 
 import javax.servlet.Filter;
@@ -24,6 +25,14 @@ public class TokenFilterConfig {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(refreshTokenValidationFilter);
         filterRegistrationBean.addUrlPatterns("/api/auth/reissue/token");
+        return filterRegistrationBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean<Filter> addEmailTokenFilter(EmailTokenValidationFilter emailTokenValidationFilter) {
+        FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
+        filterRegistrationBean.setFilter(emailTokenValidationFilter);
+        filterRegistrationBean.addUrlPatterns("/api/auth/signUp");
         return filterRegistrationBean;
     }
 }

@@ -25,7 +25,8 @@ public class MemberController {
     public ResponseEntity<Void> signUp(@RequestBody @Valid SignUpRequest request,
                                        HttpServletResponse response) {
         request.validateSignUpRequest();
-        memberService.signUp(request, response);
+        String emailByToken = "devygwan@gmail.com";  //emailAuthToken에서 추출한 email 값(임시)
+        memberService.signUp(request, emailByToken, response);
         return ResponseEntity.ok().build();
     }
 
