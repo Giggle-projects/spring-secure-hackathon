@@ -1,8 +1,6 @@
 package se.ton.t210.domain;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @Entity
-public class JudgingClass {
+public class EvaluationScoreSection {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -22,17 +20,17 @@ public class JudgingClass {
 
     private int takenScore;
 
-    public JudgingClass() {
+    public EvaluationScoreSection() {
     }
 
-    public JudgingClass(Long id, Long judgingItemId, int targetScore, int takenScore) {
+    public EvaluationScoreSection(Long id, Long judgingItemId, int targetScore, int takenScore) {
         this.id = id;
         this.judgingItemId = judgingItemId;
         this.targetScore = targetScore;
         this.takenScore = takenScore;
     }
 
-    public JudgingClass(Long judgingItemId, int targetScore, int takenScore) {
+    public EvaluationScoreSection(Long judgingItemId, int targetScore, int takenScore) {
         this(null, judgingItemId, targetScore, takenScore);
     }
 }
