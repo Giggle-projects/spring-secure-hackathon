@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <link rel="stylesheet" href="./global.css" />
+    <link rel="stylesheet" href="./sign-in.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+    />
+  </head>
+  <body>
+    <div class="sign-in1">
+      <div class="frame1017">
+        <div class="frame1018">
+          <div class="frame1019">
+            <b class="text544">당신의 꿈을 응원합니다!</b>
+          </div>
+          <div class="text545">서비스를 이용하려면 로그인 해주세요</div>
+        </div>
+        <div class="frame1020">
+          <div class="frame1021">
+            <div class="frame1022">
+              <div class="text546">이메일 주소</div>
+              <div class="email1">
+                <div class="text547">Email</div>
+              </div>
+            </div>
+          </div>
+          <div class="frame1021">
+            <div class="frame1022">
+              <div class="text546">패스워드</div>
+              <div class="password1">
+                <div class="text547">Password</div>
+                <img
+                  class="frame-icon48"
+                  alt=""
+                  src="./public/1256-frame.svg"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="frame1025">
+            <div class="check-box1">
+              <div class="frame1026">
+
+              </div>
+            </div>
+            <div class="frame1027">
+              <div class="text550">로그인 정보 저장하기</div>
+            </div>
+            <div class="text551" id="text7">비밀번호를 잊어버렸습니까?</div>
+          </div>
+          <div class="button">
+            <div class="frame1028">
+              <div class="text552">로그인</div>
+            </div>
+          </div>
+          <div class="frame1029">
+            <div class="frame1030">
+              <div class="frame1031">
+                <img
+                  class="frame-icon48"
+                  alt=""
+                  src="./public/1103-instance.svg"
+                />
+              </div>
+              <div class="frame1032">
+                <div class="frame1033">
+                  <div class="text553">로그인에 실패했습니다.</div>
+                  <div class="text547">계정 정보를 정확히 입력해주십시오.</div>
+                </div>
+              </div>
+              <div class="frame1034">
+                <div class="frame1035">
+                  <img
+                    class="frame-icon48"
+                    alt=""
+                    src="./public/1111-frame.svg"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="line1"></div>
+        <div class="sign-up1" id="signUpText">
+          계정이 없으신가요?
+          <span class="span">계정 생성하기</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var text7 = document.getElementById("text7");
+      if (text7) {
+        text7.addEventListener("click", function (e) {
+          window.location.href = "./reset-password.html";
+        });
+      }
+      
+      var signUpText = document.getElementById("signUpText");
+      if (signUpText) {
+        signUpText.addEventListener("click", function (e) {
+          window.location.href = "./sign-up.html";
+        });
+      }
+      </script>
+  </body>
+</html>

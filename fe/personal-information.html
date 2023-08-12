@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <link rel="stylesheet" href="./global.css" />
+    <link rel="stylesheet" href="./personal-information.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  </head>
+  <body>
+    <div class="personal-information">
+      <div class="frame1230">
+        <div class="frame1231">
+          <div class="frame1232">
+            <div class="frame1233">
+              <b class="text658">CSPFT</b>
+            </div>
+          </div>
+        </div>
+        <div class="frame1234">
+          <div class="setting6" id="settingContainer">
+            <img class="frame-icon58" alt="" src="./public/735-frame.svg" />
+          </div>
+        </div>
+        <div class="frame1235">
+          <div class="menu-016" id="menu01Container">
+            <img class="frame-icon58" alt="" src="./public/555-frame.svg" />
+
+            <div class="text659">대시보드</div>
+          </div>
+          <button class="menu-026" id="menu02">
+            <img class="frame-icon58" alt="" src="./public/559-frame.svg" />
+
+            <div class="text660">측정기록</div>
+          </button>
+          <div class="menu-036" id="menu03Container">
+            <img class="frame-icon58" alt="" src="./public/748-frame.svg" />
+
+            <div class="text659">개인정보</div>
+          </div>
+          <div class="menu-016" id="menu04Container">
+            <img class="frame-icon58" alt="" src="./public/755-frame.svg" />
+
+            <div class="text659">직렬정보</div>
+          </div>
+        </div>
+      </div>
+      <div class="frame1236">
+        <b class="text663">개인정보</b>
+        <div class="frame1237">
+          <div class="frame1238">
+            <b class="text664">내 정보</b>
+            <div class="frame1239">
+              <div class="frame1240">
+                <div class="tier">Challenger</div>
+                <b class="name1">하승원 님</b>
+              </div>
+              <div class="frame1241">
+                <div class="frame1242">
+                  <img
+                    class="frame-icon58"
+                    alt=""
+                    src="./public/586-frame.svg"
+                  />
+                </div>
+                <div class="frame1243">
+                  <div class="application">경찰간부시험</div>
+                  <div class="sex">남자</div>
+                </div>
+              </div>
+              <div class="current-score">키: 178cm</div>
+              <div class="current-score">몸무게: 85kg</div>
+              <div class="current-score">현재점수: 42점</div>
+              <div class="current-score">최고점수: 47점</div>
+            </div>
+          </div>
+          <div class="frame1244">
+            <b class="text658">내 점수 분포</b>
+            <div class="frame1245">
+              <div class="graph-container"> 
+                <canvas id="radarChart"width="100" height="100"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+ 
+        <canvas id="myChart" width="150" height="40"></canvas>
+        
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const data = {
+        labels: ["악력", "팔굽혀피기", "윗몸일으키기", "50m 오래달리기", "왕복오래달리기"],
+        datasets: [
+          {
+            label: "My Scores",
+            data: [71, 92, 63, 80, 56], // Sample values
+            backgroundColor: "rgba(66, 135, 245, 0.5)",
+            borderColor: "rgba(66, 135, 245, 1)",
+            pointBackgroundColor: "rgba(66, 135, 245, 1)"
+          },{
+            label: "your Scores",
+            data: [31, 92, 23, 80, 96], // Sample values
+            backgroundColor: "rgba(33, 33, 33, 0.5)",
+            borderColor: "rgba(33, 33, 33, 1)",
+            pointBackgroundColor: "rgba(66, 135, 245, 1)"
+          },
+          // Add additional dataset here
+        ]
+      };
+      
+      // Create the radar chart
+      const ctx = document.getElementById("radarChart").getContext("2d");
+      const radarChart = new Chart(ctx, {
+        type: "radar",
+        data: data,
+        options: {
+          line: {
+            borderWidth: 3
+          },
+          legend: {
+            display: false, // 범례 숨기기
+          },
+          scale: {
+            r: {
+              pointLabels: {
+                font: {
+                  size: 100
+                }
+              }
+            },
+
+            ticks: {
+              beginAtZero: true,
+              max: 100, // You can adjust the maximum scale value
+              stepSize: 10,
+            }
+          },
+          tooltips: {
+            enabled: false, // Disable tooltips
+          },
+        }
+      });
+      
+
+      //막대 그래프
+      // 데이터 준비
+      // 데이터 준비
+    var bar_labels = ['악력 (kg)', '팔굽혀피기 (회/분)', '윗몸일으키기 (회/분)', '50m 오래달리기 (초)', '왕복오래달리기 (회)'];
+    var myScore = [7, 9, 8, 6, 5];
+    var avgScore = [5, 7, 6, 8, 7];
+    var top30Score = [9, 10, 9, 9, 8];
+
+    // 차트 생성
+    var bar_ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(bar_ctx, {
+      type: 'bar',
+      data: {
+        labels: bar_labels,
+        datasets: [{
+          label: '나',
+          data: myScore,
+          backgroundColor: 'rgba(0, 0, 0, 0.2)', // 검은색
+          borderColor: 'rgba(0, 0, 0, 1)',     // 검은색
+          borderWidth: 1
+        }, {
+          label: '평균',
+          data: avgScore,
+          backgroundColor: 'rgba(128, 128, 128, 0.2)', // 회색
+          borderColor: 'rgba(128, 128, 128, 1)',     // 회색
+          borderWidth: 1
+        }, {
+          label: '상위 30%',
+          data: top30Score,
+          backgroundColor: 'rgba(192, 192, 192, 0.2)', // 밝은 회색
+          borderColor: 'rgba(192, 192, 192, 1)',     // 밝은 회색
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: '점'
+            },
+            ticks: {
+              stepSize: 1, // 간격을 1로 설정하여 1점 단위로 표시
+              precision: 0 // 소수점 없이 정수로 표시
+            }
+          }
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: '종목별 점수 분포'
+          }
+        }
+      }
+    });
+
+
+
+
+
+      var settingContainer = document.getElementById("settingContainer");
+      if (settingContainer) {
+        settingContainer.addEventListener("click", function (e) {
+          window.location.href = "./setting-account.html";
+        });
+      }
+      
+      var menu01Container = document.getElementById("menu01Container");
+      if (menu01Container) {
+        menu01Container.addEventListener("click", function (e) {
+          window.location.href = "./dashboard.html";
+        });
+      }
+      
+      var menu02 = document.getElementById("menu02");
+      if (menu02) {
+        menu02.addEventListener("click", function (e) {
+          window.location.href = "./record.html";
+        });
+      }
+      
+      var menu03Container = document.getElementById("menu03Container");
+      if (menu03Container) {
+        menu03Container.addEventListener("click", function (e) {
+          window.location.href = "personal-information.html";
+        });
+      }
+      
+      var menu04Container = document.getElementById("menu04Container");
+      if (menu04Container) {
+        menu04Container.addEventListener("click", function (e) {
+          window.location.href = "./application-information1.html";
+        });
+      }
+      </script>
+  </body>
+</html>
