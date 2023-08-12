@@ -61,6 +61,10 @@ public class Member {
         this(null, name, email, password, gender, applicationType, createdAt, updatedAt);
     }
 
+    public Member(Long id, String name, String email, String password, Gender gender, ApplicationType applicationType) {
+        this(id, name, email, password, gender, applicationType, LocalDate.now(), LocalDate.now());
+    }
+
     public void reissuePwd(String newPwd) {
         this.password = newPwd;
     }

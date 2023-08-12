@@ -3,8 +3,11 @@ package se.ton.t210.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import se.ton.t210.domain.Member;
 import se.ton.t210.domain.type.ApplicationType;
+import se.ton.t210.domain.type.Gender;
 import se.ton.t210.dto.MonthlyScoresResponse;
+import se.ton.t210.dto.RecordCountResponse;
 import se.ton.t210.dto.TopMonthlyScoresResponse;
 import se.ton.t210.service.EvaluationScoreRecordService;
 
@@ -19,11 +22,6 @@ public class EvaluationScoreRecordController {
         this.evaluationScoreRecordService = evaluationScoreRecordService;
     }
 
-    @GetMapping("/api/up")
-    public String up() {
-        return "299";
-    }
-
     @GetMapping("/api/me/avgScores")
     public ResponseEntity<MonthlyScoresResponse> myScoreRecordResponse(String yearDate) {
         Long memberId = 1L;
@@ -35,5 +33,12 @@ public class EvaluationScoreRecordController {
     public ResponseEntity<TopMonthlyScoresResponse> topScoresRecordResponse(ApplicationType applicationType, String yearDate) {
         final TopMonthlyScoresResponse topMonthlyScoresResponse = evaluationScoreRecordService.averageAllScoresByJudgingItem(applicationType, LocalDate.parse(yearDate));
         return ResponseEntity.ok(topMonthlyScoresResponse);
+    }
+
+    @GetMapping("/api/records/count")
+    public ResponseEntity<RecordCountResponse> recordCount() {
+        final Member member = new Member(1l, "name", "email", "password", Gender.MALE, ApplicationType.FireOfficerFemale);
+        final RecordCountResponse countResponse = evaluationScoreRecordService.count(member.getApplicationType());
+        return ResponseEntity.ok(countResponse);
     }
 }

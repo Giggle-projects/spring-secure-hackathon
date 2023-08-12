@@ -12,12 +12,12 @@ import java.util.Comparator;
 import java.util.List;
 
 @Service
-public class EvaluationService {
+public class EvaluationItemService {
 
     private final EvaluationScoreSectionRepository evaluationScoreSectionRepository;
     private final EvaluationItemRepository evaluationItemRepository;
 
-    public EvaluationService(EvaluationScoreSectionRepository evaluationScoreSectionRepository, EvaluationItemRepository evaluationItemRepository) {
+    public EvaluationItemService(EvaluationScoreSectionRepository evaluationScoreSectionRepository, EvaluationItemRepository evaluationItemRepository) {
         this.evaluationScoreSectionRepository = evaluationScoreSectionRepository;
         this.evaluationItemRepository = evaluationItemRepository;
     }
