@@ -6,7 +6,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import se.ton.t210.dto.Email;
+import se.ton.t210.service.mail.form.Email;
 
 @ConditionalOnProperty(value = "auth.mail.enable.mode", havingValue = "true")
 @Async

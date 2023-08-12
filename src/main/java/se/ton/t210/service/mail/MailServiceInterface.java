@@ -1,6 +1,6 @@
 package se.ton.t210.service.mail;
 
-import se.ton.t210.dto.Email;
+import se.ton.t210.service.mail.form.Email;
 
 public interface MailServiceInterface {
 

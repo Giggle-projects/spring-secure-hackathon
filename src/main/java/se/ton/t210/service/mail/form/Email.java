@@ -1,4 +1,4 @@
-package se.ton.t210.dto;
+package se.ton.t210.service.mail.form;
 
 import lombok.Getter;
 

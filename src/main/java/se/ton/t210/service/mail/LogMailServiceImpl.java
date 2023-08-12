@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-import se.ton.t210.dto.Email;
+import se.ton.t210.service.mail.form.Email;
 
 @ConditionalOnProperty(value = "auth.mail.enable.mode", havingValue = "false", matchIfMissing = true)
 @Component
