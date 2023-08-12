@@ -1,4 +1,4 @@
-package se.ton.t210.service;
+package se.ton.t210.service.token;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -7,6 +7,7 @@ import se.ton.t210.dto.MemberTokens;
 import se.ton.t210.exception.AuthException;
 import se.ton.t210.cache.TokenCache;
 import se.ton.t210.cache.TokenCacheRepository;
+import se.ton.t210.service.JwtUtils;
 
 import java.util.Map;
 

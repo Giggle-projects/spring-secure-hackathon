@@ -12,7 +12,7 @@ public class CookieUtils {
         loadTokenCookie(response, cookieKey, cookieValue);
     }
 
-    public static void loadTokenCookie(HttpServletResponse response, String key, String value) {
+    private static void loadTokenCookie(HttpServletResponse response, String key, String value) {
         final Cookie cookie = new Cookie(key, value);
         cookie.setHttpOnly(true);
         cookie.setPath("/");

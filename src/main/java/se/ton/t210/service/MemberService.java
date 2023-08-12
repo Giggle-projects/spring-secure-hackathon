@@ -6,12 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.MemberRepository;
-import se.ton.t210.dto.Email;
 import se.ton.t210.dto.MemberTokens;
 import se.ton.t210.dto.SignInRequest;
 import se.ton.t210.dto.SignUpRequest;
 import se.ton.t210.exception.AuthException;
-import se.ton.t210.service.mail.MailServiceInterface;
+import se.ton.t210.service.token.MemberTokenService;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,22 +24,12 @@ public class MemberService {
     @Value("${auth.jwt.token.refresh.cookie:refreshToken}")
     private String refreshTokenCookieKey;
 
-    @Value("${auth.mail.title}")
-    private String emailAuthMailTitle;
-
-    @Value("${auth.mail.content.header}")
-    private String emailAuthMailContentHeader;
-
     private final MemberRepository memberRepository;
     private final MemberTokenService memberTokenService;
-    private final MailServiceInterface mailServiceInterface;
-    private final MailAuthService mailAuthService;
 
-    public MemberService(MemberRepository memberRepository, MemberTokenService memberTokenService, MailServiceInterface mailServiceInterface, MailAuthService mailAuthService) {
+    public MemberService(MemberRepository memberRepository, MemberTokenService memberTokenService) {
         this.memberRepository = memberRepository;
         this.memberTokenService = memberTokenService;
-        this.mailServiceInterface = mailServiceInterface;
-        this.mailAuthService = mailAuthService;
     }
 
     public void signUp(SignUpRequest request, HttpServletResponse response) {
@@ -63,13 +52,6 @@ public class MemberService {
     public void reissueToken(String accessToken, String refreshToken, HttpServletResponse response) {
         final MemberTokens tokens = memberTokenService.reissue(accessToken, refreshToken);
         responseTokens(response, tokens);
-    }
-
-    public void sendEmailAuthMail(String userEmail) {
-        String authCode = mailAuthService.createAuthCode();
-        Email email = new Email(emailAuthMailTitle, emailAuthMailContentHeader + authCode, userEmail);
-        mailServiceInterface.sendMail(email);
-        mailAuthService.saveAuthInfoFromEmailAuthMailCache(userEmail, authCode);
     }
 
     public void reissuePwd(String email, String newPwd) {
