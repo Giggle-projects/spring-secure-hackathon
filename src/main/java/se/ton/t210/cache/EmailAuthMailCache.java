@@ -7,17 +7,17 @@ import org.springframework.data.redis.core.RedisHash;
 import java.time.LocalTime;
 
 @Getter
-@RedisHash(value = "signUpEmailAuth", timeToLive = 60 * 5)
+@RedisHash(value = "EmailAuthMailCache", timeToLive = 60 * 5)
 public class EmailAuthMailCache {
 
     @Id
     private final String email;
     private final String authCode;
-    private final LocalTime createTime;
+    private final LocalTime createdTime;
 
-    public EmailAuthMailCache(String email, String authCode, LocalTime createTime) {
+    public EmailAuthMailCache(String email, String authCode, LocalTime createdTime) {
         this.email = email;
         this.authCode = authCode;
-        this.createTime = createTime;
+        this.createdTime = createdTime;
     }
 }

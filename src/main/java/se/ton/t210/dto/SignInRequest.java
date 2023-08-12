@@ -9,7 +9,6 @@ import javax.validation.constraints.NotBlank;
 public class SignInRequest {
 
     @Email
-    @NotBlank
     private String email;
 
     @NotBlank

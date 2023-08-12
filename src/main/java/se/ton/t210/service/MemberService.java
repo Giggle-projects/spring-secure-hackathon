@@ -7,10 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.MemberRepository;
 import se.ton.t210.dto.MemberTokens;
-import se.ton.t210.dto.SignInRequest;
 import se.ton.t210.dto.SignUpRequest;
 import se.ton.t210.exception.AuthException;
 import se.ton.t210.service.token.MemberTokenService;
+import se.ton.t210.utils.http.CookieUtils;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -44,31 +44,8 @@ public class MemberService {
         responseTokens(response, tokens);
     }
 
-    public void signIn(SignInRequest request, HttpServletResponse response) {
-        if (!memberRepository.existsByEmailAndPassword(request.getEmail(), request.getPassword())) {
-            throw new AuthException(HttpStatus.UNAUTHORIZED, "The username or password is not valid.");
-        }
-        final MemberTokens tokens = memberTokenService.createTokensByEmail(request.getEmail());
-        responseTokens(response, tokens);
-    }
-
-    public void reissueToken(String accessToken, String refreshToken, HttpServletResponse response) {
-        final MemberTokens tokens = memberTokenService.reissue(accessToken, refreshToken);
-        responseTokens(response, tokens);
-    }
-
-    public void reissuePwd(String email, String newPwd) {
-        Member member = memberRepository.findByEmail(email).orElseThrow(() ->
-                new AuthException(HttpStatus.NOT_FOUND, "User is not found"));
-        if (member.getEmail().equals(newPwd)) {
-            throw new IllegalArgumentException("The password you want to change must be different from the previous password.");
-        }
-        member.reissuePwd(newPwd);
-        memberRepository.save(member);
-    }
-
     private void responseTokens(HttpServletResponse response, MemberTokens tokens) {
-        CookieUtils.saveInCookie(response, accessTokenCookieKey, tokens.getAccessToken());
-        CookieUtils.saveInCookie(response, refreshTokenCookieKey, tokens.getRefreshToken());
+        CookieUtils.loadHttpOnlyCookie(response, accessTokenCookieKey, tokens.getAccessToken());
+        CookieUtils.loadHttpOnlyCookie(response, refreshTokenCookieKey, tokens.getRefreshToken());
     }
 }

@@ -9,13 +9,14 @@ import se.ton.t210.dto.Email;
 import se.ton.t210.exception.AuthException;
 import se.ton.t210.service.mail.MailServiceInterface;
 import se.ton.t210.service.token.AuthTokenService;
+import se.ton.t210.utils.http.CookieUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.Duration;
 import java.time.LocalTime;
 
 @Service
-public class MailAuthService {
+public class AuthService {
 
     @Value("${auth.mail.valid.time}")
     private Long mailValidTime;
@@ -36,7 +37,7 @@ public class MailAuthService {
     private final AuthTokenService authTokenService;
     private final MailServiceInterface mailServiceInterface;
 
-    public MailAuthService(EmailAuthMailCacheRepository emailAuthMailCacheRepository, AuthTokenService authTokenService, MailServiceInterface mailServiceInterface) {
+    public AuthService(EmailAuthMailCacheRepository emailAuthMailCacheRepository, AuthTokenService authTokenService, MailServiceInterface mailServiceInterface) {
         this.emailAuthMailCacheRepository = emailAuthMailCacheRepository;
         this.authTokenService = authTokenService;
         this.mailServiceInterface = mailServiceInterface;
@@ -56,7 +57,7 @@ public class MailAuthService {
     public void validateAuthCode(String email, String authCode, HttpServletResponse response) {
         EmailAuthMailCache emailAuthMailCache = emailAuthMailCacheRepository.findById(email).orElseThrow(() ->
                 new AuthException(HttpStatus.NOT_FOUND, "Email not found"));
-        long afterSeconds = Duration.between(emailAuthMailCache.getCreateTime(), LocalTime.now()).getSeconds();
+        long afterSeconds = Duration.between(emailAuthMailCache.getCreatedTime(), LocalTime.now()).getSeconds();
         if (afterSeconds > mailValidTime) {
             throw new AuthException(HttpStatus.REQUEST_TIMEOUT, "Email valid time is exceed");
         }
@@ -67,6 +68,6 @@ public class MailAuthService {
             throw new AuthException(HttpStatus.UNAUTHORIZED, "email is not correct");
         }
         String authToken = authTokenService.createAuthTokenByEmail(email);
-        CookieUtils.saveInCookie(response, authTokenCookieKey, authToken);
+        CookieUtils.loadHttpOnlyCookie(response, authTokenCookieKey, authToken);
     }
 }

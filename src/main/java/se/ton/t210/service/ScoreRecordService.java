@@ -3,6 +3,7 @@ package se.ton.t210.service;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import se.ton.t210.domain.*;
+import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.MonthlyScoresResponse;
 import se.ton.t210.dto.TopMonthlyScoresResponse;
 

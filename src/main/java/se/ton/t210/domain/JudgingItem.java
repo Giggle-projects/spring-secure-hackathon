@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.Getter;
+import se.ton.t210.domain.type.ApplicationType;
 
 @Getter
 @Entity

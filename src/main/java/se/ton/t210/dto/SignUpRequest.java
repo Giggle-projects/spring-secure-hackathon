@@ -1,7 +1,7 @@
 package se.ton.t210.dto;
 
 import lombok.Getter;
-import se.ton.t210.domain.ApplicationType;
+import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.type.Gender;
 

@@ -3,12 +3,14 @@ package se.ton.t210.service.token;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import se.ton.t210.dto.MemberTokens;
-import se.ton.t210.exception.AuthException;
 import se.ton.t210.cache.TokenCache;
 import se.ton.t210.cache.TokenCacheRepository;
+import se.ton.t210.dto.MemberTokens;
+import se.ton.t210.exception.AuthException;
 import se.ton.t210.service.JwtUtils;
 
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.Map;
 
 @Service
@@ -58,6 +60,10 @@ public class MemberTokenService {
                 .orElseThrow(() -> new AuthException(HttpStatus.UNAUTHORIZED, "Token is invalid"));
         if (!tokenCache.getRefreshToken().equals(refreshToken) || !tokenCache.getAccessToken().equals(accessToken)) {
             throw new AuthException(HttpStatus.UNAUTHORIZED, "Reissue request is invalid");
+        }
+        final long afterSeconds = Duration.between(tokenCache.getCreatedTime(), LocalTime.now()).getSeconds();
+        if (afterSeconds > refreshTokenExpireTime) {
+            throw new AuthException(HttpStatus.REQUEST_TIMEOUT, "Email valid time is exceed");
         }
         return createTokensByEmail(tokenCache.getUsername());
     }

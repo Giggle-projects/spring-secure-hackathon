@@ -13,11 +13,10 @@ public class AsyncConfig {
 
     @Bean
     public Executor taskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(2);
         executor.setMaxPoolSize(2);
-        executor.setQueueCapacity(500);
-        executor.setThreadNamePrefix("CSPFT-Thread-");
+        executor.setQueueCapacity(20);
         executor.initialize();
         return executor;
     }

@@ -3,7 +3,7 @@ package se.ton.t210.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.ton.t210.dto.*;
-import se.ton.t210.service.MailAuthService;
+import se.ton.t210.service.AuthService;
 import se.ton.t210.service.MemberService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -14,11 +14,11 @@ import javax.validation.Valid;
 public class MemberController {
 
     private final MemberService memberService;
-    private final MailAuthService mailAuthService;
+    private final AuthService authService;
 
-    public MemberController(MemberService memberService, MailAuthService mailAuthService) {
+    public MemberController(MemberService memberService, AuthService authService) {
         this.memberService = memberService;
-        this.mailAuthService = mailAuthService;
+        this.authService = authService;
     }
 
     @PostMapping("/signUp")
@@ -47,14 +47,14 @@ public class MemberController {
 
     @PostMapping("/send/mail")
     public ResponseEntity<Void> sendEmailAuthMail(@RequestBody EmailRequest request) {
-        mailAuthService.sendEmailAuthMail(request.getEmail());
+        authService.sendEmailAuthMail(request.getEmail());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/check/authCode")
     public ResponseEntity<Void> validateAuthCode(@RequestBody ValidateAuthCodeRequest request,
                                                  HttpServletResponse response) {
-        mailAuthService.validateAuthCode(request.getEmail(), request.getAuthCode(), response);
+        authService.validateAuthCode(request.getEmail(), request.getAuthCode(), response);
         return ResponseEntity.ok().build();
     }
 

@@ -3,7 +3,7 @@ package se.ton.t210.service;
 import java.util.Comparator;
 import java.util.List;
 import org.springframework.stereotype.Service;
-import se.ton.t210.domain.ApplicationType;
+import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.domain.JudgingClass;
 import se.ton.t210.domain.JudgingClassRepository;
 import se.ton.t210.domain.JudgingItem;

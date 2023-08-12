@@ -1,4 +1,4 @@
-package se.ton.t210.domain;
+package se.ton.t210.domain.type;
 
 public enum ApplicationType {
     PoliceOfficerMale("/static/default.jpg", "경찰직공무원(남)"),

@@ -1,6 +1,7 @@
 package se.ton.t210.domain;
 
 import lombok.Getter;
+import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.domain.type.Gender;
 
 import javax.persistence.*;
@@ -26,8 +27,8 @@ public class Member {
     @NotNull
     private String password;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
+    @NotNull
     private Gender gender;
 
     @Enumerated(EnumType.STRING)

@@ -3,7 +3,7 @@ package se.ton.t210.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import se.ton.t210.domain.ApplicationType;
+import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.MonthlyScoresResponse;
 import se.ton.t210.dto.TopMonthlyScoresResponse;
 import se.ton.t210.service.ScoreRecordService;

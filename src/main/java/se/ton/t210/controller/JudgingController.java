@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import se.ton.t210.domain.ApplicationType;
+import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.JudgingItemNamesResponse;
 import se.ton.t210.dto.TakenScoreResponse;
 import se.ton.t210.service.JudgingService;
