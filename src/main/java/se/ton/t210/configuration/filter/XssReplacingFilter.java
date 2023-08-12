@@ -9,10 +9,10 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-//@WebFilter(urlPatterns = {"*"})
-public class PageScriptReplacingFilter implements Filter  {
+@WebFilter(urlPatterns = {"*"})
+public class XssReplacingFilter implements Filter  {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PageScriptReplacingFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(XssReplacingFilter.class);
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

@@ -19,6 +19,10 @@ public class ResponseLog {
         this.status = HttpStatus.resolve(response.getStatus());
     }
 
+    public static String asString(ContentCachingResponseWrapper responseWrapper) {
+        return new ResponseLog(responseWrapper).asLog();
+    }
+
     public String asLog() {
         return String.format(LOG_FORMAT, status);
     }

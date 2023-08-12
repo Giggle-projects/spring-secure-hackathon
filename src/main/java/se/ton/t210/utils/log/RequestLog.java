@@ -1,6 +1,7 @@
 package se.ton.t210.utils.log;
 
 import lombok.Getter;
+import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -39,6 +40,10 @@ public class RequestLog {
 
     private static String method(HttpServletRequest request) {
         return request.getMethod();
+    }
+
+    public static String asString(ContentCachingRequestWrapper requestWrapper, String accessTokenCookieKey) {
+        return new RequestLog(requestWrapper, accessTokenCookieKey).asLog();
     }
 
     public String asLog() {
