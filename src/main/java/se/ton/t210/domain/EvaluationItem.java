@@ -11,7 +11,7 @@ import se.ton.t210.domain.type.ApplicationType;
 
 @Getter
 @Entity
-public class JudgingItem {
+public class EvaluationItem {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -22,16 +22,16 @@ public class JudgingItem {
 
     private String name;
 
-    public JudgingItem() {
+    public EvaluationItem() {
     }
 
-    public JudgingItem(Long id, ApplicationType applicationType, String name) {
+    public EvaluationItem(Long id, ApplicationType applicationType, String name) {
         this.id = id;
         this.applicationType = applicationType;
         this.name = name;
     }
 
-    public JudgingItem(ApplicationType applicationType, String name) {
+    public EvaluationItem(ApplicationType applicationType, String name) {
         this(null, applicationType, name);
     }
 }

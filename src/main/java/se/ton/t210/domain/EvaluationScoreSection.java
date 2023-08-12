@@ -14,23 +14,23 @@ public class EvaluationScoreSection {
     @Id
     private Long id;
 
-    private Long judgingItemId;
+    private Long evaluationItemId;
 
-    private int targetScore;
+    private int sectionBaseScore;
 
-    private int takenScore;
+    private int score;
 
     public EvaluationScoreSection() {
     }
 
-    public EvaluationScoreSection(Long id, Long judgingItemId, int targetScore, int takenScore) {
+    public EvaluationScoreSection(Long id, Long evaluationItemId, int sectionBaseScore, int score) {
         this.id = id;
-        this.judgingItemId = judgingItemId;
-        this.targetScore = targetScore;
-        this.takenScore = takenScore;
+        this.evaluationItemId = evaluationItemId;
+        this.sectionBaseScore = sectionBaseScore;
+        this.score = score;
     }
 
-    public EvaluationScoreSection(Long judgingItemId, int targetScore, int takenScore) {
-        this(null, judgingItemId, targetScore, takenScore);
+    public EvaluationScoreSection(Long evaluationItemId, int sectionBaseScore, int score) {
+        this(null, evaluationItemId, sectionBaseScore, score);
     }
 }

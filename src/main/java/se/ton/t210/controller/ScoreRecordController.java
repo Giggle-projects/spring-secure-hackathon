@@ -6,17 +6,17 @@ import org.springframework.web.bind.annotation.RestController;
 import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.MonthlyScoresResponse;
 import se.ton.t210.dto.TopMonthlyScoresResponse;
-import se.ton.t210.service.ScoreRecordService;
+import se.ton.t210.service.EvaluationScoreRecordService;
 
 import java.time.LocalDate;
 
 @RestController
 public class ScoreRecordController {
 
-    private final ScoreRecordService scoreRecordService;
+    private final EvaluationScoreRecordService evaluationScoreRecordService;
 
-    public ScoreRecordController(ScoreRecordService scoreRecordService) {
-        this.scoreRecordService = scoreRecordService;
+    public ScoreRecordController(EvaluationScoreRecordService evaluationScoreRecordService) {
+        this.evaluationScoreRecordService = evaluationScoreRecordService;
     }
 
     @GetMapping("/api/up")
@@ -27,13 +27,13 @@ public class ScoreRecordController {
     @GetMapping("/api/me/avgScores")
     public ResponseEntity<MonthlyScoresResponse> myScoreRecordResponse(String yearDate) {
         Long memberId = 1L;
-        final MonthlyScoresResponse monthlyScoresResponse = scoreRecordService.averageScoresByJudgingItem(memberId, LocalDate.parse(yearDate));
+        final MonthlyScoresResponse monthlyScoresResponse = evaluationScoreRecordService.averageScoresByJudgingItem(memberId, LocalDate.parse(yearDate));
         return ResponseEntity.ok(monthlyScoresResponse);
     }
 
     @GetMapping("/api/me/topScores")
     public ResponseEntity<TopMonthlyScoresResponse> topScoresRecordResponse(ApplicationType applicationType, String yearDate) {
-        final TopMonthlyScoresResponse topMonthlyScoresResponse = scoreRecordService.averageAllScoresByJudgingItem(applicationType, LocalDate.parse(yearDate));
+        final TopMonthlyScoresResponse topMonthlyScoresResponse = evaluationScoreRecordService.averageAllScoresByJudgingItem(applicationType, LocalDate.parse(yearDate));
         return ResponseEntity.ok(topMonthlyScoresResponse);
     }
 }
