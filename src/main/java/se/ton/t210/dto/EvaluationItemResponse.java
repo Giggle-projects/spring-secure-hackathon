@@ -9,11 +9,11 @@ import se.ton.t210.domain.EvaluationItem;
 public class EvaluationItemResponse {
 
     private final Long evaluationItemId;
-    private final String evaluationName;
+    private final String evaluationItemName;
 
-    public EvaluationItemResponse(Long evaluationItemId, String evaluationName) {
+    public EvaluationItemResponse(Long evaluationItemId, String evaluationItemName) {
         this.evaluationItemId = evaluationItemId;
-        this.evaluationName = evaluationName;
+        this.evaluationItemName = evaluationItemName;
     }
 
     public static List<EvaluationItemResponse> listOf(List<EvaluationItem> items) {
