@@ -29,8 +29,8 @@ public class ScoreController {
 
     @GetMapping("/api/score")
     public ResponseEntity<ScoreResponse> evaluationScore(Long evaluationItemId, int score) {
-        final ScoreResponse response = scoreService.evaluationScore(evaluationItemId, score);
-        return ResponseEntity.ok(response);
+        final int evaluationScore = scoreService.evaluationScore(evaluationItemId, score);
+        return ResponseEntity.ok(new ScoreResponse(evaluationScore));
     }
 
     @GetMapping("/api/score/me")

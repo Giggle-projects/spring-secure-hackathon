@@ -7,29 +7,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import se.ton.t210.domain.*;
 import se.ton.t210.domain.type.ApplicationType;
-import se.ton.t210.dto.*;
+import se.ton.t210.dto.EvaluationScoreRequest;
+import se.ton.t210.dto.RankResponse;
+import se.ton.t210.dto.RecordCountResponse;
+import se.ton.t210.dto.ScoreResponse;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ScoreService {
 
     private final MemberRepository memberRepository;
     private final EvaluationItemRepository evaluationItemRepository;
-    private final MonthlyScoreItemRepository monthlyScoreItemRepository;
+    private final EvaluationItemScoreItemRepository evaluationItemScoreItemRepository;
     private final MonthlyScoreRepository monthlyScoreRepository;
 
     @Autowired
     private EvaluationScoreSectionRepository evaluationScoreSectionRepository;
 
-    public ScoreService(MemberRepository memberRepository, EvaluationItemRepository evaluationItemRepository, MonthlyScoreItemRepository monthlyScoreItemRepository, MonthlyScoreRepository monthlyScoreRepository) {
+    public ScoreService(MemberRepository memberRepository, EvaluationItemRepository evaluationItemRepository, EvaluationItemScoreItemRepository evaluationItemScoreItemRepository, MonthlyScoreRepository monthlyScoreRepository) {
         this.memberRepository = memberRepository;
         this.evaluationItemRepository = evaluationItemRepository;
-        this.monthlyScoreItemRepository = monthlyScoreItemRepository;
+        this.evaluationItemScoreItemRepository = evaluationItemScoreItemRepository;
         this.monthlyScoreRepository = monthlyScoreRepository;
     }
 
@@ -46,22 +48,34 @@ public class ScoreService {
 
     @Transactional
     public ScoreResponse update(Long memberId, List<EvaluationScoreRequest> request, LocalDate yearMonth) {
-        int evaluationScoreSum = 0;
-        for(EvaluationScoreRequest scoreInfo : request) {
-            evaluationScoreSum += evaluationScore(scoreInfo.getEvaluationItemId(), scoreInfo.getScore()).getScore();
-        }
+        int monthlyScore = 0;
         final Member member = memberRepository.findById(memberId).orElseThrow();
-        monthlyScoreRepository.deleteAllByMemberIdAndYearMonth(member.getId(), yearMonth);
-        monthlyScoreRepository.save(MonthlyScore.of(member, evaluationScoreSum));
-        return new ScoreResponse(evaluationScoreSum);
+        for (EvaluationScoreRequest scoreInfo : request) {
+            final int itemScore = updateEvaluationItemScore(memberId, yearMonth, scoreInfo);
+            monthlyScore += itemScore;
+        }
+        updateMonthlyScore(member, monthlyScore, yearMonth);
+        return new ScoreResponse(monthlyScore);
     }
 
-    public ScoreResponse evaluationScore(Long evaluationItemId, int score) {
-        return new ScoreResponse(evaluationScoreSectionRepository.findAllByEvaluationItemId(evaluationItemId).stream()
+    private int updateEvaluationItemScore(Long memberId, LocalDate yearMonth, EvaluationScoreRequest scoreInfo) {
+        final Long itemId = scoreInfo.getEvaluationItemId();
+        evaluationItemScoreItemRepository.deleteAllByMemberIdAndEvaluationItemIdAndYearMonth(memberId, itemId, yearMonth);
+        final EvaluationItemScore newItemScore = evaluationItemScoreItemRepository.save(scoreInfo.toEntity(memberId));
+        return evaluationScore(itemId, newItemScore.getScore());
+    }
+
+    private void updateMonthlyScore(Member member, int evaluationScoreSum, LocalDate yearMonth) {
+        monthlyScoreRepository.deleteAllByMemberIdAndYearMonth(member.getId(), yearMonth);
+        monthlyScoreRepository.save(MonthlyScore.of(member, evaluationScoreSum));
+    }
+
+    public int evaluationScore(Long evaluationItemId, int score) {
+        return evaluationScoreSectionRepository.findAllByEvaluationItemId(evaluationItemId).stream()
             .filter(it -> it.getSectionBaseScore() < score)
             .max(Comparator.comparingInt(EvaluationScoreSection::getScore))
             .map(EvaluationScoreSection::getScore)
-            .orElse(0));
+            .orElse(0);
     }
 
     public List<RankResponse> rank(ApplicationType applicationType, int rankCnt, LocalDate date) {

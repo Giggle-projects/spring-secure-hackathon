@@ -8,6 +8,7 @@ import se.ton.t210.domain.*;
 import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.domain.type.Gender;
 import se.ton.t210.service.EvaluationItemService;
+import se.ton.t210.service.ScoreService;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -31,10 +32,13 @@ class DummyData {
     private EvaluationScoreSectionRepository evaluationScoreSectionRepository;
 
     @Autowired
-    private MonthlyScoreItemRepository monthlyScoreItemRepository;
+    private EvaluationItemScoreItemRepository evaluationItemScoreItemRepository;
 
     @Autowired
     private EvaluationItemService evaluationItemService;
+
+    @Autowired
+    private ScoreService scoreService;
 
     private Map<ApplicationType, List<EvaluationItem>> itemTable = new HashMap<>();
 
@@ -96,15 +100,15 @@ class DummyData {
 
     @Transactional
     public void records(Member member) {
-        final List<MonthlyEvaluationItemScore> evaluationItemScores = new ArrayList<>();
+        final List<EvaluationItemScore> evaluationItemScores = new ArrayList<>();
         for (var evaluationItem : itemTable.get(member.getApplicationType())) {
-            var itemScore = MonthlyEvaluationItemScore.of(member, evaluationItem, RANDOM.nextInt(100));
-            monthlyScoreItemRepository.save(itemScore);
+            var itemScore = EvaluationItemScore.of(member, evaluationItem, RANDOM.nextInt(100));
+            evaluationItemScoreItemRepository.save(itemScore);
             evaluationItemScores.add(itemScore);
         }
         int evaluationScoreSum = 0;
-        for(MonthlyEvaluationItemScore itemScore : evaluationItemScores) {
-            var score = evaluationItemService.calculateEvaluationScore(itemScore.getEvaluationItemId(), itemScore.getScore());
+        for(EvaluationItemScore itemScore : evaluationItemScores) {
+            var score = scoreService.evaluationScore(itemScore.getEvaluationItemId(), itemScore.getScore());
             evaluationScoreSum += score;
         }
         monthlyScoreRepository.save(MonthlyScore.of(member, evaluationScoreSum));

@@ -16,8 +16,6 @@ public interface MonthlyScoreRepository extends JpaRepository<MonthlyScore, Long
 
     Optional<MonthlyScore> findByMemberIdAndYearMonth(Long memberId, LocalDate yearMonth);
 
-    boolean existByMemberIdAndYearMonth(Long memberId, LocalDate yearMonth);
-
     List<MonthlyScore> findAllByApplicationTypeAndYearMonth(ApplicationType applicationType, LocalDate yearMonth, PageRequest page);
 
     void deleteAllByMemberIdAndYearMonth(Long memberId, LocalDate yearMonth);
