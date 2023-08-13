@@ -13,13 +13,17 @@ docker-compose -f docker-compose-dev.yaml down
 ```
 
 ### [BE - DevOPs]
-- [] Access token, Refresh token 
+- [x] Access token, Refresh token
 - [] TLS setting
-- [] CRUD 
-- [] email sender
-- [] CI/CD
+- [x] CRUD
+- [x] email sender
+- [x] CI/CD
 - [] ip black list filter
-- [] ip - token logging
+- [x] ip - token logging
+- [] personal information encrypt
+- [] combine with FE
+- [] block invalid FE request
+- [x] xss filter
 - [] BE deployment
 - [] FE connection
 - [] FE deployment
