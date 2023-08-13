@@ -38,4 +38,8 @@ public class MonthlyScore {
     public static MonthlyScore of(Member member, int score) {
         return new MonthlyScore(member.getApplicationType(), member.getId(), score);
     }
+
+    public void update(int evaluationScoreSum) {
+        this.score = evaluationScoreSum;
+    }
 }

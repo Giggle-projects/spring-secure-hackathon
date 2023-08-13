@@ -19,12 +19,6 @@ public class EvaluationItemController {
         this.evaluationItemService = evaluationItemService;
     }
 
-    @GetMapping("/api/evaluation/score")
-    public ResponseEntity<ScoreResponse> evaluationScore(Long evaluationItemId, int memberInputScore) {
-        final int evaluationScore = evaluationItemService.calculateEvaluationScore(evaluationItemId, memberInputScore);
-        return ResponseEntity.ok(new ScoreResponse(evaluationScore));
-    }
-
     @GetMapping("/api/evaluation/items")
     public ResponseEntity<List<EvaluationItemResponse>> items(ApplicationType applicationType) {
         final List<EvaluationItemResponse> responses = evaluationItemService.items(applicationType);

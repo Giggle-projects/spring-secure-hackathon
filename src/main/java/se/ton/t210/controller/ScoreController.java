@@ -27,10 +27,23 @@ public class ScoreController {
         return ResponseEntity.ok(countResponse);
     }
 
+    @GetMapping("/api/score")
+    public ResponseEntity<ScoreResponse> evaluationScore(Long evaluationItemId, int score) {
+        final ScoreResponse response = scoreService.evaluationScore(evaluationItemId, score);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/api/score/me")
     public ResponseEntity<ScoreResponse> myScore() {
         final Member member = new Member(1l, "name", "email", "password", Gender.MALE, ApplicationType.FireOfficerFemale);
         final ScoreResponse scoreResponse = scoreService.score(member.getId(), LocalDate.now());
+        return ResponseEntity.ok(scoreResponse);
+    }
+
+    @PostMapping("/api/score/me")
+    public ResponseEntity<ScoreResponse> updateScore(List<EvaluationScoreRequest> request) {
+        final Member member = new Member(1l, "name", "email", "password", Gender.MALE, ApplicationType.FireOfficerFemale);
+        final ScoreResponse scoreResponse = scoreService.update(member.getId(), request, LocalDate.now());
         return ResponseEntity.ok(scoreResponse);
     }
 

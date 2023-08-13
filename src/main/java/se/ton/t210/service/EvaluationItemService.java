@@ -8,6 +8,7 @@ import se.ton.t210.domain.EvaluationScoreSectionRepository;
 import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.EvaluationItemResponse;
 import se.ton.t210.dto.EvaluationSectionInfo;
+import se.ton.t210.dto.ScoreResponse;
 
 import java.util.*;
 
@@ -20,14 +21,6 @@ public class EvaluationItemService {
     public EvaluationItemService(EvaluationScoreSectionRepository evaluationScoreSectionRepository, EvaluationItemRepository evaluationItemRepository) {
         this.evaluationScoreSectionRepository = evaluationScoreSectionRepository;
         this.evaluationItemRepository = evaluationItemRepository;
-    }
-
-    public int calculateEvaluationScore(Long evaluationItemId, int score) {
-        return evaluationScoreSectionRepository.findAllByEvaluationItemId(evaluationItemId).stream()
-            .filter(it -> it.getSectionBaseScore() < score)
-            .max(Comparator.comparingInt(EvaluationScoreSection::getScore))
-            .map(EvaluationScoreSection::getScore)
-            .orElse(0);
     }
 
     public List<EvaluationItemResponse> items(ApplicationType applicationType) {
