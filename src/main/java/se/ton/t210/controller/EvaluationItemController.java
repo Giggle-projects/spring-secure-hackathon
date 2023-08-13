@@ -20,9 +20,9 @@ public class EvaluationItemController {
     }
 
     @GetMapping("/api/evaluation/score")
-    public ResponseEntity<TakenScoreResponse> takenScore(Long evaluationItemId, int score) {
-        final int takenScore = evaluationItemService.calculateTakenScore(evaluationItemId, score);
-        return ResponseEntity.ok(TakenScoreResponse.of(takenScore));
+    public ResponseEntity<TakenScoreResponse> evaluationScore(Long evaluationItemId, int score) {
+        final int evaluationScore = evaluationItemService.calculateEvaluationScore(evaluationItemId, score);
+        return ResponseEntity.ok(TakenScoreResponse.of(evaluationScore));
     }
 
     @GetMapping("/api/evaluation/items")
@@ -34,7 +34,7 @@ public class EvaluationItemController {
     @GetMapping("/api/evaluation/sections")
     public ResponseEntity<List<List<EvaluationSectionInfo>>> sections() {
         final Member member = new Member(1l, "name", "email", "password", Gender.MALE, ApplicationType.PoliceOfficerMale);
-        final List<List<EvaluationSectionInfo>> sectionInfos = evaluationItemService.getSectionInfos(member.getApplicationType());
+        final List<List<EvaluationSectionInfo>> sectionInfos = evaluationItemService.sectionInfos(member.getApplicationType());
         return ResponseEntity.ok(sectionInfos);
     }
 }

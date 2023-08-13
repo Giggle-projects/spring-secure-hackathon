@@ -1,7 +1,7 @@
 package se.ton.t210.dto;
 
 import lombok.Getter;
-import se.ton.t210.domain.EvaluationItemScoreRecord;
+import se.ton.t210.domain.MonthlyScoreItem;
 
 import java.util.List;
 
@@ -9,21 +9,21 @@ import java.util.List;
 public class UploadScoreRequest {
 
     private Long evaluationItemId1;
-    private int score1;
+    private Long score1;
 
     private Long evaluationItemId2;
-    private int score2;
+    private Long score2;
 
     private Long evaluationItemId3;
-    private int score3;
+    private Long score3;
 
     private Long evaluationItemId4;
-    private int score4;
+    private Long score4;
 
     private Long evaluationItemId5;
-    private int score5;
+    private Long score5;
 
-    public UploadScoreRequest(Long evaluationItemId1, int score1, Long evaluationItemId2, int score2, Long evaluationItemId3, int score3, Long evaluationItemId4, int score4, Long evaluationItemId5, int score5) {
+    public UploadScoreRequest(Long evaluationItemId1, Long score1, Long evaluationItemId2, Long score2, Long evaluationItemId3, Long score3, Long evaluationItemId4, Long score4, Long evaluationItemId5, Long score5) {
         this.evaluationItemId1 = evaluationItemId1;
         this.score1 = score1;
         this.evaluationItemId2 = evaluationItemId2;
@@ -36,17 +36,17 @@ public class UploadScoreRequest {
         this.score5 = score5;
     }
 
-    public List<EvaluationItemScoreRecord> records(Long memberId) {
+    public List<MonthlyScoreItem> records(Long memberId) {
         return List.of(
-            new EvaluationItemScoreRecord(memberId, evaluationItemId1, score1),
-            new EvaluationItemScoreRecord(memberId, evaluationItemId2, score2),
-            new EvaluationItemScoreRecord(memberId, evaluationItemId3, score3),
-            new EvaluationItemScoreRecord(memberId, evaluationItemId4, score4),
-            new EvaluationItemScoreRecord(memberId, evaluationItemId5, score5)
+            new MonthlyScoreItem(memberId, evaluationItemId1, score1),
+            new MonthlyScoreItem(memberId, evaluationItemId2, score2),
+            new MonthlyScoreItem(memberId, evaluationItemId3, score3),
+            new MonthlyScoreItem(memberId, evaluationItemId4, score4),
+            new MonthlyScoreItem(memberId, evaluationItemId5, score5)
         );
     }
 
-    public int scoreSum() {
+    public Long scoreSum() {
         return score1 + score2 + score3 + score4 + score5;
     }
 }

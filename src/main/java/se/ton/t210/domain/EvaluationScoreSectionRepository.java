@@ -8,6 +8,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface EvaluationScoreSectionRepository extends JpaRepository<EvaluationScoreSection, Long> {
 
     List<EvaluationScoreSection> findAllByEvaluationItemId(Long evaluationItemId);
-
-    List<EvaluationScoreSection> findAllByEvaluationItemIdIn(Set<Long> evaluationItemIds);
 }

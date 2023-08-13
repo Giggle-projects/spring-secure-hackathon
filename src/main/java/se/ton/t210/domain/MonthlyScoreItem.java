@@ -8,29 +8,29 @@ import se.ton.t210.domain.converter.ScoreRecordYearAndMonthConverter;
 
 @Getter
 @Entity
-public class EvaluationItemScoreRecord {
+public class MonthlyScoreItem {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
     private Long memberId;
     private Long evaluationItemId;
-    private int score;
+    private Long monthlyScoreId;
 
     @Convert(converter = ScoreRecordYearAndMonthConverter.class)
-    private final LocalDate createdAt = LocalDate.now();
+    private final LocalDate yearMonth = LocalDate.now();
 
-    public EvaluationItemScoreRecord() {
+    public MonthlyScoreItem() {
     }
 
-    public EvaluationItemScoreRecord(Long id, Long memberId, Long evaluationItemId, int score) {
+    public MonthlyScoreItem(Long id, Long memberId, Long evaluationItemId, Long monthlyScoreId) {
         this.id = id;
         this.memberId = memberId;
         this.evaluationItemId = evaluationItemId;
-        this.score = score;
+        this.monthlyScoreId = monthlyScoreId;
     }
 
-    public EvaluationItemScoreRecord(Long memberId, Long evaluationItemId, int score) {
-        this(null, memberId, evaluationItemId, score);
+    public MonthlyScoreItem(Long memberId, Long evaluationItemId, Long monthlyScoreId) {
+        this(null, memberId, evaluationItemId, monthlyScoreId);
     }
 }

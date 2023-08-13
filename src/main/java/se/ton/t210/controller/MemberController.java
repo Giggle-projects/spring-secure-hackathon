@@ -55,7 +55,6 @@ public class MemberController {
     public ResponseEntity<Void> validateAuthCode(@RequestBody ValidateAuthCodeRequest request,
                                                  HttpServletResponse response) {
         memberService.validateEmailAuthCode(request.getEmail(), request.getAuthCode());
-        System.out.println("HI");
         memberService.issueEmailToken(request.getEmail(), response);
         return ResponseEntity.ok().build();
     }

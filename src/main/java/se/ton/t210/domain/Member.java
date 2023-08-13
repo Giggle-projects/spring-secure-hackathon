@@ -61,6 +61,10 @@ public class Member {
         this(null, name, email, password, gender, applicationType, createdAt, updatedAt);
     }
 
+    public Member(String name, String email, String password, Gender gender, ApplicationType applicationType) {
+        this(null, name, email, password, gender, applicationType, LocalDate.now(), LocalDate.now());
+    }
+
     public Member(Long id, String name, String email, String password, Gender gender, ApplicationType applicationType) {
         this(id, name, email, password, gender, applicationType, LocalDate.now(), LocalDate.now());
     }

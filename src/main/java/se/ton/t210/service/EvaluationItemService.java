@@ -22,7 +22,7 @@ public class EvaluationItemService {
         this.evaluationItemRepository = evaluationItemRepository;
     }
 
-    public int calculateTakenScore(Long evaluationItemId, int score) {
+    public int calculateEvaluationScore(Long evaluationItemId, int score) {
         return evaluationScoreSectionRepository.findAllByEvaluationItemId(evaluationItemId).stream()
             .filter(it -> it.getSectionBaseScore() < score)
             .max(Comparator.comparingInt(EvaluationScoreSection::getScore))
@@ -35,7 +35,7 @@ public class EvaluationItemService {
         return EvaluationItemResponse.listOf(items);
     }
 
-    public List<List<EvaluationSectionInfo>> getSectionInfos(ApplicationType applicationType) {
+    public List<List<EvaluationSectionInfo>> sectionInfos(ApplicationType applicationType) {
         final List<List<EvaluationSectionInfo>> evaluationSectionsInfos = new ArrayList<>();
         final List<EvaluationItem> evaluationItems = evaluationItemRepository.findAllByApplicationType(applicationType);
 
