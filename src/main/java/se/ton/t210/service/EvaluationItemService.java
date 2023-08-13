@@ -59,7 +59,7 @@ public class EvaluationItemService {
     }
 
     public ApplicationTypeNamesResponse getApplicationTypeNames() {
-        List<String> getApplicationTypeNames = Arrays.stream(ApplicationType.values())
+        final List<String> getApplicationTypeNames = Arrays.stream(ApplicationType.values())
                 .map(ApplicationType::getName)
                 .collect(Collectors.toList());
         return new ApplicationTypeNamesResponse(getApplicationTypeNames);
