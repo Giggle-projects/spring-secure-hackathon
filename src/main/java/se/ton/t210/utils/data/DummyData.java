@@ -1,5 +1,6 @@
 package se.ton.t210.utils.data;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -54,9 +55,17 @@ class DummyData {
 
     private List<Member> createMembers(int number) {
         final List<Member> members = new ArrayList<>();
-        for(var at : ApplicationType.values()) {
+        for (var at : ApplicationType.values()) {
             for (int i = 0; i < number; i++) {
-                members.add(new Member("hi", "dev" + RANDOM.nextInt(10000) + "@gmail.com", "12345", Gender.MALE, at));
+                members.add(
+                    new Member(
+                        RandomStringUtils.randomAlphabetic(3),
+                        RandomStringUtils.randomAlphabetic(10) + "@gmail.com",
+                        "12345",
+                        Gender.MALE,
+                        at
+                    )
+                );
             }
         }
         memberRepository.saveAll(members);
@@ -64,7 +73,7 @@ class DummyData {
     }
 
     private Map<ApplicationType, List<EvaluationItem>> createEvaluationItemTable() {
-        Map<ApplicationType, List<EvaluationItem>>  itemTable = new HashMap<>();
+        Map<ApplicationType, List<EvaluationItem>> itemTable = new HashMap<>();
         for (var at : ApplicationType.values()) {
             itemTable.put(at, createDummyEvaluationItem(at));
         }
@@ -107,7 +116,7 @@ class DummyData {
             evaluationItemScores.add(itemScore);
         }
         int evaluationScoreSum = 0;
-        for(EvaluationItemScore itemScore : evaluationItemScores) {
+        for (EvaluationItemScore itemScore : evaluationItemScores) {
             var score = scoreService.evaluationScore(itemScore.getEvaluationItemId(), itemScore.getScore());
             evaluationScoreSum += score;
         }

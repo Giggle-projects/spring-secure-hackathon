@@ -79,13 +79,22 @@ public class ScoreService {
     }
 
     public List<RankResponse> rank(ApplicationType applicationType, int rankCnt, LocalDate date) {
-        final PageRequest page = PageRequest.of(0, rankCnt, Sort.by(Sort.Order.desc("score")));
+        final PageRequest page = PageRequest.of(0, rankCnt, Sort.by(Sort.Order.desc("score"), Sort.Order.asc("id")));
         final List<MonthlyScore> rankScores = monthlyScoreRepository.findAllByApplicationTypeAndYearMonth(applicationType, date, page);
         final List<RankResponse> rankResponses = new ArrayList<>();
-        int rank = 1;
+        int rank = 0;
+        int prevScore = Integer.MAX_VALUE;
+        int sameStack = 0;
         for (var score : rankScores) {
             final Member member = memberRepository.findById(score.getMemberId()).orElseThrow();
-            rankResponses.add(RankResponse.of(rank++, member, score));
+            if(prevScore == score.getScore()) {
+                sameStack++;
+            } else {
+                rank = rank + sameStack +1;
+                sameStack = 0;
+            }
+            prevScore = score.getScore();
+            rankResponses.add(RankResponse.of(rank, member, score));
         }
         return rankResponses;
     }
