@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import se.ton.t210.cache.EmailAuthMailCache;
-import se.ton.t210.cache.EmailAuthMailCacheRepository;
+import se.ton.t210.cache.EmailAuthCodeCache;
+import se.ton.t210.cache.EmailAuthCodeCacheRepository;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.MemberRepository;
 import se.ton.t210.domain.TokenSecret;
@@ -53,13 +53,13 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final TokenService tokenService;
-    private final EmailAuthMailCacheRepository emailAuthMailCacheRepository;
+    private final EmailAuthCodeCacheRepository emailAuthCodeCacheRepository;
     private final MailServiceInterface mailServiceInterface;
 
-    public MemberService(MemberRepository memberRepository, TokenService tokenService, EmailAuthMailCacheRepository emailAuthMailCacheRepository, MailServiceInterface mailServiceInterface) {
+    public MemberService(MemberRepository memberRepository, TokenService tokenService, EmailAuthCodeCacheRepository emailAuthCodeCacheRepository, MailServiceInterface mailServiceInterface) {
         this.memberRepository = memberRepository;
         this.tokenService = tokenService;
-        this.emailAuthMailCacheRepository = emailAuthMailCacheRepository;
+        this.emailAuthCodeCacheRepository = emailAuthCodeCacheRepository;
         this.mailServiceInterface = mailServiceInterface;
     }
 
@@ -91,7 +91,7 @@ public class MemberService {
 
     public void reissuePwd(String email, String newPwd) {
         Member member = memberRepository.findByEmail(email).orElseThrow(() ->
-            new AuthException(HttpStatus.NOT_FOUND, "User is not found"));
+                new AuthException(HttpStatus.NOT_FOUND, "User is not found"));
         if (member.getEmail().equals(newPwd)) {
             throw new IllegalArgumentException("The password you want to change must be different from the previous password.");
         }
@@ -100,16 +100,16 @@ public class MemberService {
     }
 
     public void validateEmailAuthCode(String email, String authCode) {
-        EmailAuthMailCache emailAuthMailCache = emailAuthMailCacheRepository.findById(email).orElseThrow(() ->
-            new AuthException(HttpStatus.NOT_FOUND, "Email not found"));
-        long afterSeconds = Duration.between(emailAuthMailCache.getCreatedTime(), LocalTime.now()).getSeconds();
+        EmailAuthCodeCache emailAuthCodeCache = emailAuthCodeCacheRepository.findById(email).orElseThrow(() ->
+                new AuthException(HttpStatus.NOT_FOUND, "Email not found"));
+        long afterSeconds = Duration.between(emailAuthCodeCache.getCreatedTime(), LocalTime.now()).getSeconds();
         if (afterSeconds > mailValidTime) {
             throw new AuthException(HttpStatus.REQUEST_TIMEOUT, "Email valid time is exceed");
         }
-        if (!emailAuthMailCache.getAuthCode().equals(authCode)) {
+        if (!emailAuthCodeCache.getAuthCode().equals(authCode)) {
             throw new AuthException(HttpStatus.UNAUTHORIZED, "AuthCode is not correct");
         }
-        if (!emailAuthMailCache.getEmail().equals(email)) {
+        if (!emailAuthCodeCache.getEmail().equals(email)) {
             throw new AuthException(HttpStatus.UNAUTHORIZED, "email is not correct");
         }
     }
@@ -127,7 +127,7 @@ public class MemberService {
     public void sendEmailAuthMail(String userEmailAddress) {
         String emailAuthCode = AuthCodeUtils.generate(authCodeLength);
         mailServiceInterface.sendMail(userEmailAddress, new SignUpAuthMailForm(emailAuthCode));
-        emailAuthMailCacheRepository.save(new EmailAuthMailCache(userEmailAddress, emailAuthCode, LocalTime.now()));
+        emailAuthCodeCacheRepository.save(new EmailAuthCodeCache(userEmailAddress, emailAuthCode, LocalTime.now()));
     }
 
     public ApplicantCountResponse countApplicant(ApplicationType applicationType) {
