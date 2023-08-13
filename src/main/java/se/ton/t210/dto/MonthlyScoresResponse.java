@@ -9,15 +9,15 @@ import java.util.stream.Collectors;
 @Getter
 public class MonthlyScoresResponse {
 
-    private final List<AverageScoresByJudgingItem> avgScoresByJudgingItems;
+    private final List<AverageScoresByEvaluationItem> avgScoresByEvaluationItems;
 
-    public MonthlyScoresResponse(List<AverageScoresByJudgingItem> avgScoresByJudgingItems) {
-        this.avgScoresByJudgingItems = avgScoresByJudgingItems;
+    public MonthlyScoresResponse(List<AverageScoresByEvaluationItem> avgScoresByEvaluationItems) {
+        this.avgScoresByEvaluationItems = avgScoresByEvaluationItems;
     }
 
-    public static MonthlyScoresResponse listOf(Map<Long, Double> averageScoresByJudgingItem) {
-        return new MonthlyScoresResponse(averageScoresByJudgingItem.keySet().stream()
-            .map(it -> new AverageScoresByJudgingItem(it, averageScoresByJudgingItem.get(it)))
+    public static MonthlyScoresResponse listOf(Map<Long, Double> averageScoresByEvaluationItem) {
+        return new MonthlyScoresResponse(averageScoresByEvaluationItem.keySet().stream()
+            .map(it -> new AverageScoresByEvaluationItem(it, averageScoresByEvaluationItem.get(it)))
             .collect(Collectors.toList())
         );
     }

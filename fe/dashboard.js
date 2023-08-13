@@ -25,21 +25,34 @@ const totalRecordsContainer = document.getElementById("total-records")
 const currentDomain = "http://localhost:8080"
 
 async function fetchTotalApplication() {
-    let response1 = await fetch(currentDomain + "/api/auth/count" + new URLSearchParams());
+    let response1 = await fetch(currentDomain + "/api/auth/count");
     if (!response1.ok) {
         throw new Error('Error fetching products.');
     }
     totalApplicationContainer.innerText = (await response1.json()).count
 
-    let response2 = await fetch(currentDomain + "/api/records/count" + new URLSearchParams());
+    let response2 = await fetch(currentDomain + "/api/records/count");
     if (!response2.ok) {
         throw new Error('Error fetching products.');
     }
     totalRecordsContainer.innerText = (await response2.json()).count
 }
 
-async function fetchMyScore() {
+const currentScoreContainer = document.getElementById("current-score")
+const expectedScoreContainer = document.getElementById("expected-score")
 
+async function fetchMyScore() {
+    let response1 = await fetch(currentDomain + "/api/me/scores");
+    if (!response1.ok) {
+        throw new Error('Error fetching products.');
+    }
+    currentScoreContainer.innerText = (await response1.json()).score
+
+    let response2 = await fetch(currentDomain + "/api/records/count" + new URLSearchParams());
+    if (!response2.ok) {
+        throw new Error('Error fetching products.');
+    }
+    totalRecordsContainer.innerText = (await response2.json()).count
 }
 
 fetchTotalApplication()
