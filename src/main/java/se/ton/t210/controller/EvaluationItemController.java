@@ -20,8 +20,9 @@ public class EvaluationItemController {
     }
 
     @GetMapping("/api/evaluation/items")
-    public ResponseEntity<List<EvaluationItemResponse>> items(ApplicationType applicationType) {
-        final List<EvaluationItemResponse> responses = evaluationItemService.items(applicationType);
+    public ResponseEntity<List<EvaluationItemResponse>> items() {
+        final Member member = new Member(1l, "name", "email", "password", Gender.MALE, ApplicationType.PoliceOfficerMale);
+        final List<EvaluationItemResponse> responses = evaluationItemService.items(member.getApplicationType());
         return ResponseEntity.ok(responses);
     }
 
