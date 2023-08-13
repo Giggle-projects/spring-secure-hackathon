@@ -97,11 +97,11 @@ class DummyData {
                 new EvaluationScoreSection(item.getId(), 43, 3),
                 new EvaluationScoreSection(item.getId(), 46, 4),
                 new EvaluationScoreSection(item.getId(), 49, 5),
-                new EvaluationScoreSection(item.getId(), 52, 5),
-                new EvaluationScoreSection(item.getId(), 55, 5),
-                new EvaluationScoreSection(item.getId(), 61, 5),
-                new EvaluationScoreSection(item.getId(), 64, 5),
-                new EvaluationScoreSection(item.getId(), 68, 5)
+                new EvaluationScoreSection(item.getId(), 52, 6),
+                new EvaluationScoreSection(item.getId(), 55, 7),
+                new EvaluationScoreSection(item.getId(), 61, 8),
+                new EvaluationScoreSection(item.getId(), 64, 9),
+                new EvaluationScoreSection(item.getId(), 68, 10)
             ));
         }
         return evaluationItems;

@@ -48,7 +48,7 @@ public class EvaluationItemService {
                         evaluationItem.getName(),
                         prevItemBaseScore,
                         section.getSectionBaseScore(),
-                        section.getScore()
+                        section.getEvaluationScore()
                 );
                 evaluationSectionInfos.add(sectionInfo);
                 prevItemBaseScore = section.getSectionBaseScore() - 1;
