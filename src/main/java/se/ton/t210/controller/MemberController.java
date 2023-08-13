@@ -70,4 +70,11 @@ public class MemberController {
         final ApplicantCountResponse applicantCountResponse = memberService.countApplicant(member.getApplicationType());
         return ResponseEntity.ok(applicantCountResponse);
     }
+
+    @GetMapping("/api/member/me")
+    public ResponseEntity<MemberResponse> me() {
+        final Member member = new Member(1L, "name", "email", "password", Gender.MALE, ApplicationType.PoliceOfficerMale);
+        final MemberResponse response = MemberResponse.of(member);
+        return ResponseEntity.ok(response);
+    }
 }

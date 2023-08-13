@@ -13,24 +13,21 @@ public class EvaluationScoreSection {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-
     private Long evaluationItemId;
-
     private int sectionBaseScore;
-
-    private int score;
+    private int evaluationScore;
 
     public EvaluationScoreSection() {
     }
 
-    public EvaluationScoreSection(Long id, Long evaluationItemId, int sectionBaseScore, int score) {
+    public EvaluationScoreSection(Long id, Long evaluationItemId, int sectionBaseScore, int evaluationScore) {
         this.id = id;
         this.evaluationItemId = evaluationItemId;
         this.sectionBaseScore = sectionBaseScore;
-        this.score = score;
+        this.evaluationScore = evaluationScore;
     }
 
-    public EvaluationScoreSection(Long evaluationItemId, int sectionBaseScore, int score) {
-        this(null, evaluationItemId, sectionBaseScore, score);
+    public EvaluationScoreSection(Long evaluationItemId, int sectionBaseScore, int evaluationScore) {
+        this(null, evaluationItemId, sectionBaseScore, evaluationScore);
     }
 }

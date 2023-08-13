@@ -72,10 +72,10 @@ public class ScoreService {
 
     public int evaluationScore(Long evaluationItemId, int score) {
         return evaluationScoreSectionRepository.findAllByEvaluationItemId(evaluationItemId).stream()
-            .filter(it -> it.getSectionBaseScore() < score)
-            .max(Comparator.comparingInt(EvaluationScoreSection::getScore))
-            .map(EvaluationScoreSection::getScore)
-            .orElse(0);
+            .filter(it -> it.getSectionBaseScore() <= score)
+            .max(Comparator.comparingInt(EvaluationScoreSection::getEvaluationScore))
+            .map(EvaluationScoreSection::getEvaluationScore)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid evaluationItemId or score"));
     }
 
     public List<RankResponse> rank(ApplicationType applicationType, int rankCnt, LocalDate date) {
@@ -87,10 +87,10 @@ public class ScoreService {
         int sameStack = 0;
         for (var score : rankScores) {
             final Member member = memberRepository.findById(score.getMemberId()).orElseThrow();
-            if(prevScore == score.getScore()) {
+            if (prevScore == score.getScore()) {
                 sameStack++;
             } else {
-                rank = rank + sameStack +1;
+                rank = rank + sameStack + 1;
                 sameStack = 0;
             }
             prevScore = score.getScore();
