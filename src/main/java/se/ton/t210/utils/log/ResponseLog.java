@@ -3,10 +3,8 @@ package se.ton.t210.utils.log;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.util.ContentCachingResponseWrapper;
-import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Getter
 public class ResponseLog {

@@ -2,26 +2,13 @@ package se.ton.t210.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.ton.t210.domain.EvaluationItem;
-import se.ton.t210.domain.EvaluationItemRepository;
-import se.ton.t210.domain.EvaluationItemScoreRecord;
-import se.ton.t210.domain.EvaluationItemScoreRecordRepository;
-import se.ton.t210.domain.MemberRepository;
-import se.ton.t210.domain.MemberScore;
-import se.ton.t210.domain.MemberScoreRepository;
+import se.ton.t210.domain.*;
 import se.ton.t210.domain.type.ApplicationType;
-import se.ton.t210.dto.MonthlyScoresResponse;
-import se.ton.t210.dto.RecordCountResponse;
-import se.ton.t210.dto.ScoreResponse;
-import se.ton.t210.dto.TopMonthlyScoresResponse;
+import se.ton.t210.dto.*;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-import se.ton.t210.dto.UploadScoreRequest;
 
 import static java.util.stream.Collectors.averagingInt;
 import static java.util.stream.Collectors.groupingBy;
@@ -69,7 +56,7 @@ public class EvaluationScoreRecordService {
 
     public RecordCountResponse count(ApplicationType applicationType) {
         final Set<Long> evaluationIds = evaluationItemRepository.findAllByApplicationType(applicationType).stream()
-            .map(it -> it.getId())
+            .map(EvaluationItem::getId)
             .collect(Collectors.toSet());
         final int count = evaluationItemScoreRecordRepository.countByEvaluationItemIdIn(evaluationIds);
         return new RecordCountResponse(applicationType, count);
@@ -84,16 +71,22 @@ public class EvaluationScoreRecordService {
         return new ScoreResponse(avgMonthScore);
     }
 
-    public ScoreResponse uploadScore(UploadScoreRequest request, Long id, LocalDate now) {
-        return null;
+    public ScoreResponse uploadScore(UploadScoreRequest request, Long memberId) {
+        final List<EvaluationItemScoreRecord> records = request.records(memberId);
+        evaluationItemScoreRecordRepository.saveAll(records);
+        final MemberScore memberScore = new MemberScore(memberId, request.scoreSum());
+        memberScoreRepository.save(memberScore);
+        return new ScoreResponse(memberScore.getScore());
     }
 
-    public List<RankResponse> rank(ApplicationType applicationType, int topNumber, LocalDate now) {
-        final Set<Long> memberIds = memberRepository.findAllByApplicationType(applicationType).stream()
-                .map(it -> it.getId())
-                .collect(Collectors.toSet());
-        final List<MemberScore> scores = memberScoreRepository.findAllByMemberIdInAndCreatedAtOrderByScore(memberIds, now);
-        final List<MemberScore> rankScores = scores.subList(Math.max(scores.size() - 3, 0), scores.size());
-
+    public List<RankResponse> rank(ApplicationType applicationType, int topNumber) {
+        final Map<Long, Member> members = memberRepository.findAllByApplicationType(applicationType).stream()
+            .collect(Collectors.toMap(Member::getId, v -> v));
+        final List<MemberScore> scores = memberScoreRepository.findAllByMemberIdInAndCreatedAtOrderByScore(members.keySet(), LocalDate.now());
+        if(members.size() < topNumber || scores.size() < topNumber) {
+            throw new IllegalArgumentException("Need more data for ranking");
+        }
+        final List<MemberScore> rankScores = scores.subList(scores.size()-topNumber, scores.size());
+        return RankResponse.listOf(rankScores, members);
     }
 }

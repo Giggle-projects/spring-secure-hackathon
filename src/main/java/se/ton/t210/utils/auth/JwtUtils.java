@@ -1,13 +1,10 @@
 package se.ton.t210.utils.auth;
 
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import se.ton.t210.exception.AuthException;
 
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.Duration;
 import java.util.Date;
@@ -20,12 +17,12 @@ public class JwtUtils {
         final Date now = new Date();
         final Date expiration = new Date(now.getTime() + Duration.ofSeconds(expireTime).toMillis());
         return Jwts.builder()
-                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setClaims(payloads)
-                .setExpiration(expiration)
-                .setSubject("user-auto")
-                .signWith(key)
-                .compact();
+            .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+            .setClaims(payloads)
+            .setExpiration(expiration)
+            .setSubject("user-auto")
+            .signWith(key)
+            .compact();
     }
 
     public static boolean isExpired(Key key, String token) {
@@ -56,10 +53,10 @@ public class JwtUtils {
     public static Claims tokenClaimsFrom(Key key, String token, boolean ignoreExpired) {
         try {
             return Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
         } catch (ExpiredJwtException e) {
             if (ignoreExpired) {
                 return e.getClaims();

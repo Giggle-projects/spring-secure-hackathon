@@ -3,16 +3,12 @@ package se.ton.t210.service.token;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import se.ton.t210.cache.EmailAuthMailCache;
-import se.ton.t210.cache.EmailAuthMailCacheRepository;
 import se.ton.t210.cache.TokenCache;
 import se.ton.t210.cache.TokenCacheRepository;
 import se.ton.t210.domain.TokenSecret;
 import se.ton.t210.dto.MemberTokens;
 import se.ton.t210.exception.AuthException;
-import se.ton.t210.utils.auth.AuthCodeUtils;
 
-import java.time.LocalTime;
 import java.util.Map;
 
 @Service

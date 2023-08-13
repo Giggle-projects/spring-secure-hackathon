@@ -1,10 +1,10 @@
 package se.ton.t210.domain;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
-import org.springframework.data.jpa.repository.JpaRepository;
-import se.ton.t210.domain.type.ApplicationType;
 
 public interface MemberScoreRepository extends JpaRepository<MemberScore, Long> {
 
