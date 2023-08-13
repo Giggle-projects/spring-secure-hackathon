@@ -41,7 +41,7 @@ public class ScoreController {
     }
 
     @PostMapping("/api/score/me")
-    public ResponseEntity<ScoreResponse> updateScore(List<EvaluationScoreRequest> request) {
+    public ResponseEntity<ScoreResponse> updateScore(@RequestBody List<EvaluationScoreRequest> request) {
         final Member member = new Member(1l, "name", "email", "password", Gender.MALE, ApplicationType.FireOfficerFemale);
         final ScoreResponse scoreResponse = scoreService.update(member.getId(), request, LocalDate.now());
         return ResponseEntity.ok(scoreResponse);
