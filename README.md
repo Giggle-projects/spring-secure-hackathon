@@ -24,6 +24,8 @@ docker-compose -f docker-compose-dev.yaml down
 - [] combine with FE
 - [] block invalid FE request
 - [x] xss filter
+- [] block reusing - password
+- [] response message login with old password
 - [] BE deployment
 - [] FE connection
 - [] FE deployment
