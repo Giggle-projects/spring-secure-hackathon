@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"*"})
+@WebFilter(urlPatterns = {"/api/*"})
 public class AccessLogFilter implements Filter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccessLogFilter.class);

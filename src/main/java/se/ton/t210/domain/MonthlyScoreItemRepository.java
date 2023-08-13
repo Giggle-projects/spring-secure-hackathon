@@ -6,11 +6,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-public interface MonthlyScoreItemRepository extends JpaRepository<MonthlyScoreItem, Long> {
+public interface MonthlyScoreItemRepository extends JpaRepository<MonthlyEvaluationItemScore, Long> {
 
-    List<MonthlyScoreItem> findAllByMemberIdAndYearMonth(Long memberId, LocalDate yearMonth);
+    List<MonthlyEvaluationItemScore> findAllByMemberIdAndYearMonth(Long memberId, LocalDate yearMonth);
 
-    List<MonthlyScoreItem> findAllByEvaluationItemIdAndYearMonth(Long evaluationItemId, LocalDate yearMonth);
+    List<MonthlyEvaluationItemScore> findAllByEvaluationItemIdAndYearMonth(Long evaluationItemId, LocalDate yearMonth);
 
     int countByEvaluationItemIdIn(Set<Long> evaluationIds);
 }

@@ -1,9 +1,6 @@
 package se.ton.t210.dto;
 
 import lombok.Getter;
-import se.ton.t210.domain.MonthlyScoreItem;
-
-import java.util.List;
 
 @Getter
 public class UploadScoreRequest {
@@ -34,16 +31,6 @@ public class UploadScoreRequest {
         this.score4 = score4;
         this.evaluationItemId5 = evaluationItemId5;
         this.score5 = score5;
-    }
-
-    public List<MonthlyScoreItem> records(Long memberId) {
-        return List.of(
-            new MonthlyScoreItem(memberId, evaluationItemId1, score1),
-            new MonthlyScoreItem(memberId, evaluationItemId2, score2),
-            new MonthlyScoreItem(memberId, evaluationItemId3, score3),
-            new MonthlyScoreItem(memberId, evaluationItemId4, score4),
-            new MonthlyScoreItem(memberId, evaluationItemId5, score5)
-        );
     }
 
     public Long scoreSum() {

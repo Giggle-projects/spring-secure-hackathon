@@ -17,8 +17,6 @@ import se.ton.t210.exception.AuthException;
 
 public class TokenFilter extends OncePerRequestFilter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TokenFilter.class);
-
     private final String tokenCookieKey;
     private final TokenSecret secret;
 
@@ -29,7 +27,6 @@ public class TokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        LOGGER.info("RefreshTokenValidationFilter");
         try {
             final String refreshToken = getTokenFromCookies(tokenCookieKey, request.getCookies());
             secret.validateToken(refreshToken);

@@ -20,17 +20,24 @@ public class ScoreController {
         this.scoreService = scoreService;
     }
 
-//    @GetMapping("/api/application/rank")
-//    public ResponseEntity<List<RankResponse>> rank() {
-//        final Member member = new Member(1l, "name", "email", "password", Gender.MALE, ApplicationType.FireOfficerFemale);
-//        final List<RankResponse> rankResponses = scoreService.rank(member.getApplicationType(), 5);
-//        return ResponseEntity.ok(rankResponses);
-//    }
-//
-//    @GetMapping("/api/records/count")
-//    public ResponseEntity<RecordCountResponse> recordCount() {
-//        final Member member = new Member(1l, "name", "email", "password", Gender.MALE, ApplicationType.FireOfficerFemale);
-//        final RecordCountResponse countResponse = scoreService.count(member.getApplicationType());
-//        return ResponseEntity.ok(countResponse);
-//    }
+    @GetMapping("/api/score/count")
+    public ResponseEntity<RecordCountResponse> recordCount() {
+        final Member member = new Member(1l, "name", "email", "password", Gender.MALE, ApplicationType.FireOfficerFemale);
+        final RecordCountResponse countResponse = scoreService.count(member.getApplicationType());
+        return ResponseEntity.ok(countResponse);
+    }
+
+    @GetMapping("/api/score/me")
+    public ResponseEntity<ScoreResponse> myScore() {
+        final Member member = new Member(1l, "name", "email", "password", Gender.MALE, ApplicationType.FireOfficerFemale);
+        final ScoreResponse scoreResponse = scoreService.score(member.getId(), LocalDate.now());
+        return ResponseEntity.ok(scoreResponse);
+    }
+
+    @GetMapping("/api/score/rank")
+    public ResponseEntity<List<RankResponse>> rank(int rankCnt) {
+        final Member member = new Member(1l, "name", "email", "password", Gender.MALE, ApplicationType.FireOfficerFemale);
+        final List<RankResponse> rankResponses = scoreService.rank(member.getApplicationType(), rankCnt, LocalDate.now());
+        return ResponseEntity.ok(rankResponses);
+    }
 }

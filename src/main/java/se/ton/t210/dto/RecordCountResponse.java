@@ -6,11 +6,9 @@ import se.ton.t210.domain.type.ApplicationType;
 @Getter
 public class RecordCountResponse {
 
-    private final ApplicationType applicationType;
     private final int count;
 
-    public RecordCountResponse(ApplicationType applicationType, int count) {
-        this.applicationType = applicationType;
+    public RecordCountResponse(int count) {
         this.count = count;
     }
 }

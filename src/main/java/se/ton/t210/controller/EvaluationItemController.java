@@ -20,9 +20,9 @@ public class EvaluationItemController {
     }
 
     @GetMapping("/api/evaluation/score")
-    public ResponseEntity<TakenScoreResponse> evaluationScore(Long evaluationItemId, int score) {
-        final int evaluationScore = evaluationItemService.calculateEvaluationScore(evaluationItemId, score);
-        return ResponseEntity.ok(TakenScoreResponse.of(evaluationScore));
+    public ResponseEntity<ScoreResponse> evaluationScore(Long evaluationItemId, int memberInputScore) {
+        final int evaluationScore = evaluationItemService.calculateEvaluationScore(evaluationItemId, memberInputScore);
+        return ResponseEntity.ok(new ScoreResponse(evaluationScore));
     }
 
     @GetMapping("/api/evaluation/items")
