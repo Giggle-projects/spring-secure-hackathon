@@ -6,11 +6,15 @@ import se.ton.t210.domain.EvaluationItemRepository;
 import se.ton.t210.domain.EvaluationScoreSection;
 import se.ton.t210.domain.EvaluationScoreSectionRepository;
 import se.ton.t210.domain.type.ApplicationType;
+import se.ton.t210.dto.ApplicationTypeNamesResponse;
 import se.ton.t210.dto.EvaluationItemResponse;
 import se.ton.t210.dto.EvaluationSectionInfo;
-import se.ton.t210.dto.ScoreResponse;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EvaluationItemService {
@@ -32,25 +36,32 @@ public class EvaluationItemService {
         final List<List<EvaluationSectionInfo>> evaluationSectionsInfos = new ArrayList<>();
         final List<EvaluationItem> evaluationItems = evaluationItemRepository.findAllByApplicationType(applicationType);
 
-        for(EvaluationItem evaluationItem : evaluationItems) {
+        for (EvaluationItem evaluationItem : evaluationItems) {
             final List<EvaluationSectionInfo> evaluationSectionInfos = new ArrayList<>();
             final List<EvaluationScoreSection> sections = evaluationScoreSectionRepository.findAllByEvaluationItemId(evaluationItem.getId());
             sections.sort(Comparator.comparingInt(EvaluationScoreSection::getSectionBaseScore));
 
             int prevItemBaseScore = 100;
-            for(EvaluationScoreSection section : sections) {
+            for (EvaluationScoreSection section : sections) {
                 final EvaluationSectionInfo sectionInfo = new EvaluationSectionInfo(
-                    evaluationItem.getId(),
-                    evaluationItem.getName(),
-                    prevItemBaseScore,
-                    section.getSectionBaseScore(),
-                    section.getScore()
+                        evaluationItem.getId(),
+                        evaluationItem.getName(),
+                        prevItemBaseScore,
+                        section.getSectionBaseScore(),
+                        section.getScore()
                 );
                 evaluationSectionInfos.add(sectionInfo);
-                prevItemBaseScore = section.getSectionBaseScore() -1;
+                prevItemBaseScore = section.getSectionBaseScore() - 1;
             }
             evaluationSectionsInfos.add(evaluationSectionInfos);
         }
         return evaluationSectionsInfos;
+    }
+
+    public ApplicationTypeNamesResponse getApplicationTypeNames() {
+        List<String> getApplicationTypeNames = Arrays.stream(ApplicationType.values())
+                .map(ApplicationType::getName)
+                .collect(Collectors.toList());
+        return new ApplicationTypeNamesResponse(getApplicationTypeNames);
     }
 }

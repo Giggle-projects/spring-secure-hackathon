@@ -9,15 +9,15 @@ public enum ApplicationType {
     CorrectionalOfficerFemale("/static/default.jpg", "교정직공무원(여)");
 
     private final String iconImageUrl;
-    private final String standardName;
+    private final String name;
 
-    ApplicationType(String iconImageUrl, String standardName) {
+    ApplicationType(String iconImageUrl, String name) {
         this.iconImageUrl = iconImageUrl;
-        this.standardName = standardName;
+        this.name = name;
     }
 
-    public String standardName() {
-        return standardName;
+    public String getName() {
+        return name;
     }
 
     public String iconImageUrl() {
