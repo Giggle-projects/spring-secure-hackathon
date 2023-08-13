@@ -2,13 +2,13 @@ package se.ton.t210.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.domain.type.Gender;
-import se.ton.t210.dto.ApplicationTypeNamesResponse;
-import se.ton.t210.dto.EvaluationItemResponse;
-import se.ton.t210.dto.EvaluationSectionInfo;
+import se.ton.t210.dto.*;
 import se.ton.t210.service.EvaluationItemService;
 
 import java.util.List;
@@ -23,14 +23,21 @@ public class EvaluationItemController {
     }
 
     @GetMapping("api/applicationType/names")
-    private ResponseEntity<ApplicationTypeNamesResponse> getApplicationTypeNames() {
+    public ResponseEntity<ApplicationTypeNamesResponse> getApplicationTypeNames() {
         ApplicationTypeNamesResponse responses = evaluationItemService.getApplicationTypeNames();
         return ResponseEntity.ok(responses);
     }
 
+    @PostMapping("/api/applicationType/key")
+    public ResponseEntity<GetApplicationTypeKeyResponse> getApplicationTypeKey(@RequestBody GetApplicationTypeKeyRequest request) {
+        final String applicationTypeKey = ApplicationType.getKeyByName(request.getApplicationTypeName());
+        final GetApplicationTypeKeyResponse response = new GetApplicationTypeKeyResponse(applicationTypeKey);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/api/evaluation/items")
     public ResponseEntity<List<EvaluationItemResponse>> items() {
-        final Member member = new Member(1l, "name", "email", "password", Gender.MALE, ApplicationType.PoliceOfficerMale);
+        final Member member = new Member(1L, "name", "email", "password", Gender.MALE, ApplicationType.PoliceOfficerMale);
         final List<EvaluationItemResponse> responses = evaluationItemService.items(member.getApplicationType());
         return ResponseEntity.ok(responses);
     }

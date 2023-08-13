@@ -23,4 +23,13 @@ public enum ApplicationType {
     public String iconImageUrl() {
         return iconImageUrl;
     }
+
+    public static String getKeyByName(String name) {
+        for (ApplicationType ApplicationType : values()) {
+            if (ApplicationType.name.equals(name)) {
+                return ApplicationType.toString();
+            }
+        }
+        return null;
+    }
 }
