@@ -1,8 +1,8 @@
 package se.ton.t210.dto;
 
 import lombok.Getter;
-import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.domain.Member;
+import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.domain.type.Gender;
 
 import javax.validation.constraints.Email;
@@ -26,28 +26,18 @@ public class SignUpRequest {
 
     private ApplicationType applicationType;
 
-    private Boolean isAgreePersonalInfo;
-
     public SignUpRequest() {
     }
 
-    public SignUpRequest(String name, Gender gender, String email, String password,
-                         ApplicationType applicationType, Boolean isAgreePersonalInfo) {
+    public SignUpRequest(String name, Gender gender, String email, String password, ApplicationType applicationType) {
         this.name = name;
         this.gender = gender;
         this.email = email;
         this.password = password;
         this.applicationType = applicationType;
-        this.isAgreePersonalInfo = isAgreePersonalInfo;
     }
 
     public Member toEntity() {
         return new Member(name, email, password, gender, applicationType, LocalDate.now(), LocalDate.now());
-    }
-
-    public void validateSignUpRequest() {
-        if (!isAgreePersonalInfo) {
-            throw new IllegalArgumentException("Must agree personal Info");
-        }
     }
 }
