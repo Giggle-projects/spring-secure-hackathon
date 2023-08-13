@@ -11,7 +11,6 @@ import se.ton.t210.service.MemberService;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-@RequestMapping("/api/auth")
 @RestController
 public class MemberController {
 
@@ -21,7 +20,7 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @PostMapping("/signUp")
+    @PostMapping("/api/member/signUp")
     public ResponseEntity<Void> signUp(@RequestBody @Valid SignUpRequest request,
                                        @CookieValue String emailAuthToken,
                                        HttpServletResponse response) {
@@ -30,14 +29,14 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/signIn")
+    @PostMapping("/api/member/signIn")
     public ResponseEntity<Void> signIn(@RequestBody @Valid SignInRequest request,
                                        HttpServletResponse response) {
         memberService.signIn(request, response);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/reissue/token")
+    @GetMapping("/api/reissue/token")
     public ResponseEntity<Void> reissueToken(@CookieValue String accessToken,
                                              @CookieValue String refreshToken,
                                              HttpServletResponse response) {
@@ -45,13 +44,13 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/send/mail")
+    @PostMapping("/api/send/mail")
     public ResponseEntity<Void> sendEmailAuthMail(@RequestBody EmailRequest request) {
         memberService.sendEmailAuthMail(request.getEmail());
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/check/authCode")
+    @PostMapping("/api/valid/authCode")
     public ResponseEntity<Void> validateAuthCode(@RequestBody ValidateAuthCodeRequest request,
                                                  HttpServletResponse response) {
         memberService.validateEmailAuthCode(request.getEmail(), request.getAuthCode());
@@ -59,16 +58,16 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/reissue/pwd")
+    @PostMapping("/api/reissue/pwd")
     public ResponseEntity<Void> reissuePwd(@RequestBody ReissuePwdRequest request) {
         String email = "devygwan@gmail.com"; //임시
         memberService.reissuePwd(email, request.getPassword());
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/count")
+    @GetMapping("/api/applicant/count")
     public ResponseEntity<ApplicantCountResponse> applicantCount() {
-        final Member member = new Member(1l, "name", "email", "password", Gender.MALE, ApplicationType.PoliceOfficerMale);
+        final Member member = new Member(1L, "name", "email", "password", Gender.MALE, ApplicationType.PoliceOfficerMale);
         final ApplicantCountResponse applicantCountResponse = memberService.countApplicant(member.getApplicationType());
         return ResponseEntity.ok(applicantCountResponse);
     }
