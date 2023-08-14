@@ -1,5 +1,10 @@
 package se.ton.t210.configuration.http;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import javax.servlet.ReadListener;
+import javax.servlet.ServletInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +28,26 @@ public class XssCleanHttpRequestWrapper extends HttpServletRequestWrapper {
         "script", ""
     );
 
+    private byte[] body;
+
     public XssCleanHttpRequestWrapper(HttpServletRequest request) {
         super(request);
+        try {
+            InputStream is = request.getInputStream();
+            if (is != null) {
+                StringBuilder sb = new StringBuilder();
+                while(true) {
+                    int data = is.read();
+                    if (data < 0) {
+                        break;
+                    }
+                    sb.append((char) data);
+                }
+                body = cleanXSS(sb.toString()).getBytes(StandardCharsets.ISO_8859_1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String getParameter(String parameterKey) {
@@ -43,6 +66,33 @@ public class XssCleanHttpRequestWrapper extends HttpServletRequestWrapper {
 
     public String getHeader(String name) {
         return cleanXSS(super.getHeader(name));
+    }
+
+    @Override
+    public ServletInputStream getInputStream() {
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(this.body);
+        return new ServletInputStream() {
+
+            @Override
+            public boolean isFinished() {
+                return byteArrayInputStream.available() == 0;
+            }
+
+            @Override
+            public boolean isReady() {
+                return true;
+            }
+
+            @Override
+            public void setReadListener(ReadListener readListener) {
+
+            }
+
+            @Override
+            public int read() {
+                return byteArrayInputStream.read();
+            }
+        };
     }
 
     private static String cleanXSS(String value) {
