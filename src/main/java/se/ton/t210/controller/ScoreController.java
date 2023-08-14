@@ -28,7 +28,7 @@ public class ScoreController {
     }
 
     @GetMapping("/api/score")
-    public ResponseEntity<ScoreResponse> evaluationScore(Long evaluationItemId, int score) {
+    public ResponseEntity<ScoreResponse> evaluationScore(Long evaluationItemId, Integer score) {
         final int evaluationScore = scoreService.evaluationScore(evaluationItemId, score);
         return ResponseEntity.ok(new ScoreResponse(evaluationScore));
     }
@@ -48,7 +48,7 @@ public class ScoreController {
     }
 
     @GetMapping("/api/score/rank")
-    public ResponseEntity<List<RankResponse>> rank(int rankCnt) {
+    public ResponseEntity<List<RankResponse>> rank(Integer rankCnt) {
         final Member member = new Member(1l, "name", "email", "password", Gender.MALE, ApplicationType.FireOfficerFemale);
         final List<RankResponse> rankResponses = scoreService.rank(member.getApplicationType(), rankCnt, LocalDate.now());
         return ResponseEntity.ok(rankResponses);
