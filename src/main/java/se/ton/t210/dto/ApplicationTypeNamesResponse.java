@@ -7,7 +7,7 @@ import java.util.List;
 @Getter
 public class ApplicationTypeNamesResponse {
 
-    List<String> applicationTypeNames;
+    private final List<String> applicationTypeNames;
 
     public ApplicationTypeNamesResponse(List<String> applicationTypeNames) {
         this.applicationTypeNames = applicationTypeNames;

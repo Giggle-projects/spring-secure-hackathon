@@ -4,7 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.type.ApplicationType;
-import se.ton.t210.domain.type.Gender;
 import se.ton.t210.dto.*;
 import se.ton.t210.service.MemberService;
 
@@ -24,6 +23,7 @@ public class MemberController {
     public ResponseEntity<Void> signUp(@RequestBody @Valid SignUpRequest request,
                                        @CookieValue String emailAuthToken,
                                        HttpServletResponse response) {
+        System.out.println(emailAuthToken);
         memberService.signUp(request, emailAuthToken, response);
         return ResponseEntity.ok().build();
     }
@@ -66,14 +66,14 @@ public class MemberController {
 
     @GetMapping("/api/applicant/count")
     public ResponseEntity<ApplicantCountResponse> applicantCount() {
-        final Member member = new Member(1L, "name", "email", "password", Gender.MALE, ApplicationType.PoliceOfficerMale);
+        final Member member = new Member(1L, "name", "email", "password", ApplicationType.PoliceOfficerMale);
         final ApplicantCountResponse applicantCountResponse = memberService.countApplicant(member.getApplicationType());
         return ResponseEntity.ok(applicantCountResponse);
     }
 
     @GetMapping("/api/member/me")
     public ResponseEntity<MemberResponse> me() {
-        final Member member = new Member(1L, "name", "email", "password", Gender.MALE, ApplicationType.PoliceOfficerMale);
+        final Member member = new Member(1L, "name", "email", "password", ApplicationType.PoliceOfficerMale);
         final MemberResponse response = MemberResponse.of(member);
         return ResponseEntity.ok(response);
     }

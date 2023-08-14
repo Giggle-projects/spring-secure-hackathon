@@ -116,6 +116,7 @@ public class MemberService {
 
     public void issueEmailToken(String email, HttpServletResponse response) {
         final String emailAuthToken = tokenService.issueMailToken(email);
+        System.out.println(emailAuthToken);
         CookieUtils.loadHttpOnlyCookie(response, emailAuthTokenCookieKey, emailAuthToken);
     }
 

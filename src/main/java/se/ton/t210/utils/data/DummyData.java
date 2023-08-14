@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import se.ton.t210.domain.*;
 import se.ton.t210.domain.type.ApplicationType;
-import se.ton.t210.domain.type.Gender;
 import se.ton.t210.service.EvaluationItemService;
 import se.ton.t210.service.ScoreService;
 
@@ -58,13 +57,12 @@ class DummyData {
         for (var at : ApplicationType.values()) {
             for (int i = 0; i < number; i++) {
                 members.add(
-                    new Member(
-                        RandomStringUtils.randomAlphabetic(3),
-                        RandomStringUtils.randomAlphabetic(10) + "@gmail.com",
-                        "12345",
-                        Gender.MALE,
-                        at
-                    )
+                        new Member(
+                                RandomStringUtils.randomAlphabetic(3),
+                                RandomStringUtils.randomAlphabetic(10) + "@gmail.com",
+                                "12345",
+                                at
+                        )
                 );
             }
         }
@@ -83,25 +81,25 @@ class DummyData {
     @Transactional
     public List<EvaluationItem> createDummyEvaluationItem(ApplicationType applicationType) {
         final List<EvaluationItem> evaluationItems = List.of(
-            new EvaluationItem(applicationType, "A"),
-            new EvaluationItem(applicationType, "B"),
-            new EvaluationItem(applicationType, "C"),
-            new EvaluationItem(applicationType, "D"),
-            new EvaluationItem(applicationType, "E")
+                new EvaluationItem(applicationType, "A"),
+                new EvaluationItem(applicationType, "B"),
+                new EvaluationItem(applicationType, "C"),
+                new EvaluationItem(applicationType, "D"),
+                new EvaluationItem(applicationType, "E")
         );
         evaluationItemRepository.saveAll(evaluationItems);
         for (EvaluationItem item : evaluationItems) {
             evaluationScoreSectionRepository.saveAll(List.of(
-                new EvaluationScoreSection(item.getId(), 0, 1),
-                new EvaluationScoreSection(item.getId(), 40, 2),
-                new EvaluationScoreSection(item.getId(), 43, 3),
-                new EvaluationScoreSection(item.getId(), 46, 4),
-                new EvaluationScoreSection(item.getId(), 49, 5),
-                new EvaluationScoreSection(item.getId(), 52, 6),
-                new EvaluationScoreSection(item.getId(), 55, 7),
-                new EvaluationScoreSection(item.getId(), 61, 8),
-                new EvaluationScoreSection(item.getId(), 64, 9),
-                new EvaluationScoreSection(item.getId(), 68, 10)
+                    new EvaluationScoreSection(item.getId(), 0, 1),
+                    new EvaluationScoreSection(item.getId(), 40, 2),
+                    new EvaluationScoreSection(item.getId(), 43, 3),
+                    new EvaluationScoreSection(item.getId(), 46, 4),
+                    new EvaluationScoreSection(item.getId(), 49, 5),
+                    new EvaluationScoreSection(item.getId(), 52, 6),
+                    new EvaluationScoreSection(item.getId(), 55, 7),
+                    new EvaluationScoreSection(item.getId(), 61, 8),
+                    new EvaluationScoreSection(item.getId(), 64, 9),
+                    new EvaluationScoreSection(item.getId(), 68, 10)
             ));
         }
         return evaluationItems;

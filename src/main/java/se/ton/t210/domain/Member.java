@@ -2,7 +2,6 @@ package se.ton.t210.domain;
 
 import lombok.Getter;
 import se.ton.t210.domain.type.ApplicationType;
-import se.ton.t210.domain.type.Gender;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -29,10 +28,6 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    private Gender gender;
-
-    @Enumerated(EnumType.STRING)
-    @NotNull
     private ApplicationType applicationType;
 
     @NotNull
@@ -44,29 +39,28 @@ public class Member {
     public Member() {
     }
 
-    public Member(Long id, String name, String email, String password, Gender gender,
+    public Member(Long id, String name, String email, String password,
                   ApplicationType applicationType, LocalDate createdAt, LocalDate updatedAt) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
-        this.gender = gender;
         this.applicationType = applicationType;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public Member(String name, String email, String password, Gender gender,
+    public Member(String name, String email, String password,
                   ApplicationType applicationType, LocalDate createdAt, LocalDate updatedAt) {
-        this(null, name, email, password, gender, applicationType, createdAt, updatedAt);
+        this(null, name, email, password, applicationType, createdAt, updatedAt);
     }
 
-    public Member(String name, String email, String password, Gender gender, ApplicationType applicationType) {
-        this(null, name, email, password, gender, applicationType, LocalDate.now(), LocalDate.now());
+    public Member(String name, String email, String password, ApplicationType applicationType) {
+        this(null, name, email, password, applicationType, LocalDate.now(), LocalDate.now());
     }
 
-    public Member(Long id, String name, String email, String password, Gender gender, ApplicationType applicationType) {
-        this(id, name, email, password, gender, applicationType, LocalDate.now(), LocalDate.now());
+    public Member(Long id, String name, String email, String password, ApplicationType applicationType) {
+        this(id, name, email, password, applicationType, LocalDate.now(), LocalDate.now());
     }
 
     public void reissuePwd(String newPwd) {
