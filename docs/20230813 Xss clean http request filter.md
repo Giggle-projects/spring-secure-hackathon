@@ -26,3 +26,21 @@ Naver에서 만든 이런 상황을 대비한 Xss filter 라이브러리가 있�
 이번의 경우에는 h2의 인증에서 이 필터가 추가되니 문제가 있었다.    
 
 특수문자를 어떻게 처리할지가 명확한 api, Xss 공격과 프론트 노출 시 문제가 될 api 만 특정하여 적용한다. 
+
+### Sample
+
+1. 사용자 이름으로 스크립트를 숨겨 서버에 요청했다.
+<img width="987" alt="Screenshot 2023-08-14 at 5 48 16 PM" src="https://github.com/Giggle-projects/spring-secure-hackathon/assets/46060746/162fcc10-a61a-40da-9634-42fca4d647df">
+
+<br/>
+
+
+2. 필터가 없는 서버는 이를 그대로 DB에 저장하고 반환한다. 페이지에 직접 노출되었다.
+<img width="1294" alt="Screenshot 2023-08-14 at 5 44 42 PM" src="https://github.com/Giggle-projects/spring-secure-hackathon/assets/46060746/9fb3f8dc-83fb-473e-97ef-3444ed26e5dc">
+
+
+<br/>
+
+3. 필터를 적용 후 공격 스크립트를 숨길 수 있는 문자들을 치환하여 서버는 요청을 다루게 된다.
+<img width="1352" alt="Screenshot 2023-08-14 at 6 37 17 PM" src="https://github.com/Giggle-projects/spring-secure-hackathon/assets/46060746/19d48275-2e9e-4ad8-97d4-4ca342694118">
+
