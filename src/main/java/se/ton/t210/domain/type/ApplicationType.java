@@ -9,15 +9,15 @@ public enum ApplicationType {
     CorrectionalOfficerFemale("/static/default.jpg", "교정직공무원(여)");
 
     private final String iconImageUrl;
-    private final String name;
+    private final String standardName;
 
-    ApplicationType(String iconImageUrl, String name) {
+    ApplicationType(String iconImageUrl, String standardName) {
         this.iconImageUrl = iconImageUrl;
-        this.name = name;
+        this.standardName = standardName;
     }
 
-    public String getName() {
-        return name;
+    public String getStandardName() {
+        return standardName;
     }
 
     public String iconImageUrl() {
@@ -26,7 +26,7 @@ public enum ApplicationType {
 
     public static String getKeyByName(String name) {
         for (ApplicationType ApplicationType : values()) {
-            if (ApplicationType.name.equals(name)) {
+            if (ApplicationType.standardName.equals(name)) {
                 return ApplicationType.toString();
             }
         }

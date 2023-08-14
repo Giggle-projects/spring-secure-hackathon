@@ -6,15 +6,13 @@ import se.ton.t210.domain.EvaluationItemRepository;
 import se.ton.t210.domain.EvaluationScoreSection;
 import se.ton.t210.domain.EvaluationScoreSectionRepository;
 import se.ton.t210.domain.type.ApplicationType;
-import se.ton.t210.dto.ApplicationTypeNamesResponse;
+import se.ton.t210.dto.ApplicationTypeInfoResponse;
 import se.ton.t210.dto.EvaluationItemResponse;
 import se.ton.t210.dto.EvaluationSectionInfo;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class EvaluationItemService {
@@ -56,12 +54,5 @@ public class EvaluationItemService {
             evaluationSectionsInfos.add(evaluationSectionInfos);
         }
         return evaluationSectionsInfos;
-    }
-
-    public ApplicationTypeNamesResponse getApplicationTypeNames() {
-        final List<String> getApplicationTypeNames = Arrays.stream(ApplicationType.values())
-                .map(ApplicationType::getName)
-                .collect(Collectors.toList());
-        return new ApplicationTypeNamesResponse(getApplicationTypeNames);
     }
 }

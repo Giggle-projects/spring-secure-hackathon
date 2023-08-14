@@ -5,10 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.type.ApplicationType;
-import se.ton.t210.dto.ApplicationTypeNamesResponse;
+import se.ton.t210.dto.ApplicationTypeInfoResponse;
 import se.ton.t210.dto.EvaluationItemResponse;
 import se.ton.t210.dto.EvaluationSectionInfo;
-import se.ton.t210.dto.GetApplicationTypeKeyResponse;
 import se.ton.t210.service.EvaluationItemService;
 
 import java.util.List;
@@ -22,17 +21,9 @@ public class EvaluationItemController {
         this.evaluationItemService = evaluationItemService;
     }
 
-    @GetMapping("api/applicationType/names")
-    public ResponseEntity<ApplicationTypeNamesResponse> getApplicationTypeNames() {
-        ApplicationTypeNamesResponse responses = evaluationItemService.getApplicationTypeNames();
-        return ResponseEntity.ok(responses);
-    }
-
-    @GetMapping("/api/applicationType/key")
-    public ResponseEntity<GetApplicationTypeKeyResponse> getApplicationTypeKey(String applicationTypeName) {
-        final String applicationTypeKey = ApplicationType.getKeyByName(applicationTypeName);
-        final GetApplicationTypeKeyResponse response = new GetApplicationTypeKeyResponse(applicationTypeKey);
-        return ResponseEntity.ok(response);
+    @GetMapping("/api/applicationType")
+    public ResponseEntity<List<ApplicationTypeInfoResponse>> getApplicationType() {
+        return ResponseEntity.ok(ApplicationTypeInfoResponse.listOf());
     }
 
     @GetMapping("/api/evaluation/items")
