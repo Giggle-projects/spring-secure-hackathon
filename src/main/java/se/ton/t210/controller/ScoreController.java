@@ -1,6 +1,7 @@
 package se.ton.t210.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.type.ApplicationType;
@@ -8,9 +9,12 @@ import se.ton.t210.domain.type.Gender;
 import se.ton.t210.dto.*;
 import se.ton.t210.service.ScoreService;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
+@Validated
 @RestController
 public class ScoreController {
 
@@ -28,7 +32,8 @@ public class ScoreController {
     }
 
     @GetMapping("/api/score")
-    public ResponseEntity<ScoreResponse> evaluationScore(Long evaluationItemId, Integer score) {
+    public ResponseEntity<ScoreResponse> evaluationScore(@Valid @NotNull Long evaluationItemId,
+                                                         @Valid @NotNull Integer score) {
         final int evaluationScore = scoreService.evaluationScore(evaluationItemId, score);
         return ResponseEntity.ok(new ScoreResponse(evaluationScore));
     }
@@ -48,7 +53,7 @@ public class ScoreController {
     }
 
     @GetMapping("/api/score/rank")
-    public ResponseEntity<List<RankResponse>> rank(Integer rankCnt) {
+    public ResponseEntity<List<RankResponse>> rank(@Valid @NotNull Integer rankCnt) {
         final Member member = new Member(1l, "name", "email", "password", Gender.MALE, ApplicationType.FireOfficerFemale);
         final List<RankResponse> rankResponses = scoreService.rank(member.getApplicationType(), rankCnt, LocalDate.now());
         return ResponseEntity.ok(rankResponses);

@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import se.ton.t210.exception.AuthException;
 
+import javax.validation.ConstraintViolationException;
+
 
 @ControllerAdvice
 public class GlobalControllerAdvice {
@@ -21,6 +23,11 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handledException(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<String> invalidInputPrams() {
+        return ResponseEntity.badRequest().body("Invalid input request");
     }
 
     @ExceptionHandler(Exception.class)
