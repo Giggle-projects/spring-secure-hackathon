@@ -7,7 +7,6 @@ import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.*;
 import se.ton.t210.service.MemberService;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -56,12 +55,6 @@ public class MemberController {
                                                  HttpServletResponse response) {
         memberService.validateEmailAuthCode(request.getEmail(), request.getAuthCode());
         memberService.issueEmailToken(request.getEmail(), response);
-        response.addCookie(new Cookie("hiih", "hiih"));
-        String emailAuthToken = response.getHeader("emailAuthToken");
-        System.out.println(emailAuthToken);
-
-        response.getHeaderNames().stream()
-                .forEach(it -> System.out.println(it));
         return ResponseEntity.ok().build();
     }
 

@@ -235,7 +235,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     const data = await response.text();
                     throw new Error(data || "회원가입 실패");
                 }
+
+                // 이메일 정보 리셋 후 dashboard로 이동
                 eraseCookie("userEmail");
+                window.location.href = "../html/dashboard.html";
                 alert("회원가입을 성공했습니다.");
             } catch (error) {
                 alert(error.message);
