@@ -38,10 +38,10 @@ public class ScoreController {
         return ResponseEntity.ok(new ScoreResponse(evaluationScore));
     }
 
-    @GetMapping("/api/score/me")
-    public ResponseEntity<ScoreResponse> myScore() {
+    @GetMapping("/api/score/expect")
+    public ResponseEntity<ExpectScoreResponse> expect() {
         final Member member = new Member(1l, "name", "email", "password", Gender.MALE, ApplicationType.FireOfficerFemale);
-        final ScoreResponse scoreResponse = scoreService.score(member.getId(), LocalDate.now());
+        final ExpectScoreResponse scoreResponse = scoreService.score(member.getId(), LocalDate.now());
         return ResponseEntity.ok(scoreResponse);
     }
 
