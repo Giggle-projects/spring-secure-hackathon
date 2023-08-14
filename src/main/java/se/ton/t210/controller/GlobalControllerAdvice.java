@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import se.ton.t210.exception.AuthException;
 
 import javax.validation.ConstraintViolationException;
@@ -20,14 +21,14 @@ public class GlobalControllerAdvice {
         return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }
 
+    @ExceptionHandler({ConstraintViolationException.class, MethodArgumentTypeMismatchException.class})
+    public ResponseEntity<String> invalidInputPrams() {
+        return ResponseEntity.badRequest().body("Invalid input request");
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handledException(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<String> invalidInputPrams() {
-        return ResponseEntity.badRequest().body("Invalid input request");
     }
 
     @ExceptionHandler(Exception.class)
