@@ -308,3 +308,12 @@
   color: var(--coolgray-90);
   font-family: var(--body-xs);
 }
+
+.error-message{
+  color: red;
+  /*font-size: 12px;*/
+}
+
+.swal2-title {
+  color: red;
+}
