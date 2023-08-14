@@ -6,3 +6,7 @@ Https 통신 키를 탈취당하거나 개발자의 부주의로 Http로 통신�
 서버 쪽에서 쿠키를 발급할 때 Http secure 태그를 함께 하는 것으로 브라우저가 HTTPS 통신 외에서는 쿠키를 전송하지 않도록 하였다.   
 
 `https://nsinc.tistory.com/121`
+
+```
+server.session.cookie.secure=true
+```
