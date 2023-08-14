@@ -1,5 +1,3 @@
-var validDomains = ['naver.com', 'google.com', 'daum.net'];
-
 const emailInput = document.getElementById("email"); // 변경된 이메일 입력 요소 가져오기
 const passwordInput = document.getElementById("password1");
 const passwordInput2 = document.getElementById("password2");
@@ -14,7 +12,6 @@ const check_box = document.querySelector(".check-box");
 const dropdown = document.querySelector(".dropdown");
 const dropdownText = dropdown.querySelector(".text704");
 const dropdownContent = dropdown.querySelector(".dropdown-content");
-const dropdownKey = document.getElementById("applicationTypeDropDownKey");
 
 let mail_result = 0
 
@@ -69,10 +66,6 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             if (!regex.test(emailFront)) {
                 errorMessage = "올바른 이메일 앞 부분을 입력하세요.";
-            } else if (!validDomains.includes(emailAfterAt)) {
-                errorMessage = "올바른 도메인 주소를 입력하세요.";
-            } else if (!validDomains.includes(emailAfterAt)) {
-                errorMessage = "지원하지 않는 도메인 주소입니다.";
             }
         }
         if (errorMessage) {
@@ -238,11 +231,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     },
                     body: JSON.stringify(userData),
                 });
-
                 if (!response.ok) {
                     const data = await response.text();
                     throw new Error(data || "회원가입 실패");
                 }
+                eraseCookie("userEmail");
                 alert("회원가입을 성공했습니다.");
             } catch (error) {
                 alert(error.message);
@@ -252,6 +245,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+function eraseCookie(name) {
+    document.cookie = name + '=; Max-Age=0'
+}
 
 check_box.addEventListener("click", function () {
     check_box.classList.toggle("selected_box");

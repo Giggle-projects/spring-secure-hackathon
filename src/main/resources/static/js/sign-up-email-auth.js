@@ -26,18 +26,6 @@ function getCookie(name) {
     }
 }
 
-//쿠키 값 가져오는 함수
-function getCookieValue(cookieName) {
-    const cookies = document.cookie.split('; ');
-    for (const cookie of cookies) {
-        const [name, value] = cookie.split('=');
-        if (name === cookieName) {
-            return value;
-        }
-    }
-    return null;
-}
-
 document.addEventListener("DOMContentLoaded", function () {
     let timerInterval;
     const timerDuration = 180; // 3 minutes in seconds
@@ -99,11 +87,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (!response.ok) {
                     throw new Error("인증에 실패했습니다. 다시 시도해주시기 바랍니다.");
                 }
-
-                //인증 번호 맞음
-
-                // let emailAuthToken = response.getC.get("Set-Cookie");
-                // alert(emailAuthToken)
 
                 authNumberResult.textContent = "인증이 완료되었습니다.";
                 alert(authNumberResult.textContent);

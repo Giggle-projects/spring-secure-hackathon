@@ -1,7 +1,3 @@
-
-
-
-
 document.addEventListener("DOMContentLoaded", function () {
   // Dropdown functionality
   var dropdown = document.querySelector(".dropdown");
