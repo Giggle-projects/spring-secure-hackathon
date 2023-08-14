@@ -7,10 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import se.ton.t210.domain.*;
 import se.ton.t210.domain.type.ApplicationType;
-import se.ton.t210.dto.EvaluationScoreRequest;
-import se.ton.t210.dto.RankResponse;
-import se.ton.t210.dto.RecordCountResponse;
-import se.ton.t210.dto.ScoreResponse;
+import se.ton.t210.dto.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,10 +37,11 @@ public class ScoreService {
         return new RecordCountResponse(recordCnt);
     }
 
-    public ScoreResponse score(Long memberId, LocalDate date) {
-        final MonthlyScore monthlyScore = monthlyScoreRepository.findByMemberIdAndYearMonth(memberId, date)
-            .orElseThrow();
-        return new ScoreResponse(monthlyScore.getScore());
+    public ExpectScoreResponse score(Long memberId, LocalDate date) {
+        final MonthlyScore monthlyScore = monthlyScoreRepository.findByMemberIdAndYearMonth(memberId, date).orElseThrow();
+        final int expectedScore = 0; // TODO :: expectedScore
+        final int expectedGrade = 0; // TODO :: expectedScore
+        return new ExpectScoreResponse(monthlyScore.getScore(), expectedScore, expectedGrade);
     }
 
     @Transactional
