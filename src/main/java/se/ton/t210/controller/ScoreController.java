@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.type.ApplicationType;
-import se.ton.t210.dto.EvaluationScoreRequest;
-import se.ton.t210.dto.RankResponse;
-import se.ton.t210.dto.RecordCountResponse;
-import se.ton.t210.dto.ScoreResponse;
+import se.ton.t210.dto.*;
 import se.ton.t210.service.ScoreService;
 
 import javax.validation.Valid;
@@ -43,13 +40,9 @@ public class ScoreController {
         return ResponseEntity.ok(new ScoreResponse(evaluationScore));
     }
 
-    @GetMapping("/api/score/me")
-    public ResponseEntity<ScoreResponse> myScore() {
-        final Member member = new Member(1l, "name", "email", "password", ApplicationType.FireOfficerFemale);
-        final ScoreResponse scoreResponse = scoreService.score(member.getId(), LocalDate.now());
     @GetMapping("/api/score/expect")
     public ResponseEntity<ExpectScoreResponse> expect() {
-        final Member member = new Member(1l, "name", "email", "password", Gender.MALE, ApplicationType.FireOfficerFemale);
+        final Member member = new Member(1l, "name", "email", "password", ApplicationType.FireOfficerFemale);
         final ExpectScoreResponse scoreResponse = scoreService.score(member.getId(), LocalDate.now());
         return ResponseEntity.ok(scoreResponse);
     }

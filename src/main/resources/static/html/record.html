@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/record.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+    />
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  </head>
+  <body>
+    <div class="record">
+      <div class="frame1384">
+        <div class="frame1385">
+          <div class="frame1386">
+            <div class="frame1387">
+              <b class="text742">CSPFT</b>
+            </div>
+          </div>
+        </div>
+        <form class="frame1389">
+          <div class="menu-019" id="menu01Container">
+            <img class="frame-icon89" alt="" src="../files/555-frame.svg" />
+
+            <div class="text743">대시보드</div>
+          </div>
+          <button class="menu-029" id="menu02">
+            <img class="frame-icon89" alt="" src="../files/559-frame.svg" />
+
+            <div class="text744">측정기록</div>
+          </button>
+          <div class="menu-019" id="menu03Container">
+            <img class="frame-icon89" alt="" src="../files/748-frame.svg" />
+
+            <div class="text743">개인정보</div>
+          </div>
+          <div class="menu-019" id="menu04Container">
+            <img class="frame-icon89" alt="" src="../files/755-frame.svg" />
+
+            <div class="text743">직렬정보</div>
+          </div>
+          <div class="setting9" id="settingContainer">
+            <img class="frame-icon89" alt="" src="../files/735-frame.svg" />
+
+            <div class="text743">환경설정</div>
+          </div>
+        </form>
+      </div>
+      <div class="frame1390">
+        <b class="text747">측정기록</b>
+        <div class="frame1391">
+          <div class="frame1392">
+            <div class="frame1393">
+              <b class="text742">점수 통계</b>
+            </div>
+
+            
+            <div class="frame1397">
+              <canvas id="myChart"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="frame1424">
+          <div class="frame1425">
+            <b class="text769" id ="applicationType">경찰간부시험 (남)</b>
+            <div class="frame1426">
+              <div class="frame1427">
+                <b class="text770">시험 종목</b>
+                <b class="text770">측정 결과</b>
+                <b class="text770">환산 점수</b>
+              </div>
+              <div class="frame1428">
+                <div style="display: none" id="item-1-id"></div>
+                <div class="item-01" id="item-1-name">약력 (kg)</div>
+                <div class="frame14281">
+                  <div class="input-01">
+                      <input type="text" id="item-1-score" placeholder="데이터 입력"/>
+                  </div>
+                  <p class="error-message" id="item-1-error"></p>
+                </div>
+                <div class="input-01">
+                  <div class="text773" id="item-1-evaluation-score">점</div>
+                </div>
+              </div>
+              <div class="frame1428">
+                <div style="display: none" id="item-2-id"></div>
+                <div class="item-01" id="item-2-name">약력 (kg)</div>
+                <div class="frame14281">
+                  <div class="input-01">
+                    <input type="text" id="item-2-score" placeholder="데이터 입력" />
+                  </div>
+                  <p class="error-message" id="item-2-error"></p>
+                </div>
+                <div class="input-01">
+                  <div class="text773" id="item-2-evaluation-score">점</div>
+                </div>
+              </div>
+              <div class="frame1428">
+                <div style="display: none" id="item-3-id"></div>
+                <div class="item-01" id="item-3-name">약력 (kg)</div>
+                <div class="frame14281">
+                  <div class="input-01">
+                    <input type="text" id="item-3-score" placeholder="데이터 입력" />
+                  </div>
+                  <p class="error-message" id="item-3-error"></p>
+                </div>
+                <div class="input-01">
+                  <div class="text773" id="item-3-evaluation-score">점</div>
+                </div>
+              </div>
+              <div class="frame1428">
+                <div style="display: none" id="item-4-id"></div>
+                <div class="item-01" id="item-4-name">약력 (kg)</div>
+                <div class="frame14281">
+                  <div class="input-01">
+                    <input type="text" id="item-4-score" placeholder="데이터 입력" />
+                  </div>
+                  <p class="error-message" id="item-4-error"></p>
+                </div>
+                <div class="input-01">
+                  <div class="text773" id="item-4-evaluation-score">점</div>
+                </div>
+              </div>
+              <div class="frame1428">
+                <div style="display: none" id="item-5-id"></div>
+                <div class="item-01" id="item-5-name">약력 (kg)</div>
+                <div class="frame14281">
+                  <div class="input-01">
+                    <input type="text" id="item-5-score" placeholder="데이터 입력" />
+                  </div>
+                  <p class="error-message" id="item-5-error"></p>
+                </div>
+                <div class="input-01">
+                  <div class="text773" id="item-5-evaluation-score">점</div>
+                </div>
+              </div>
+              <div class="frame1433">
+                <div class="container">
+                  <div class="checkbox-container">
+                    <input type="checkbox" class="frame1434" id="agreeCheckbox"></input>
+                  </div>
+                  <div class="text749">
+                    본인의 점수를 거짓 없이 입력했음을 맹세합니다.
+                  </div>
+                </div>
+              </div>
+              <div class="frame1436">
+                <button class="text784" id="saveButton">저장하기</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="frame1392">
+            <b class="text742">측정 결과</b>
+            <div class="frame14401">
+              <div class="frame1440">
+                <div class="frame1441">
+                  <div id="gauge-container"></div>
+                </div>
+              </div>
+              <div class="frame14403">
+                <div class="frame14402">
+                  <div class="frame1442">
+                    <b class="text742">나의 점수</b>
+                  </div>
+                  <div class="text742" id="currentScore">현재 내 점수는 37점입니다.</div>
+                  <div class="frame1443">
+                    <div class="text742" id="expectedScore">예상 통과 점수는 42점입니다.</div>
+                  </div>
+                  <b class="text742" id="expectedGrade">합격 보류가 예상입니다.</b>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="../js/record.js" type="module"></script>
+  </body>
+</html>

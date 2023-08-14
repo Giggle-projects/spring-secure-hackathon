@@ -10,6 +10,7 @@ import se.ton.t210.service.MemberService;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 
 @RestController
 public class MemberController {
@@ -45,7 +46,7 @@ public class MemberController {
     }
 
     @GetMapping("/api/send/mail")
-    public ResponseEntity<Void> sendEmailAuthMail(String email) {
+    public ResponseEntity<Void> sendEmailAuthMail(@Valid @Email String email) {
         memberService.sendEmailAuthMail(email);
         return ResponseEntity.ok().build();
     }
