@@ -100,6 +100,7 @@ function saveData() {
         .then(result => {
             if (result.prediction === 1) {
                 sAlert("데이터가 저장되었습니다.\n결과: 합격");
+                reload()
             } else {
                 sAlert("데이터가 저장되었습니다.\n결과: 불합격");
             }
@@ -123,105 +124,111 @@ async function fetchMyInfo() {
         throw new Error('Error fetching.');
     }
 
-    let responseMemberInfoValue = await responseMemberInfo.json();
-    let responseScoreInfoValue = await responseScoreInfo.json();
+    const responseMemberInfoValue = await responseMemberInfo.json();
+    const responseScoreInfoValue = await responseScoreInfo.json();
 
     const applicationType = document.getElementById('applicationType');
     const currentScore = document.getElementById('currentScore');
-    const expectedScore = document.getElementById('expectedScore');
+    const expectedPassPercent = document.getElementById('expectedPassPercent');
     const expectedGrade = document.getElementById('expectedGrade');
 
     applicationType.innerText = responseMemberInfoValue.applicationTypeName
-    currentScore.innerText = responseScoreInfoValue.currentScore
-    expectedScore.innerText = responseScoreInfoValue.expectedScore
+    currentScore.innerText = "현재 점수 : " + responseScoreInfoValue.currentScore + "점"
+    expectedPassPercent.innerText = "합격 예상 :" + responseScoreInfoValue.expectedPassPercent + "%"
 
-    if(responseScoreInfoValue.expectedGrade >= 80) {
-        expectedGrade.innerText = "합격이 예상됩니다."
+    if(responseScoreInfoValue.expectedPassPercent >= 90) {
+        expectedGrade.innerText = "예측 결과 : 합격 확실"
     }
-    if(responseScoreInfoValue.expectedGrade < 80 && responseScoreInfoValue.expectedGrade >= 60) {
-        expectedGrade.innerText = "합격 보류가 예상됩니다."
+    if(responseScoreInfoValue.expectedPassPercent < 90 && responseScoreInfoValue.expectedPassPercent >= 80) {
+        expectedGrade.innerText = "예측 결과 : 합격 유력"
     }
-    if(responseScoreInfoValue.expectedGrade < 60) {
-        expectedGrade.innerText = "탈락이 예상됩니다."
+    if(responseScoreInfoValue.expectedPassPercent < 80) {
+        expectedGrade.innerText = "예측 결과 : 탈락 예상"
     }
 }
 
 fetchMyInfo()
 
-const checkbox = document.getElementById('checkbox');
+async function monthlyRecordsGraph() {
+    const yearScores = await fetch(currentDomain + "/api/score/year")
+    const expectedScores = await fetch(currentDomain + "/api/score/expect")
 
-const percentage = 53; // Change this value dynamically
+    const percentage = (await expectedScores.json()).currentPercentile
+    console.log(percentage)
 
-const container = d3.select("#gauge-container");
-const width = 256;
-const height = 214;
-const radius = Math.min(width, height) / 2;
-const data = [percentage, 100 - percentage];
+    const container = d3.select("#gauge-container");
+    const width = 256;
+    const height = 214;
+    const radius = Math.min(width, height) / 2;
+    const data = [percentage, 100];
 
-const color = d3.scaleOrdinal()
-    .domain(data)
-    .range(["#DDE1E6", "#878D96"]);
+    const color = d3.scaleOrdinal()
+        .domain(data)
+        .range(["#DDE1E6", "#878D96"]);
 
-const pie = d3.pie()
-    .sort(null)
-    .value(d => d);
+    const pie = d3.pie()
+        .sort(null)
+        .value(d => d);
 
-const arc = d3.arc()
-    .innerRadius(radius - 30)
-    .outerRadius(radius - 10);
+    const arc = d3.arc()
+        .innerRadius(radius - 30)
+        .outerRadius(radius - 10);
 
-const svg = container.append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .append("g")
-    .attr("transform", `translate(${width / 2},${height / 2})`);
+    const svg = container.append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", `translate(${width / 2},${height / 2})`);
 
-svg.selectAll("path")
-    .data(pie(data))
-    .enter().append("path")
-    .attr("d", arc)
-    .attr("fill", d => color(d.data));
+    svg.selectAll("path")
+        .data(pie(data))
+        .enter().append("path")
+        .attr("d", arc)
+        .attr("fill", d => color(d.data));
 
-svg.append("text")
-    .attr("class", "percentage")
-    .attr("text-anchor", "middle")
-    .attr("dy", "0.35em")
-    .text(percentage + "%");
+    svg.append("text")
+        .attr("class", "percentage")
+        .attr("text-anchor", "middle")
+        .attr("dy", "0.35em")
+        .text(percentage + "%");
 
-var months = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"];
-var currentScores = [50, null, 30, 20, 10, 0];
-var expectedScores = [30, 25, 20, 15, null, 5];
-
-var ctx = document.getElementById('myChart').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: months,
-        datasets: [{
-            label: '현재 점수',
-            data: currentScores,
-            borderColor: 'black',
-            borderWidth: 2,
-            fill: true
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            y: {
-                beginAtZero: true
+    const months = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"];
+    const currentScores = (await yearScores.json()).map(function(element){
+        return element.score;
+    });
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [{
+                label: '현재 점수',
+                data: currentScores,
+                borderColor: 'black',
+                borderWidth: 2,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                display: false
             }
         }
-    },
-    plugins: {
-        legend: {
-            display: false
-        }
-    }
-});
+    });
+}
 
-var settingContainer = document.getElementById("settingContainer");
+monthlyRecordsGraph()
+
+const settingContainer = document.getElementById("settingContainer");
 if (settingContainer) {
     settingContainer.addEventListener("click", function (e) {
         window.location.href = "../html/setting-account.html";
@@ -235,21 +242,21 @@ if (menu01Container) {
     });
 }
 
-var menu02 = document.getElementById("menu02");
+const menu02 = document.getElementById("menu02");
 if (menu02) {
     menu02.addEventListener("click", function (e) {
         window.location.href = "record.html";
     });
 }
 
-var menu03Container = document.getElementById("menu03Container");
+const menu03Container = document.getElementById("menu03Container");
 if (menu03Container) {
     menu03Container.addEventListener("click", function (e) {
         window.location.href = "../html/personal-information.html";
     });
 }
 
-var menu04Container = document.getElementById("menu04Container");
+const menu04Container = document.getElementById("menu04Container");
 if (menu04Container) {
     menu04Container.addEventListener("click", function (e) {
         window.location.href = "../html/application-information1.html";

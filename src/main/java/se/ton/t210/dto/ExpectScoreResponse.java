@@ -6,12 +6,12 @@ import lombok.Getter;
 public class ExpectScoreResponse {
 
     private final int currentScore;
-    private final int expectedScore;
-    private final int expectedGrade;
+    private final int currentPercentile;
+    private final int expectedPassPercent;
 
-    public ExpectScoreResponse(int currentScore, int expectedScore, int expectedGrade) {
+    public ExpectScoreResponse(int currentScore, int currentPercentile, int expectedPassPercent) {
         this.currentScore = currentScore;
-        this.expectedScore = expectedScore;
-        this.expectedGrade = expectedGrade;
+        this.currentPercentile = currentPercentile;
+        this.expectedPassPercent = expectedPassPercent;
     }
 }

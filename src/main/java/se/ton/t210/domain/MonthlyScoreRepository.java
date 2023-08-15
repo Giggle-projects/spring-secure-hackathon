@@ -12,9 +12,13 @@ public interface MonthlyScoreRepository extends JpaRepository<MonthlyScore, Long
 
     int countByApplicationType(ApplicationType applicationType);
 
+    int countByApplicationTypeAndYearMonth(ApplicationType applicationType, LocalDate yearMonth);
+
     Optional<MonthlyScore> findByMemberIdAndYearMonth(Long memberId, LocalDate yearMonth);
 
     List<MonthlyScore> findAllByApplicationTypeAndYearMonth(ApplicationType applicationType, LocalDate yearMonth, PageRequest page);
 
     void deleteAllByMemberIdAndYearMonth(Long memberId, LocalDate yearMonth);
+
+    int countByApplicationTypeAndYearMonthAndScoreGreaterThan(ApplicationType applicationType, LocalDate yearMonth, int score);
 }

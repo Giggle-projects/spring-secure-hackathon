@@ -39,7 +39,7 @@ public class MonthlyScore {
         return new MonthlyScore(member.getApplicationType(), member.getId(), score);
     }
 
-    public void update(int evaluationScoreSum) {
-        this.score = evaluationScoreSum;
+    public static MonthlyScore empty(ApplicationType applicationType) {
+        return new MonthlyScore(null, applicationType, null, 0);
     }
 }

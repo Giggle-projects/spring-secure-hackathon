@@ -8,12 +8,15 @@ import org.springframework.transaction.annotation.Transactional;
 import se.ton.t210.domain.*;
 import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.*;
+import se.ton.t210.utils.date.LocalDateUtils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Transactional(readOnly = true)
 @Service
 public class ScoreService {
 
@@ -37,11 +40,17 @@ public class ScoreService {
         return new RecordCountResponse(recordCnt);
     }
 
-    public ExpectScoreResponse score(Long memberId, LocalDate date) {
-        final MonthlyScore monthlyScore = monthlyScoreRepository.findByMemberIdAndYearMonth(memberId, date).orElseThrow();
-        final int expectedScore = 0; // TODO :: expectedScore
-        final int expectedGrade = 0; // TODO :: expectedScore
-        return new ExpectScoreResponse(monthlyScore.getScore(), expectedScore, expectedGrade);
+    public ExpectScoreResponse expect(Long memberId, LocalDate yearMonth) {
+        final MonthlyScore monthlyScore = monthlyScoreRepository.findByMemberIdAndYearMonth(memberId, yearMonth).orElseThrow();
+        final ApplicationType applicationType = monthlyScore.getApplicationType();
+        final int currentScore = monthlyScore.getScore();
+
+        final int greaterThanMine = monthlyScoreRepository.countByApplicationTypeAndYearMonthAndScoreGreaterThan(applicationType, yearMonth, currentScore);
+        final int totalCount = monthlyScoreRepository.countByApplicationTypeAndYearMonth(applicationType, yearMonth);
+        final int currentPercentile = (int) ((float) greaterThanMine / totalCount * 100);
+
+        final int expectedPassPercent = 0; // TODO :: expectedGrade
+        return new ExpectScoreResponse(currentScore, currentPercentile, expectedPassPercent);
     }
 
     @Transactional
@@ -78,12 +87,12 @@ public class ScoreService {
 
     public List<RankResponse> rank(ApplicationType applicationType, int rankCnt, LocalDate date) {
         final PageRequest page = PageRequest.of(0, rankCnt, Sort.by(Sort.Order.desc("score"), Sort.Order.asc("id")));
-        final List<MonthlyScore> rankScores = monthlyScoreRepository.findAllByApplicationTypeAndYearMonth(applicationType, date, page);
+        final List<MonthlyScore> scores = monthlyScoreRepository.findAllByApplicationTypeAndYearMonth(applicationType, date, page);
         final List<RankResponse> rankResponses = new ArrayList<>();
         int rank = 0;
         int prevScore = Integer.MAX_VALUE;
         int sameStack = 0;
-        for (var score : rankScores) {
+        for (var score : scores) {
             final Member member = memberRepository.findById(score.getMemberId()).orElseThrow();
             if (prevScore == score.getScore()) {
                 sameStack++;
@@ -95,5 +104,13 @@ public class ScoreService {
             rankResponses.add(RankResponse.of(rank, member, score));
         }
         return rankResponses;
+    }
+
+    public List<MonthlyScoreResponse> scoresYear(Member member, LocalDate year) {
+        final ApplicationType applicationType = member.getApplicationType();
+        return LocalDateUtils.monthsOfYear(year).stream()
+            .map(yearMonth -> MonthlyScoreResponse.of(monthlyScoreRepository.findByMemberIdAndYearMonth(member.getId(), yearMonth)
+                .orElse(MonthlyScore.empty(applicationType)))
+            ).collect(Collectors.toList());
     }
 }

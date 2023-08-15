@@ -40,10 +40,17 @@ public class ScoreController {
         return ResponseEntity.ok(new ScoreResponse(evaluationScore));
     }
 
+    @GetMapping("/api/score/year")
+    public ResponseEntity<List<MonthlyScoreResponse>> scores() {
+        final Member member = new Member(1l, "name", "email", "password", ApplicationType.FireOfficerFemale);
+        final List<MonthlyScoreResponse> scoresYear = scoreService.scoresYear(member, LocalDate.now());
+        return ResponseEntity.ok(scoresYear);
+    }
+
     @GetMapping("/api/score/expect")
     public ResponseEntity<ExpectScoreResponse> expect() {
         final Member member = new Member(1l, "name", "email", "password", ApplicationType.FireOfficerFemale);
-        final ExpectScoreResponse scoreResponse = scoreService.score(member.getId(), LocalDate.now());
+        final ExpectScoreResponse scoreResponse = scoreService.expect(member.getId(), LocalDate.now());
         return ResponseEntity.ok(scoreResponse);
     }
 
