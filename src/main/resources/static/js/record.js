@@ -192,36 +192,36 @@ async function monthlyRecordsGraph() {
         .attr("dy", "0.35em")
         .text(percentage + "%");
 
-    const months = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"];
-    const currentScores = (await yearScores.json()).map(function(element){
-        return element.score;
-    });
     const ctx = document.getElementById('myChart').getContext('2d');
-    const myChart = new Chart(ctx, {
+    new Chart(ctx, {
         type: 'line',
         data: {
-            labels: months,
+            labels: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
             datasets: [{
                 label: '현재 점수',
-                data: currentScores,
+                data: (await yearScores.json()).map(function(element){
+                    return element.score;
+                }),
                 borderColor: 'black',
                 borderWidth: 2,
-                fill: true
+                fill: false,
+                backgroundColor: 'black'
             }]
         },
         options: {
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
             responsive: true,
             maintainAspectRatio: false,
             scales: {
                 y: {
                     beginAtZero: true
                 }
-            }
-        },
-        plugins: {
-            legend: {
-                display: false
-            }
+            },
+            fillStyle: 'blue',
         }
     });
 }
