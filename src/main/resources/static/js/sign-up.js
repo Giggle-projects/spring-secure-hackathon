@@ -209,12 +209,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const applicationTypeKey = dropdownText.id;
 
         if (checkBoxSelected) {
-            // 프론트 로그
-            console.log("이름 입력 값:", nameInputValue);
-            console.log("이메일 입력 값:", emailInputValue);
-            console.log("비밀번호 입력 값:", password1InputValue);
-            console.log("개인정보 이용 동의 여부:", checkBoxSelected);
-            console.log("희망 지망 직렬 선택:", applicationTypeKey);
+            // // 프론트 로그
+            // console.log("이름 입력 값:", nameInputValue);
+            // console.log("이메일 입력 값:", emailInputValue);
+            // console.log("비밀번호 입력 값:", password1InputValue);
+            // console.log("개인정보 이용 동의 여부:", checkBoxSelected);
+            // console.log("희망 지망 직렬 선택:", applicationTypeKey);
 
             // 회원가입 - 서버에 요청
             const userData = {
@@ -294,7 +294,6 @@ const currentDomain = "http://localhost:8080"
 
 async function fetchApplicationTypeName() {
     const applicationTypeDropDownContent = document.getElementById("applicationTypeDropDownContent");
-    const applicationTypeDropDownKey = document.getElementById("applicationTypeDropDownKey");
 
     const response = await fetch(currentDomain + "/api/applicationType")
     if (!response.ok) {
