@@ -45,7 +45,7 @@ public class ScoreController {
 
     @GetMapping("/api/score/expect")
     public ResponseEntity<ExpectScoreResponse> expect(@LoginMember LoginMemberInfo member) {
-        final ExpectScoreResponse scoreResponse = scoreService.expect(member.getId(), LocalDate.now());
+        final ExpectScoreResponse scoreResponse = scoreService.expect(member.getId(), member.getApplicationType(), LocalDate.now());
         return ResponseEntity.ok(scoreResponse);
     }
 

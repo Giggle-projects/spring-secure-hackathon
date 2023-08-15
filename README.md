@@ -17,6 +17,41 @@ docker-compose -f docker-compose-dev.yaml down
 java -jar build/libs/t210-0.0.1.jar 
 ```
 
+```
+더미데이터 만들기 - 서버에서 사용할 더미
+
+더미데이터 만들기 2 - 학습서버에서 사용할 더미
+ApplicationType(문자열) user-id(1 ~ 100000) 
+1 - score(5 ~ 50까지)
+2 - score(5 ~ 50까지)
+3 - score(5 ~ 50까지)
+4 - score(5 ~ 50까지)
+5 - score(5 ~ 50까지)
+6 - score(5 ~ 50까지)
+7 - score(5 ~ 50까지)
+8 - score(5 ~ 50까지)
+9 - score(5 ~ 50까지)
+10 - score(5 ~ 50까지)
+11 - score(5 ~ 50까지)
+12 - score(5 ~ 50까지)
+
+                    
+DB 암호화
+
+필터 어디서 어떻게 쓰이면 좋을지
+
+소수점 점수 어떻게? 얼마나 걸릴지
+
+@RequsetBody 데이터 값 형식 제한
+
+IP Blocking
+
+예측 서버 돌리는 법 , 테스트, RestTemplate
+
+```
+
+
+
 ### [BE - DevOPs]
 - [x] Access token, Refresh token
 - [] TLS setting
