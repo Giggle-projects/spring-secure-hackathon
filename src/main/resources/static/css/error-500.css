@@ -1,0 +1,94 @@
+.frame-icon {
+  position: relative;
+  width: 124px;
+  height: 124px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.text {
+  position: relative;
+  line-height: 110%;
+}
+.frame2,
+.text,
+.text1 {
+  align-self: stretch;
+}
+.text1 {
+  position: relative;
+  font-size: var(--heading-2-size);
+  line-height: 110%;
+}
+.frame2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--gap-5xs);
+}
+.p {
+  margin: 0;
+}
+.text2 {
+  align-self: stretch;
+  position: relative;
+  font-size: var(--body-l-size);
+  line-height: 140%;
+}
+.frame1 {
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: var(--gap-29xl);
+}
+.text3 {
+  position: relative;
+  letter-spacing: 0.5px;
+  line-height: 100%;
+  font-weight: 500;
+}
+.frame3,
+.go-to-dashboard {
+  display: flex;
+  flex-direction: row;
+  padding: 0 var(--padding-base);
+  align-items: center;
+  justify-content: center;
+}
+.go-to-dashboard {
+  border: 2px solid var(--primary-60);
+  box-sizing: border-box;
+  height: 56px;
+  padding: var(--padding-base);
+  cursor: pointer;
+  text-align: left;
+  font-size: var(--button-l-size);
+  color: var(--primary-60);
+}
+.error,
+.frame {
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+}
+.frame {
+  align-self: stretch;
+  padding: var(--padding-61xl);
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-29xl);
+}
+.error {
+  position: relative;
+  background-color: var(--default-white);
+  width: 100%;
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: center;
+  font-size: var(--heading-1-size);
+  color: var(--coolgray-90);
+  font-family: var(--button-l);
+}

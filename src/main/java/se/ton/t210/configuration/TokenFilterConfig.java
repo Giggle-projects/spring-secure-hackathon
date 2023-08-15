@@ -31,7 +31,13 @@ public class TokenFilterConfig {
     public FilterRegistrationBean<Filter> addAccessTokenFilter() {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(new TokenFilter(tokenSecret, accessTokenCookieKey));
-        filterRegistrationBean.addUrlPatterns("/api/reissue/token");
+        filterRegistrationBean.addUrlPatterns(
+            "/api/reissue/token",
+            "/html/dashboard.html",
+            "/html/personal-information.html",
+            "/html/record.html",
+            "/html/setting-account.html"
+        );
         return filterRegistrationBean;
     }
 
