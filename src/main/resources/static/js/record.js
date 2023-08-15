@@ -153,18 +153,18 @@ async function monthlyRecordsGraph() {
     const yearScores = await fetch(currentDomain + "/api/score/year")
     const expectedScores = await fetch(currentDomain + "/api/score/expect")
 
-    const percentage = (await expectedScores.json()).currentPercentile
+    const percentage = 100-(await expectedScores.json()).currentPercentile
     console.log(percentage)
 
     const container = d3.select("#gauge-container");
     const width = 256;
     const height = 214;
     const radius = Math.min(width, height) / 2;
-    const data = [percentage, 100];
+    const data = [percentage, 100 - percentage];
 
     const color = d3.scaleOrdinal()
         .domain(data)
-        .range(["#DDE1E6", "#878D96"]);
+        .range([ "#4C50BB","#878D96"]);
 
     const pie = d3.pie()
         .sort(null)
