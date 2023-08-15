@@ -3,6 +3,7 @@ package se.ton.t210.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -17,10 +18,15 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<String> handledMemberException(AuthException e) {
+        e.printStackTrace();
         return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }
 
-    @ExceptionHandler({ConstraintViolationException.class, MethodArgumentTypeMismatchException.class})
+    @ExceptionHandler({
+        ConstraintViolationException.class,
+        MethodArgumentTypeMismatchException.class,
+        HttpMessageNotReadableException.class
+    })
     public ResponseEntity<String> invalidInputPrams() {
         return ResponseEntity.badRequest().body("Invalid input request");
     }

@@ -33,8 +33,13 @@ public class TokenSecret {
         return JwtUtils.isExpired(secretKey, token);
     }
 
-    public String getPayloadValue(String tokenPayloadEmailKey, String token) {
-        return JwtUtils.tokenClaimsFrom(secretKey, token, true)
-            .get(tokenPayloadEmailKey, String.class);
+    public String getPayloadValue(String tokenPayloadKey, String token) {
+        return JwtUtils.tokenClaimsFrom(secretKey, token)
+            .get(tokenPayloadKey, String.class);
+    }
+
+    public String getPayloadValue(String tokenPayloadKey, String token, boolean ignoreExpired) {
+        return JwtUtils.tokenClaimsFrom(secretKey, token, ignoreExpired)
+            .get(tokenPayloadKey, String.class);
     }
 }

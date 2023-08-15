@@ -34,7 +34,7 @@ async function fetchEvaluationItemScore(itemKey) {
         evaluationScore.innerText = '' +"점"
         return
     }
-    const response = await fetch(currentDomain + "/api/score?" + new URLSearchParams({
+    const response = await fetch(currentDomain + "/api/score/evaluate?" + new URLSearchParams({
         evaluationItemId: document.getElementById('item-' + itemKey + '-id').innerText,
         score: document.getElementById('item-' + itemKey + '-score').value,
     }))
@@ -134,7 +134,7 @@ async function fetchMyInfo() {
 
     applicationType.innerText = responseMemberInfoValue.applicationTypeName
     currentScore.innerText = "현재 점수 : " + responseScoreInfoValue.currentScore + "점"
-    expectedPassPercent.innerText = "합격 예상 :" + responseScoreInfoValue.expectedPassPercent + "%"
+    expectedPassPercent.innerText = "합격 예상 :" + responseScoreInfoValue.expectedPassPercent.toFixed(2) + "%"
 
     if(responseScoreInfoValue.expectedPassPercent >= 90) {
         expectedGrade.innerText = "예측 결과 : 합격 확실"
@@ -153,8 +153,8 @@ async function monthlyRecordsGraph() {
     const yearScores = await fetch(currentDomain + "/api/score/year")
     const expectedScores = await fetch(currentDomain + "/api/score/expect")
 
-    const percentage = 100-(await expectedScores.json()).currentPercentile
-    console.log(percentage)
+    let percentage = (100-((await expectedScores.json()).currentPercentile)).toFixed(2)
+    percentage = percentage.toFixed(2)
 
     const container = d3.select("#gauge-container");
     const width = 256;

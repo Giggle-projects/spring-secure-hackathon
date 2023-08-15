@@ -48,9 +48,7 @@ class DummyData {
         createMembers(100);
         createEvaluationItemTable();
         var testMember = memberRepository.save(new Member("test", "test@naver.com", "12345", ApplicationType.PoliceOfficerMale));
-
         members.add(testMember);
-        itemTable = createEvaluationItemTable();
         for (var member : members) {
             records(member);
         }

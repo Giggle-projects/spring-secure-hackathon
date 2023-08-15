@@ -14,13 +14,18 @@ import se.ton.t210.domain.TokenSecret;
 import se.ton.t210.dto.LoginMemberInfo;
 import se.ton.t210.exception.AuthException;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 
 @Component
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Value("${auth.jwt.token.access.cookie.key:accessToken}")
     private String accessTokenCookieKey;
+
+    @Value("${auth.jwt.token.payload.email.key:email}")
+    private String accessTokenPayloadKey;
 
     private final MemberRepository memberRepository;
     private final TokenSecret tokenSecret;
@@ -37,11 +42,12 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 
     @Override
     public LoginMemberInfo resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        final String accessToken = ((HttpServletRequest) webRequest.getNativeRequest()).getHeader(accessTokenCookieKey);
-        if (accessToken == null) {
-            throw new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
-        }
-        final String email = tokenSecret.getPayloadValue(accessTokenCookieKey, accessToken);
+        final Cookie[] cookies = ((HttpServletRequest) webRequest.getNativeRequest()).getCookies();
+        final Cookie authCookie = Arrays.stream(cookies)
+            .filter(it -> it.getName().equals(accessTokenCookieKey))
+            .findAny()
+            .orElseThrow(() -> new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized access"));
+        final String email = tokenSecret.getPayloadValue(accessTokenPayloadKey, authCookie.getValue());
         return LoginMemberInfo.of(memberRepository.findByEmail(email).orElseThrow(() -> new AuthException(HttpStatus.UNAUTHORIZED, "Invalid user")));
     }
 }

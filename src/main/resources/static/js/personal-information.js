@@ -106,9 +106,11 @@ async function showBarChart() {
         return element.evaluationItemName;
     });
     var myScore = (scoresMe).map(function(element){
+        console.log("a" + element.evaluationScore)
         return element.evaluationScore;
     });
     var top30Score = (scoresTop).map(function(element){
+        console.log("b" + element.evaluationScore)
         return element.evaluationScore;
     });
 

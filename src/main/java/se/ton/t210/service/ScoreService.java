@@ -43,14 +43,14 @@ public class ScoreService {
 
     public ExpectScoreResponse expect(Long memberId, ApplicationType applicationType, LocalDate yearMonth) {
         final MonthlyScore monthlyScore = monthlyScoreRepository.findByMemberIdAndYearMonth(memberId, yearMonth)
-                .orElse(MonthlyScore.empty(applicationType));
+            .orElse(MonthlyScore.empty(applicationType));
         final int currentScore = monthlyScore.getScore();
 
         final int greaterThanMine = monthlyScoreRepository.countByApplicationTypeAndYearMonthAndScoreGreaterThan(applicationType, yearMonth, currentScore);
         final int totalCount = monthlyScoreRepository.countByApplicationTypeAndYearMonth(applicationType, yearMonth);
-        final int currentPercentile = (int) ((float) greaterThanMine / totalCount * 100);
+        final float currentPercentile = (float) (Math.floor(((float) greaterThanMine / totalCount * 100) * 100) / 100.0);
 
-        final int expectedPassPercent = 0; // TODO :: expectedGrade
+        final float expectedPassPercent = 0; // TODO :: expectedGrade
         return new ExpectScoreResponse(currentScore, currentPercentile, expectedPassPercent);
     }
 
@@ -158,7 +158,7 @@ public class ScoreService {
 
     private List<Long> rankersByMonthlyScore(ApplicationType applicationType, int top, LocalDate yearMonth) {
         final int scoreCnt = monthlyScoreRepository.countByApplicationType(applicationType);
-        final int fetchCount = (int)(scoreCnt * ((float) top / 100));
+        final int fetchCount = (int) (scoreCnt * ((float) top / 100));
         final PageRequest page = PageRequest.of(0, fetchCount, Sort.by(Sort.Order.desc("score"), Sort.Order.asc("id")));
         return monthlyScoreRepository.findAllByApplicationTypeAndYearMonth(applicationType, yearMonth, page).stream()
             .map(MonthlyScore::getMemberId)

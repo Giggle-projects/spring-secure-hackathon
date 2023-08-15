@@ -50,6 +50,10 @@ public class JwtUtils {
         }
     }
 
+    public static Claims tokenClaimsFrom(Key key, String token) {
+        return tokenClaimsFrom(key, token, false);
+    }
+
     public static Claims tokenClaimsFrom(Key key, String token, boolean ignoreExpired) {
         try {
             return Jwts.parserBuilder()
