@@ -12,6 +12,11 @@ docker-compose -f docker-compose-dev.yaml up -d
 docker-compose -f docker-compose-dev.yaml down
 ```
 
+```
+./gradlew build
+java -jar build/libs/t210-0.0.1.jar 
+```
+
 ### [BE - DevOPs]
 - [x] Access token, Refresh token
 - [] TLS setting
