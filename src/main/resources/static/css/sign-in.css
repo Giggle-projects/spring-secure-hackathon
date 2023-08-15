@@ -1,316 +1,370 @@
 .text544 {
-  align-self: stretch;
-  position: relative;
-  line-height: 110%;
+    align-self: stretch;
+    position: relative;
+    line-height: 110%;
 }
+
 .frame1019 {
-  align-self: stretch;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
 }
+
 .text545 {
-  align-self: stretch;
-  position: relative;
-  font-size: var(--heading-6-size);
-  line-height: 140%;
+    align-self: stretch;
+    position: relative;
+    font-size: var(--heading-6-size);
+    line-height: 140%;
 }
-.text_input{
-  flex: 1;
-  border: none; /* 테두리 없애기 */
-  outline: none; /* 선택 효과 없애기 (optional) */
-  background-color: var(--coolgray-10);
-  position: relative;
-  line-height: 140%;
+
+.text_input {
+    flex: 1;
+    border: none; /* 테두리 없애기 */
+    outline: none; /* 선택 효과 없애기 (optional) */
+    background-color: var(--coolgray-10);
+    position: relative;
+    line-height: 140%;
 }
+
 .frame1018 {
-  align-self: stretch;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: var(--gap-5xs);
-  font-size: var(--heading-2-size);
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--gap-5xs);
+    font-size: var(--heading-2-size);
 }
+
 .text546,
 .text547 {
-  position: relative;
-  line-height: 140%;
+    position: relative;
+    line-height: 140%;
 }
+
 .text546 {
-  align-self: stretch;
+    align-self: stretch;
 }
+
 .text547 {
-  flex: 1;
+    flex: 1;
 }
+
 .email1 {
-  align-self: stretch;
-  background-color: var(--coolgray-10);
-  border-bottom: 1px solid var(--coolgray-30);
-  box-sizing: border-box;
-  height: 48px;
-  display: flex;
-  flex-direction: row;
-  padding: var(--padding-xs) var(--padding-base);
-  align-items: center;
-  justify-content: flex-start;
-  font-size: var(--button-m-size);
-  color: var(--coolgray-60);
+    align-self: stretch;
+    background-color: var(--coolgray-10);
+    border-bottom: 1px solid var(--coolgray-30);
+    box-sizing: border-box;
+    height: 48px;
+    display: flex;
+    flex-direction: row;
+    padding: var(--padding-xs) var(--padding-base);
+    align-items: center;
+    justify-content: flex-start;
+    font-size: var(--button-m-size);
+    color: var(--coolgray-60);
 }
+
 .frame1022 {
-  gap: var(--gap-5xs);
+    gap: var(--gap-5xs);
 }
+
 .frame1021,
 .frame1022 {
-  align-self: stretch;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
 }
+
 .frame-icon48 {
-  position: relative;
-  width: 24px;
-  height: 24px;
-  overflow: hidden;
-  flex-shrink: 0;
+    position: relative;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+    flex-shrink: 0;
 }
 
 .password1 {
-  align-self: stretch;
-  background-color: var(--coolgray-10);
-  border-bottom: 1px solid var(--coolgray-30);
-  box-sizing: border-box;
-  height: 48px;
-  display: flex;
-  flex-direction: row;
-  padding: var(--padding-xs) var(--padding-base);
-  align-items: center;
-  gap: var(--gap-5xs);
-  font-size: var(--button-m-size);
-  color: var(--coolgray-60);
-  position: relative; /* 새로운 부분 - 프레임을 relative 포지션으로 설정 */
+    align-self: stretch;
+    background-color: var(--coolgray-10);
+    border-bottom: 1px solid var(--coolgray-30);
+    box-sizing: border-box;
+    height: 48px;
+    display: flex;
+    flex-direction: row;
+    padding: var(--padding-xs) var(--padding-base);
+    align-items: center;
+    gap: var(--gap-5xs);
+    font-size: var(--button-m-size);
+    color: var(--coolgray-60);
+    position: relative; /* 새로운 부분 - 프레임을 relative 포지션으로 설정 */
 }
+
 .password-toggle {
-  cursor: pointer;
+    cursor: pointer;
 }
-.text123{
-  flex: 1;
-  border: none; /* 테두리 없애기 */
-  outline: none; /* 선택 효과 없애기 (optional) */
-  background-color: var(--coolgray-10);
-  position: relative;
-  line-height: 140%;
+
+.text123 {
+    flex: 1;
+    border: none; /* 테두리 없애기 */
+    outline: none; /* 선택 효과 없애기 (optional) */
+    background-color: var(--coolgray-10);
+    position: relative;
+    line-height: 140%;
 }
 
 .password-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between; /* 변경된 부분 */
-  gap: var(--gap-5xs);
-  flex: 1; /* 새로운 부분 - 남은 공간을 차지하도록 설정 */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between; /* 변경된 부분 */
+    gap: var(--gap-5xs);
+    flex: 1; /* 새로운 부분 - 남은 공간을 차지하도록 설정 */
 }
 
 .password-toggle {
-  cursor: pointer;
-  position: absolute; /* 새로운 부분 - 이미지를 absolute 포지션으로 설정 */
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
+    cursor: pointer;
+    position: absolute; /* 새로운 부분 - 이미지를 absolute 포지션으로 설정 */
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
 }
 
 
-.check-box1,
 .frame1026 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
 .frame1026 {
-  border: 1px solid var(--coolgray-100);
-  box-sizing: border-box;
-  width: 16px;
-  height: 16px;
-  flex-direction: column;
+    border: 1px solid var(--coolgray-100);
+    box-sizing: border-box;
+    width: 16px;
+    height: 16px;
+    flex-direction: column;
 }
-.check-box1 {
-  width: 20px;
-  height: 20px;
-  flex-direction: row;
-}
+
 .checked {
-  background-color: #000;
+    background-color: #000;
 }
+
 .text550 {
-  position: relative;
-  line-height: 140%;
+    margin-left: 10px;
+    position: relative;
+    line-height: 140%;
 }
+
 .frame1027 {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
 }
+
 .text551 {
-  flex: 1;
-  position: relative;
-  line-height: 140%;
-  color: var(--primary-90);
-  text-align: right;
-  cursor: pointer;
+    flex: 1;
+    position: relative;
+    line-height: 140%;
+    color: var(--primary-90);
+    text-align: right;
+    cursor: pointer;
 }
+
 .frame1025 {
-  align-self: stretch;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: var(--gap-base);
+    align-self: stretch;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--gap-base);
 }
+
 .text552 {
-  position: relative;
-  letter-spacing: 0.5px;
-  line-height: 100%;
-  font-weight: 500;
+    position: relative;
+    letter-spacing: 0.5px;
+    line-height: 100%;
+    font-weight: 500;
 }
+
 .frame1028 {
-  display: flex;
-  flex-direction: row;
-  padding: 0 var(--padding-base);
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    flex-direction: row;
+    padding: 0 var(--padding-base);
+    align-items: center;
+    justify-content: center;
 }
+
 .button {
-  align-self: stretch;
-  background-color: var(--primary-60);
-  border: 2px solid var(--primary-60);
-  box-sizing: border-box;
-  padding: var(--padding-base) var(--padding-xs);
-  font-size: var(--button-m-size);
-  color: var(--default-white);
+    align-self: stretch;
+    background-color: var(--primary-60);
+    border: 2px solid var(--primary-60);
+    box-sizing: border-box;
+    padding: var(--padding-base) var(--padding-xs);
+    font-size: var(--button-m-size);
+    color: var(--default-white);
 }
+
 .button,
 .frame1031 {
-  height: 48px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+    height: 48px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
+
 .text553 {
-  position: relative;
-  line-height: 110%;
-  font-weight: 500;
+    position: relative;
+    line-height: 110%;
+    font-weight: 500;
 }
+
 .frame1032,
 .frame1033 {
-  display: flex;
-  justify-content: flex-start;
+    display: flex;
+    justify-content: flex-start;
 }
+
 .frame1033 {
-  align-self: stretch;
-  flex-direction: row;
-  align-items: center;
-  gap: var(--gap-9xs);
+    align-self: stretch;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--gap-9xs);
 }
+
 .frame1032 {
-  flex: 1;
-  flex-direction: column;
-  padding: var(--padding-sm) 0 0;
-  align-items: flex-start;
+    flex: 1;
+    flex-direction: column;
+    padding: var(--padding-sm) 0 0;
+    align-items: flex-start;
 }
+
 .frame1034,
 .frame1035 {
-  height: 48px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+    height: 48px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
+
 .frame1035 {
-  width: 48px;
-  justify-content: center;
+    width: 48px;
+    justify-content: center;
 }
+
 .frame1034 {
-  justify-content: flex-start;
+    justify-content: flex-start;
 }
+
 .frame1020,
 .frame1029,
 .frame1030 {
-  align-self: stretch;
-  justify-content: flex-start;
+    align-self: stretch;
+    justify-content: flex-start;
 }
+
 .frame1030 {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: var(--gap-base);
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--gap-base);
 }
+
 .frame1020,
 .frame1029 {
-  flex-direction: column;
+    flex-direction: column;
 }
+
 .frame1029 {
-  background: linear-gradient(rgba(218, 30, 40, 0.1), rgba(218, 30, 40, 0.1)),
+    background: linear-gradient(rgba(218, 30, 40, 0.1), rgba(218, 30, 40, 0.1)),
     #fff;
-  border-left: 3px solid var(--default-alert);
-  display: none;
-  padding: 0 0 0 var(--padding-base);
-  align-items: flex-start;
+    border-left: 3px solid var(--default-alert);
+    display: none;
+    padding: 0 0 0 var(--padding-base);
+    align-items: flex-start;
 }
+
 .frame1020 {
-  display: flex;
-  padding: var(--padding-5xl) 0 0;
-  align-items: center;
-  gap: var(--gap-base);
-  text-align: left;
+    display: flex;
+    padding: var(--padding-5xl) 0 0;
+    align-items: center;
+    gap: var(--gap-base);
+    text-align: left;
 }
+
 .line1 {
-  align-self: stretch;
-  position: relative;
-  border-top: 1px solid var(--coolgray-20);
-  box-sizing: border-box;
-  height: 1px;
+    align-self: stretch;
+    position: relative;
+    border-top: 1px solid var(--coolgray-20);
+    box-sizing: border-box;
+    height: 1px;
 }
+
 .span {
-  text-decoration: underline;
+    text-decoration: underline;
 }
+
 .sign-up1 {
-  align-self: stretch;
-  position: relative;
-  line-height: 140%;
-  color: var(--primary-90);
-  cursor: pointer;
+    align-self: stretch;
+    position: relative;
+    line-height: 140%;
+    color: var(--primary-90);
+    cursor: pointer;
 }
+
 .frame1017,
 .sign-in1 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
+
 .frame1017 {
-  background-color: var(--default-white);
-  border: 1px solid var(--coolgray-20);
-  box-sizing: border-box;
-  width: 680px;
-  padding: var(--padding-61xl);
-  gap: var(--gap-5xl);
+    background-color: var(--default-white);
+    border: 1px solid var(--coolgray-20);
+    box-sizing: border-box;
+    width: 680px;
+    padding: var(--padding-61xl);
+    gap: var(--gap-5xl);
 }
+
 .sign-in1 {
-  position: relative;
-  background-color: var(--coolgray-10);
-  width: 100%;
-  height: 1024px;
-  text-align: center;
-  font-size: var(--body-s-size);
-  color: var(--coolgray-90);
-  font-family: var(--body-xs);
+    position: relative;
+    background-color: var(--coolgray-10);
+    width: 100%;
+    height: 1024px;
+    text-align: center;
+    font-size: var(--body-s-size);
+    color: var(--coolgray-90);
+    font-family: var(--body-xs);
 }
+
+.selected_box {
+    background-color: black
+}
+
+.check-box {
+    margin: 0 !important;
+    top: 526px;
+    left: 154px;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    border: 1px solid black; /* 검은색 테두리 추가 */
+}
+
 .error-message {
-  margin-top: 0; /* 상단 마진 제거 */
-  margin-bottom: 0; /* 하단 마진 제거 */
-  color: red;
-  font-size: 12px;
+    margin-top: 0; /* 상단 마진 제거 */
+    margin-bottom: 0; /* 하단 마진 제거 */
+    color: red;
+    font-size: 12px;
 }
