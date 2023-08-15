@@ -127,7 +127,7 @@ public class ScoreService {
         return rankResponses;
     }
 
-    public List<MonthlyScoreResponse> scoresYear(Member member, LocalDate year) {
+    public List<MonthlyScoreResponse> scoresYear(LoginMemberInfo member, LocalDate year) {
         final ApplicationType applicationType = member.getApplicationType();
         return LocalDateUtils.monthsOfYear(year).stream()
             .map(yearMonth -> MonthlyScoreResponse.of(monthlyScoreRepository.findByMemberIdAndYearMonth(member.getId(), yearMonth)

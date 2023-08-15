@@ -2,6 +2,7 @@ package se.ton.t210.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import se.ton.t210.configuration.annotation.LoginMember;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.*;
@@ -105,16 +106,14 @@ public class MemberController {
     }
 
     @GetMapping("/api/member/me")
-    public ResponseEntity<MemberResponse> me() {
-        final Member member = new Member(1L, "name", "email", "password", ApplicationType.PoliceOfficerMale);
-        final MemberResponse response = MemberResponse.of(member);
+    public ResponseEntity<MemberResponse> me(@LoginMember LoginMemberInfo loginMember) {
+        final MemberResponse response = MemberResponse.of(loginMember);
         return ResponseEntity.ok(response);
     }
 
     // 이후 적용
     @GetMapping("/api/refreshToken/logIn")
-    public ResponseEntity<Void> logInByRefreshToken(@CookieValue String refreshToken,
-                                                    HttpServletResponse response) {
+    public ResponseEntity<Void> logInByRefreshToken(@CookieValue String refreshToken, HttpServletResponse response) {
         memberService.reissueToken(refreshToken, response);
         return ResponseEntity.ok().build();
     }

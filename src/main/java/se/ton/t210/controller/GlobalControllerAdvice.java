@@ -10,7 +10,6 @@ import se.ton.t210.exception.AuthException;
 
 import javax.validation.ConstraintViolationException;
 
-
 @ControllerAdvice
 public class GlobalControllerAdvice {
 

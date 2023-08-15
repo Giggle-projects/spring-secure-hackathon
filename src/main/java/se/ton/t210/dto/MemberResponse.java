@@ -30,4 +30,14 @@ public class MemberResponse {
                 member.getApplicationType().getStandardName()
         );
     }
+
+    public static MemberResponse of(LoginMemberInfo member) {
+        return new MemberResponse(
+            member.getId(),
+            member.getName(),
+            member.getEmail(),
+            member.getApplicationType(),
+            member.getApplicationType().getStandardName()
+        );
+    }
 }
