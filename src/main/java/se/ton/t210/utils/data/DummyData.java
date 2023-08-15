@@ -40,10 +40,13 @@ class DummyData {
     @Autowired
     private ScoreService scoreService;
 
-    private Map<ApplicationType, List<EvaluationItem>> itemTable = new HashMap<>();
+    private List<Member> members;
+    private Map<ApplicationType, List<EvaluationItem>> itemTable;
 
     @PostConstruct
     public void create() {
+        createMembers(100);
+        createEvaluationItemTable();
         memberRepository.save(new Member("test", "test@naver.com", "12345", ApplicationType.PoliceOfficerMale));
 
         final List<Member> members = createMembers(100);
@@ -55,17 +58,16 @@ class DummyData {
     }
 
     private List<Member> createMembers(int number) {
-        final List<Member> members = new ArrayList<>();
-        for (var at : ApplicationType.values()) {
+        members = new ArrayList<>();
+        for (var applicationType : ApplicationType.values()) {
             for (int i = 0; i < number; i++) {
-                members.add(
-                        new Member(
-                                RandomStringUtils.randomAlphabetic(3),
-                                RandomStringUtils.randomAlphabetic(10) + "@gmail.com",
-                                "12345",
-                                at
-                        )
+                final Member member = new Member(
+                    RandomStringUtils.randomAlphabetic(5),
+                    RandomStringUtils.randomAlphabetic(10) + "@gmail.com",
+                    "12345",
+                    applicationType
                 );
+                members.add(member);
             }
         }
         memberRepository.saveAll(members);
@@ -73,9 +75,9 @@ class DummyData {
     }
 
     private Map<ApplicationType, List<EvaluationItem>> createEvaluationItemTable() {
-        Map<ApplicationType, List<EvaluationItem>> itemTable = new HashMap<>();
-        for (var at : ApplicationType.values()) {
-            itemTable.put(at, createDummyEvaluationItem(at));
+        itemTable = new HashMap<>();
+        for (var applicationType : ApplicationType.values()) {
+            itemTable.put(applicationType, createDummyEvaluationItem(applicationType));
         }
         return itemTable;
     }
@@ -111,13 +113,13 @@ class DummyData {
     public void records(Member member) {
         final List<EvaluationItemScore> evaluationItemScores = new ArrayList<>();
         for (var evaluationItem : itemTable.get(member.getApplicationType())) {
-            var itemScore = EvaluationItemScore.of(member, evaluationItem, RANDOM.nextInt(100));
+            var itemScore = new EvaluationItemScore(member.getId(), evaluationItem.getId(), RANDOM.nextInt(100));
             evaluationItemScoreItemRepository.save(itemScore);
             evaluationItemScores.add(itemScore);
         }
         int evaluationScoreSum = 0;
         for (EvaluationItemScore itemScore : evaluationItemScores) {
-            var score = scoreService.evaluationScore(itemScore.getEvaluationItemId(), itemScore.getScore());
+            var score = scoreService.evaluate(itemScore.getEvaluationItemId(), itemScore.getScore());
             evaluationScoreSum += score;
         }
         monthlyScoreRepository.save(MonthlyScore.of(member, evaluationScoreSum));

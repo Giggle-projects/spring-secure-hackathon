@@ -29,109 +29,132 @@ async function fetchMyInfo() {
 
 fetchMyInfo()
 
-const data = {
-    labels: ["악력", "팔굽혀피기", "윗몸일으키기", "50m 오래달리기", "왕복오래달리기"],
-    datasets: [
-        {
-            label: "나",
-            data: [1, 2, 3, 4, 5], // Sample values
-            backgroundColor: "rgba(66, 135, 245, 0.5)",
-            borderColor: "rgba(66, 135, 245, 1)",
-            pointBackgroundColor: "rgba(66, 135, 245, 1)"
-        }, {
-            label: "상위 30%",
-            data: [5, 4, 3, 2, 1], // Sample values
-            backgroundColor: "rgba(33, 33, 33, 0.5)",
-            borderColor: "rgba(33, 33, 33, 1)",
-            pointBackgroundColor: "rgba(66, 135, 245, 1)"
-        },
-        // Add additional dataset here
-    ]
-};
+async function showRadarChart() {
+    let responseScore = await fetch(currentDomain + "/api/score/detail/me");
+    if (!responseScore.ok) {
+        throw new Error('Error fetching.');
+    }
+    const scores = await responseScore.json()
+    const data = {
+        labels:  scores.map(function(element){
+            return element.evaluationItemName;
+        }),
+        datasets: [
+            {
+                label: "나",
+                data: scores.map(function(element){
+                    return element.evaluationScore;
+                }),
+                backgroundColor: "rgba(66, 135, 245, 0.5)",
+                borderColor: "rgba(66, 135, 245, 1)",
+                pointBackgroundColor: "rgba(66, 135, 245, 1)"
+            }
+        ]
+    };
 
-const ctx = document.getElementById("radarChart").getContext("2d");
-new Chart(ctx, {
-    type: "radar",
-    data: data,
-    options: {
-        responsive: false,
-        line: {
-            borderWidth: 10
+    const ctx = document.getElementById("radarChart").getContext("2d");
+    new Chart(ctx, {
+        type: "radar",
+        data: data,
+        options: {
+            responsive: false,
+            line: {
+                borderWidth: 10
+            },
+            scale: {
+                r: {
+                    pointLabels: {
+                        font: {
+                            size: 100
+                        }
+                    }
+                },
+                ticks: {
+                    beginAtZero: true,
+                    max: 10, // You can adjust the maximum scale value
+                    stepSize: 1,
+                }
+            },
+            plugins: {
+                legend: {
+                    position: "right" // Set the position of the legend to top
+                }
+            },
+            tooltips: {
+                enabled: false, // Disable tooltips
+            },
+        }
+    });
+}
+
+showRadarChart()
+
+async function showBarChart() {
+    let responseScoreMe = await fetch(currentDomain + "/api/score/detail/me");
+    if (!responseScoreMe.ok) {
+        throw new Error('Error fetching.');
+    }
+
+    let responseScoreTop = await fetch(currentDomain + "/api/score/detail/top?percent=30");
+    if (!responseScoreTop.ok) {
+        throw new Error('Error fetching.');
+    }
+    const scoresMe = await responseScoreMe.json()
+    const scoresTop = await responseScoreTop.json()
+
+    var bar_labels = (scoresMe).map(function(element){
+        return element.evaluationItemName;
+    });
+    var myScore = (scoresMe).map(function(element){
+        return element.evaluationScore;
+    });
+    var top30Score = (scoresTop).map(function(element){
+        return element.evaluationScore;
+    });
+
+    var bar_ctx = document.getElementById('myChart').getContext('2d');
+    new Chart(bar_ctx, {
+        type: 'bar',
+        data: {
+            labels: bar_labels,
+            datasets: [{
+                label: '나',
+                data: myScore,
+                backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                borderColor: 'rgba(0, 0, 0, 1)',
+                borderWidth: 1
+            },{
+                label: '상위 30%',
+                data: top30Score,
+                backgroundColor: 'rgba(192, 192, 192, 0.2)',
+                borderColor: 'rgba(192, 192, 192, 1)',
+                borderWidth: 1
+            }]
         },
-        scale: {
-            r: {
-                pointLabels: {
-                    font: {
-                        size: 100
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: '점'
+                    },
+                    ticks: {
+                        stepSize: 1, // 간격을 1로 설정하여 1점 단위로 표시
+                        precision: 0 // 소수점 없이 정수로 표시
                     }
                 }
             },
-            ticks: {
-                beginAtZero: true,
-                max: 10, // You can adjust the maximum scale value
-                stepSize: 1,
-            }
-        },
-        plugins: {
-            legend: {
-                position: "right" // Set the position of the legend to top
-            }
-        },
-        tooltips: {
-            enabled: false, // Disable tooltips
-        },
-    }
-});
-
-
-//막대 그래프
-// 데이터 준비
-// 데이터 준비
-var bar_labels = ['악력 (kg)', '팔굽혀피기 (회/분)', '윗몸일으키기 (회/분)', '50m 오래달리기 (초)', '왕복오래달리기 (회)'];
-var myScore = [7, 9, 8, 6, 5];
-var top30Score = [9, 10, 9, 9, 8];
-
-// 차트 생성
-var bar_ctx = document.getElementById('myChart').getContext('2d');
-new Chart(bar_ctx, {
-    type: 'bar',
-    data: {
-        labels: bar_labels,
-        datasets: [{
-            label: '나',
-            data: myScore,
-            backgroundColor: 'rgba(0, 0, 0, 0.2)', // 검은색
-            borderColor: 'rgba(0, 0, 0, 1)',     // 검은색
-            borderWidth: 1
-        },{
-            label: '상위 30%',
-            data: top30Score,
-            backgroundColor: 'rgba(192, 192, 192, 0.2)', // 밝은 회색
-            borderColor: 'rgba(192, 192, 192, 1)',     // 밝은 회색
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true,
-                title: {
-                    display: true,
-                    text: '점'
-                },
-                ticks: {
-                    stepSize: 1, // 간격을 1로 설정하여 1점 단위로 표시
-                    precision: 0 // 소수점 없이 정수로 표시
+            plugins: {
+                legend: {
+                    position: "right"
                 }
             }
-        },
-        plugins: {
-            legend: {
-                position: "right" // Set the position of the legend to top
-            }
         }
-    }
-});
+    });
+}
+
+showBarChart()
 
 var settingContainer = document.getElementById("settingContainer");
 if (settingContainer) {
