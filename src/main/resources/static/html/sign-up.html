@@ -24,7 +24,7 @@
                         <div class="name">
                             <input type="text" id="name" class="text_input" placeholder="Name">
                         </div>
-                        <div>결과: <span id="name_check"></span></div>
+                        <p class="error-message" id="name_check"></p>
                     </div>
                 </div>
                 <div class="frame1349">
@@ -36,7 +36,6 @@
                                 <img class="frame-icon75" alt="" src="../files/496-frame.svg"/>
                             </div>
                             <div class="dropdown-content" id="applicationTypeDropDownContent"></div>
-                            <div style="display: none" class="dropdown-key" id="applicationTypeDropDownKey"></div>
                         </div>
                     </div>
                 </div>
@@ -48,7 +47,7 @@
                         <input type="text" id="email" class="text_input" placeholder="Email 입력하기"/>
                         <button id="email_auth">인증하기</button>
                     </div>
-                    <div>결과: <span id="mergedEmail"></span></div>
+                    <p class="error-message" id="mergedEmail"></p>
                 </div>
                 <div class="text535">올바르지 않는 이메일 주소 형식입니다.</div>
             </div>
@@ -67,7 +66,7 @@
                                   fill="#21272A"/>
                         </svg>
                     </div>
-                    <div>결과: <span id="password_result"></span></div>
+                    <p class="error-message" id="password-1-error"></p>
                 </div>
             </div>
             <div class="frame1011">
@@ -85,7 +84,7 @@
                                   fill="#21272A"/>
                         </svg>
                     </div>
-                    <div>결과: <span id="password_result2"></span></div>
+                    <p class="error-message" id="password-2-error"></p>
                 </div>
                 <div class="text535">비밀번호가 일치하지 않습니다.</div>
             </div>
@@ -105,6 +104,7 @@
         <div class="sign-in" id="signInText">이미 계정이 있으십니까?</div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="../js/sign-up.js"></script>
 </body>
 </html>
