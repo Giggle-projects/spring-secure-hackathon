@@ -13,6 +13,9 @@ const dropdown = document.querySelector(".dropdown");
 const dropdownText = dropdown.querySelector(".text704");
 const dropdownContent = dropdown.querySelector(".dropdown-content");
 
+// const currentDomain = window.location.origin
+const currentDomain = "http://localhost:8080"
+
 let mail_result = 0
 let passwordMachResult = false;
 
@@ -333,9 +336,6 @@ if (signInText) {
         window.location.href = "../html/sign-in.html";
     });
 }
-
-// const currentDomain = window.location.origin
-const currentDomain = "http://localhost:8080"
 
 async function fetchApplicationTypeName() {
     const applicationTypeDropDownContent = document.getElementById("applicationTypeDropDownContent");

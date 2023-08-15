@@ -88,6 +88,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         */
 
+        // 재설정 로직
+
         passwordResult.textContent = errorMessage || "비밀번호가 유효합니다.";
     }
 
@@ -167,14 +169,31 @@ togglePasswordIcons.forEach(function (icon) {
     });
 });
 
-async function fetchApplicationTypeName() {
-    const applicationTypeDropDownContent = document.getElementById("applicationTypeDropDownContent");
+let name;
+let email;
+let applicationTypeStandardName;
 
-    const response = await fetch(currentDomain + "/api/applicationType")
+async function fetchMemberInfo() {
+    const response = await fetch(currentDomain + "/api/member/personal/info")
+
     if (!response.ok) {
         alert("Invalid score input")
         throw new Error('Error fetching.');
     }
+
+    const data = await response.json(); // JSON 데이터로 변환
+
+    name = data.name;
+    email = data.email;
+    applicationTypeStandardName = data.applicationTypeStandardName;
+
+    console.log("Name:", name);
+    console.log("Email:", email);
+    console.log("applicationTypeStandardName:", applicationTypeStandardName);
+}
+
+async function fetchApplicationTypeName() {
+    const applicationTypeDropDownContent = document.getElementById("applicationTypeDropDownContent");
 
     await fetch(currentDomain + "/api/applicationType")
         .then(response => response.json())
@@ -192,6 +211,7 @@ async function fetchApplicationTypeName() {
 }
 
 fetchApplicationTypeName()
+fetchMemberInfo()
 
 // 희망 지망 직렬 선택 처럼 이름이랑 닉네임 자동으로 호출하는 api 필요합니다.
 //from gpt 참고 코드

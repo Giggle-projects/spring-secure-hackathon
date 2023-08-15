@@ -8,11 +8,11 @@ public class MemberPersonalInfoResponse {
 
     private final String name;
     private final String email;
-    private final ApplicationType applicationType;
+    private final String applicationTypeStandardName;
 
     public MemberPersonalInfoResponse(String name, String email, ApplicationType applicationType) {
         this.name = name;
         this.email = email;
-        this.applicationType = applicationType;
+        this.applicationTypeStandardName = applicationType.getStandardName();
     }
 }
