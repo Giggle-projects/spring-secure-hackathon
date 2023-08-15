@@ -9,14 +9,12 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import se.ton.t210.configuration.annotation.LoginMember;
-import se.ton.t210.domain.Member;
 import se.ton.t210.domain.MemberRepository;
 import se.ton.t210.domain.TokenSecret;
 import se.ton.t210.dto.LoginMemberInfo;
 import se.ton.t210.exception.AuthException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Base64;
 
 @Component
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
