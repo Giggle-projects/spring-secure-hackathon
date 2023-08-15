@@ -158,4 +158,9 @@ public class MemberService {
         final String email = tokenSecret.getPayloadValue(tokenKey, accessToken);
         return memberRepository.getMemberByEmail(email);
     }
+
+    public void resetUserInfo(Member member, ResetPersonalInfoRequest request) {
+        member.resetPersonalInfo(request);
+        memberRepository.save(member);
+    }
 }

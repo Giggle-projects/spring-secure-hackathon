@@ -2,6 +2,7 @@ package se.ton.t210.domain;
 
 import lombok.Getter;
 import se.ton.t210.domain.type.ApplicationType;
+import se.ton.t210.dto.ResetPersonalInfoRequest;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -65,5 +66,10 @@ public class Member {
 
     public void reissuePwd(String newPwd) {
         this.password = newPwd;
+    }
+
+    public void resetPersonalInfo(ResetPersonalInfoRequest request) {
+        this.applicationType = request.getApplicationType();
+        this.password = request.getPassword();
     }
 }

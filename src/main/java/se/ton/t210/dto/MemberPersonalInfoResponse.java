@@ -6,13 +6,13 @@ import se.ton.t210.domain.type.ApplicationType;
 @Getter
 public class MemberPersonalInfoResponse {
 
-    private final ApplicationType applicationType;
     private final String name;
     private final String email;
+    private final ApplicationType applicationType;
 
-    public MemberPersonalInfoResponse(ApplicationType applicationType, String name, String email) {
-        this.applicationType = applicationType;
+    public MemberPersonalInfoResponse(String name, String email, ApplicationType applicationType) {
         this.name = name;
         this.email = email;
+        this.applicationType = applicationType;
     }
 }
