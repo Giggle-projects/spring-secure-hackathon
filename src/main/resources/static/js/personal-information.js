@@ -1,15 +1,46 @@
+const currentDomain = "http://localhost:8080"
+
+async function fetchMyInfo() {
+    const responseMemberInfo = await fetch(currentDomain + "/api/member/me");
+    if (!responseMemberInfo.ok) {
+        sAlert("Failed to fetch member")
+        throw new Error('Error fetching.');
+    }
+
+    const responseScoreInfo = await fetch(currentDomain + "/api/score/me");
+    if (!responseScoreInfo.ok) {
+        sAlert("Failed to fetch expected")
+        throw new Error('Error fetching.');
+    }
+
+    const responseMemberInfoValue = await responseMemberInfo.json();
+    const responseScoreInfoValue = await responseScoreInfo.json();
+
+    const name = document.getElementById('name');
+    const applicationType = document.getElementById('applicationType');
+    const currentScore = document.getElementById('currentScore');
+    const maxScore = document.getElementById('maxScore');
+
+    name.innerText = responseMemberInfoValue.name
+    applicationType.innerText = responseMemberInfoValue.applicationTypeName
+    currentScore.innerText = "현재 점수 : " + responseScoreInfoValue.score + "점"
+    maxScore.innerText = "최고 점수 : " + responseScoreInfoValue.maxScore + "점"
+}
+
+fetchMyInfo()
+
 const data = {
     labels: ["악력", "팔굽혀피기", "윗몸일으키기", "50m 오래달리기", "왕복오래달리기"],
     datasets: [
         {
-            label: "My Scores",
-            data: [71, 92, 63, 80, 56], // Sample values
+            label: "나",
+            data: [1, 2, 3, 4, 5], // Sample values
             backgroundColor: "rgba(66, 135, 245, 0.5)",
             borderColor: "rgba(66, 135, 245, 1)",
             pointBackgroundColor: "rgba(66, 135, 245, 1)"
         }, {
-            label: "your Scores",
-            data: [31, 92, 23, 80, 96], // Sample values
+            label: "상위 30%",
+            data: [5, 4, 3, 2, 1], // Sample values
             backgroundColor: "rgba(33, 33, 33, 0.5)",
             borderColor: "rgba(33, 33, 33, 1)",
             pointBackgroundColor: "rgba(66, 135, 245, 1)"
@@ -18,17 +49,14 @@ const data = {
     ]
 };
 
-// Create the radar chart
 const ctx = document.getElementById("radarChart").getContext("2d");
-const radarChart = new Chart(ctx, {
+new Chart(ctx, {
     type: "radar",
     data: data,
     options: {
+        responsive: false,
         line: {
-            borderWidth: 3
-        },
-        legend: {
-            display: false, // 범례 숨기기
+            borderWidth: 10
         },
         scale: {
             r: {
@@ -38,11 +66,15 @@ const radarChart = new Chart(ctx, {
                     }
                 }
             },
-
             ticks: {
                 beginAtZero: true,
-                max: 100, // You can adjust the maximum scale value
-                stepSize: 10,
+                max: 10, // You can adjust the maximum scale value
+                stepSize: 1,
+            }
+        },
+        plugins: {
+            legend: {
+                position: "right" // Set the position of the legend to top
             }
         },
         tooltips: {
@@ -57,12 +89,11 @@ const radarChart = new Chart(ctx, {
 // 데이터 준비
 var bar_labels = ['악력 (kg)', '팔굽혀피기 (회/분)', '윗몸일으키기 (회/분)', '50m 오래달리기 (초)', '왕복오래달리기 (회)'];
 var myScore = [7, 9, 8, 6, 5];
-var avgScore = [5, 7, 6, 8, 7];
 var top30Score = [9, 10, 9, 9, 8];
 
 // 차트 생성
 var bar_ctx = document.getElementById('myChart').getContext('2d');
-var myChart = new Chart(bar_ctx, {
+new Chart(bar_ctx, {
     type: 'bar',
     data: {
         labels: bar_labels,
@@ -72,13 +103,7 @@ var myChart = new Chart(bar_ctx, {
             backgroundColor: 'rgba(0, 0, 0, 0.2)', // 검은색
             borderColor: 'rgba(0, 0, 0, 1)',     // 검은색
             borderWidth: 1
-        }, {
-            label: '평균',
-            data: avgScore,
-            backgroundColor: 'rgba(128, 128, 128, 0.2)', // 회색
-            borderColor: 'rgba(128, 128, 128, 1)',     // 회색
-            borderWidth: 1
-        }, {
+        },{
             label: '상위 30%',
             data: top30Score,
             backgroundColor: 'rgba(192, 192, 192, 0.2)', // 밝은 회색
@@ -101,33 +126,31 @@ var myChart = new Chart(bar_ctx, {
             }
         },
         plugins: {
-            title: {
-                display: true,
-                text: '종목별 점수 분포'
+            legend: {
+                position: "right" // Set the position of the legend to top
             }
         }
     }
 });
 
-
 var settingContainer = document.getElementById("settingContainer");
 if (settingContainer) {
     settingContainer.addEventListener("click", function (e) {
-        window.location.href = "../html/setting-account.html";
+        window.location.href = "setting-account.html";
     });
 }
 
 var menu01Container = document.getElementById("menu01Container");
 if (menu01Container) {
     menu01Container.addEventListener("click", function (e) {
-        window.location.href = "../html/dashboard.html";
+        window.location.href = "dashboard.html";
     });
 }
 
 var menu02 = document.getElementById("menu02");
 if (menu02) {
     menu02.addEventListener("click", function (e) {
-        window.location.href = "../html/record.html";
+        window.location.href = "record.html";
     });
 }
 
@@ -141,6 +164,6 @@ if (menu03Container) {
 var menu04Container = document.getElementById("menu04Container");
 if (menu04Container) {
     menu04Container.addEventListener("click", function (e) {
-        window.location.href = "../html/application-information1.html";
+        window.location.href = "application-information1.html";
     });
 }

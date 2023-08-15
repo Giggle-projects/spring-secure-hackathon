@@ -53,6 +53,16 @@ public class ScoreService {
         return new ExpectScoreResponse(currentScore, currentPercentile, expectedPassPercent);
     }
 
+    public ScoreResponse score(Long memberId) {
+        final List<MonthlyScore> scores = monthlyScoreRepository.findAllByMemberId(memberId);
+        final int lastScore = scores.get(scores.size()-1).getScore();
+        final int maxScore = scores.stream()
+            .mapToInt(it -> it.getScore())
+            .max()
+            .orElse(0);
+        return new ScoreResponse(lastScore, maxScore);
+    }
+
     @Transactional
     public ScoreResponse update(Long memberId, List<EvaluationScoreRequest> request, LocalDate yearMonth) {
         int monthlyScore = 0;
