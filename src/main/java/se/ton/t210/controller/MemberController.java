@@ -24,7 +24,6 @@ public class MemberController {
     public ResponseEntity<Void> signUp(@RequestBody @Valid SignUpRequest request,
                                        @CookieValue String emailAuthToken,
                                        HttpServletResponse response) {
-        System.out.println(emailAuthToken);
         memberService.signUp(request, emailAuthToken, response);
         return ResponseEntity.ok().build();
     }
@@ -50,11 +49,31 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/api/valid/authCode")
-    public ResponseEntity<Void> validateAuthCode(@RequestBody ValidateAuthCodeRequest request,
+    @PostMapping("/api/signUp/valid/authCode")
+    public ResponseEntity<Void> validateAuthCodeFromSignUp(@RequestBody ValidateAuthCodeRequest request,
                                                  HttpServletResponse response) {
         memberService.validateEmailAuthCode(request.getEmail(), request.getAuthCode());
-        memberService.issueEmailToken(request.getEmail(), response);
+        memberService.issueEmailToken(response, request.getEmail());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/api/forgetPwd/valid/authCode")
+    public ResponseEntity<Void> validateAuthCodeFromForgetPwd(@RequestBody ValidateAuthCodeRequest request,
+                                                 HttpServletResponse response) {
+        memberService.validateEmailAuthCode(request.getEmail(), request.getAuthCode());
+        memberService.issueToken(response, request.getEmail());
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/api/notExist/email")
+    public ResponseEntity<Void> validNotExistElement(String email) {
+        memberService.isNotExistEmail(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/api/isExist/email")
+    public ResponseEntity<Void> validExistElement(String email) {
+        memberService.isExistEmail(email);
         return ResponseEntity.ok().build();
     }
 

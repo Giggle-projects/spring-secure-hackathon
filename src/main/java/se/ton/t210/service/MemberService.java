@@ -114,10 +114,14 @@ public class MemberService {
         }
     }
 
-    public void issueEmailToken(String email, HttpServletResponse response) {
+    public void issueEmailToken(HttpServletResponse response, String email) {
         final String emailAuthToken = tokenService.issueMailToken(email);
-        System.out.println(emailAuthToken);
         CookieUtils.loadHttpOnlyCookie(response, emailAuthTokenCookieKey, emailAuthToken);
+    }
+
+    public void issueToken(HttpServletResponse response, String email) {
+        final MemberTokens tokens = tokenService.issue(email);
+        responseTokens(response, tokens);
     }
 
     private void responseTokens(HttpServletResponse response, MemberTokens tokens) {
@@ -134,5 +138,17 @@ public class MemberService {
     public ApplicantCountResponse countApplicant(ApplicationType applicationType) {
         final int count = memberRepository.countByApplicationType(applicationType);
         return new ApplicantCountResponse(count);
+    }
+
+    public void isExistEmail(String email) {
+        if (!memberRepository.existsByEmail(email)) {
+            throw new AuthException(HttpStatus.CONFLICT, "Email is not exists");
+        }
+    }
+
+    public void isNotExistEmail(String email) {
+        if (memberRepository.existsByEmail(email)) {
+            throw new AuthException(HttpStatus.CONFLICT, "Email is already exists");
+        }
     }
 }
