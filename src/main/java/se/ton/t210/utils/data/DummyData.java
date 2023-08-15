@@ -54,7 +54,7 @@ class DummyData {
         }
     }
 
-    private List<Member> createMembers(int number) {
+    private void createMembers(int number) {
         members = new ArrayList<>();
         for (var applicationType : ApplicationType.values()) {
             for (int i = 0; i < number; i++) {
@@ -68,7 +68,6 @@ class DummyData {
             }
         }
         memberRepository.saveAll(members);
-        return members;
     }
 
     private Map<ApplicationType, List<EvaluationItem>> createEvaluationItemTable() {
