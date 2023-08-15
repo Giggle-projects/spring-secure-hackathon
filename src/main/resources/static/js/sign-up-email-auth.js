@@ -1,16 +1,12 @@
 // const currentDomain = window.location.origin
 const currentDomain = "http://localhost:8080"
 
-// reset-password-auth.html 페이지의 JavaScript 부분
-document.addEventListener("DOMContentLoaded", function () {
-
-});
 
 const codeInput = document.getElementById("code");
 const timerSpan = document.getElementById("timer");
 const verificationError = document.getElementById("verificationError");
 const authNumberResult = document.getElementById("auth_number");
-
+const authButton = document.querySelector(".frame977");
 // 쿠키에서 userEmail 값 가져오기
 const userEmail = getCookie("userEmail");
 // 이메일 주소 표시
@@ -63,7 +59,26 @@ document.addEventListener("DOMContentLoaded", function () {
     startTimer();
 
     // 인증하기 버튼 클릭 시
-    const authButton = document.querySelector(".frame977");
+    codeInput.addEventListener("input", function (e) {
+        const codeInputData= codeInput.value;
+        if (!(codeInputData)){
+            authNumberResult.textContent="인증번호를 입력하세요."
+            authNumberResult.style.opacity = 1;
+            authNumberResult.style.color='red'
+            return
+        }
+        else if(!(/^\d+$/.test(codeInputData))) {
+            authNumberResult.textContent = "숫자를 입력해주세요."; // 숫자가 아닐 경우 메시지 변
+            authNumberResult.style.opacity = 1;
+            authNumberResult.style.color='red'
+            return
+        }
+        else if(codeInputData && (/^\d+$/.test(codeInputData))){
+            authNumberResult.style.opacity = 0;}
+    });
+
+
+
     authButton.addEventListener("click", async function () {
         const authCode = codeInput.value;
 
@@ -87,8 +102,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (!response.ok) {
                     throw new Error("인증에 실패했습니다. 다시 시도해주시기 바랍니다.");
                 }
-                authNumberResult.textContent = "인증이 완료되었습니다.";
-                alert(authNumberResult.textContent);
+//                    authNumberResult.textContent = "인증이 완료되었습니다.";
+//                    alert(authNumberResult.textContent);
                 window.close();
             } catch (error) {
                 alert(error.message);

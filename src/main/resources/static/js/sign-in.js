@@ -54,7 +54,9 @@ logInBtn.addEventListener("click", async function () {
             body: JSON.stringify(userData),
         });
         if (!response.ok) {
-            throw new Error("회원 정보가 맞지 않습니다.");
+            sAlert("회원 정보가 맞지 않습니다.")
+            return
+            //throw new Error("회원 정보가 맞지 않습니다.");
         }
 
         const checkBoxSelected = check_box.classList.contains("selected_box");
@@ -66,7 +68,6 @@ logInBtn.addEventListener("click", async function () {
         }
 
         window.location.href = "../html/dashboard.html";
-        alert("로그인을 성공했습니다.");
     } catch (error) {
         alert(error.message);
     }
@@ -82,5 +83,13 @@ if (text7) {
 if (signUpText) {
     signUpText.addEventListener("click", function (e) {
         window.location.href = "../html/sign-up.html";
+    });
+}
+// sAlert('custom alert example!');
+function sAlert(txt, title = 'ERROR',) {
+    Swal.fire({
+        title: title,
+        text: txt,
+        confirmButtonText: '닫기'
     });
 }

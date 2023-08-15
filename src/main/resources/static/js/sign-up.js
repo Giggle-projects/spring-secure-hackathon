@@ -108,7 +108,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.cookie = "userEmail=" + emailInputValue;
 
                 // 이메일 인증 버튼 클릭 시 인증 코드를 메일로 보내는 로직
-                const email = emailInput.value;
                 const userEmail = emailInput.value
                 // 이메일 인증
                 const responseDupEmail = await fetch(currentDomain + "/api/notExist/email?" + new URLSearchParams({
@@ -120,11 +119,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     throw new Error('fetch error');
                 }
 
-                let response = await fetch(`http://localhost:8080/api/send/mail?email=${email}`)
+                let response = await fetch(currentDomain + "/api/send/mail?" + new URLSearchParams({
+                      email: userEmail
+                }))
                 if (!response.ok) {
                     throw new Error('fetch error');
                 }
-                window.open("./sign-up-email-auth.html", "SignUpEmailAuth", "width=800,height=600");
+                window.open("./sign-up-email-auth.html", "SignUpEmailAuth", "width=680,height=480");
             }
         });
     }
@@ -135,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // password 처리
-    passwordInput.addEventListener("change", handlePasswordInput);
+    passwordInput.addEventListener("input", handlePasswordInput);
 
     function checkPasswordValidity() {
         if (passwordMachResult) {
@@ -151,8 +152,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const lengthRegex = /^.{9,16}$/;
         const alphanumericRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
-
-        if (!lengthRegex.test(password)) {
+        if (!(password)){
+            errorMessage = "비밀번호를 입력하세요";
+            passwordMachResult = 0;
+        }
+        else if (!lengthRegex.test(password)) {
             passwordResult.style.color = 'red';
             errorMessage = "비밀번호는 9자 이상 16자 이하로 입력하세요.";
             passwordMachResult = 0;
@@ -185,8 +189,10 @@ document.addEventListener("DOMContentLoaded", function () {
     function checkPasswordMatch() {
         const password1 = passwordInput.value;
         const password2 = passwordInput2.value;
-
-        if (password1 === password2) {
+        if(!(password2)){
+            passwordResult2.textContent = "비밀번호를 입력하세요.";
+        }
+        else if (password1 === password2) {
             passwordResult2.textContent = "비밀번호가 일치합니다.";
             passwordResult2.style.color = "black"; // Change text color to black
             passwordMachResult = 1
@@ -246,7 +252,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const checkBoxSelected = check_box.classList.contains("selected_box");
         const applicationTypeKey = dropdownText.id;
 
-        if (checkBoxSelected) {
+        if (checkBoxSelected && passwordMachResult && mail_result && name_result) {
             // // 프론트 로그
             console.log("이름 입력 값:", nameInputValue);
             console.log("이메일 입력 값:", emailInputValue);
@@ -283,7 +289,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert(error.message);
             }
         } else {
-            sAlert("개인정보 이용 동의 여부를 체크해주세요")
+            sAlert("회원가입 정보를 정확하게 입력하세요.")
         }
     });
 });
