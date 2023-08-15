@@ -41,15 +41,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (/[!@#$%^&*()_+{}\[\]:;<>,.?~\\/`'" ]/.test(name)) {
             nameCheckResult.textContent = "특수 문자 또는 공백은 입력할 수 없습니다.";
-            nameCheckResult.style.color="red"
+            nameCheckResult.style.color = "red"
             nameCheckResult.style.opacity = 1;
         } else if (!/^[가-힣]+$/.test(name)) {
             nameCheckResult.textContent = "한글만 입력 가능합니다.";
-            nameCheckResult.style.color="red"
+            nameCheckResult.style.color = "red"
             nameCheckResult.style.opacity = 1;
         } else if (name.length < 2 || name.length > 4) {
             nameCheckResult.textContent = "이름은 2글자 이상, 4글자 이하로 입력해주세요.";
-            nameCheckResult.style.color="red"
+            nameCheckResult.style.color = "red"
             nameCheckResult.style.opacity = 1;
         } else {
             nameCheckResult.textContent = "올바른 이름입니다.";
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (errorMessage) {
             mergedEmailResult.style.opacity = 1;
             mergedEmailResult.textContent = errorMessage;
-            mergedEmailResult.style.color="red"
+            mergedEmailResult.style.color = "red"
         } else {
             mergedEmailResult.style.opacity = 0;
             mergedEmailResult.textContent = emailFront + "@" + emailAfterAt;
@@ -109,6 +109,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // 이메일 인증 버튼 클릭 시 인증 코드를 메일로 보내는 로직
                 const email = emailInput.value;
+                const userEmail = emailInput.value
+                // 이메일 인증
+                const responseDupEmail = await fetch(currentDomain + "/api/isNotExist/email?" + new URLSearchParams({
+                    email: userEmail
+                }))
+
+                if (!responseDupEmail.ok) {
+                    sAlert("이미 존재하는 이메일입니다.")
+                    throw new Error('fetch error');
+                }
+
                 let response = await fetch(`http://localhost:8080/api/send/mail?email=${email}`)
                 if (!response.ok) {
                     throw new Error('fetch error');

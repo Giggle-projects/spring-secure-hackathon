@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 authCode: authCode
             };
             try {
-                const response = await fetch(currentDomain + "/api/valid/authCode", {
+                const response = await fetch(currentDomain + "/api/signUp/valid/authCode", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -87,7 +87,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (!response.ok) {
                     throw new Error("인증에 실패했습니다. 다시 시도해주시기 바랍니다.");
                 }
-
                 authNumberResult.textContent = "인증이 완료되었습니다.";
                 alert(authNumberResult.textContent);
                 window.close();
