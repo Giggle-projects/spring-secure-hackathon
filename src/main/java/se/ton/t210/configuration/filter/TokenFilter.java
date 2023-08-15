@@ -30,13 +30,12 @@ public class TokenFilter extends OncePerRequestFilter {
         try {
             final String refreshToken = getTokenFromCookies(tokenCookieKey, request.getCookies());
             secret.validateToken(refreshToken);
-
         } catch (AuthException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.sendRedirect("/html/error-401.html");
             response.getOutputStream().write(e.getMessage().getBytes());
             return;
         }
-
         filterChain.doFilter(request, response);
     }
 
