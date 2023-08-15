@@ -2,6 +2,10 @@
 const dropdown = document.querySelector(".dropdown");
 const dropdownText = dropdown.querySelector(".text704");
 const dropdownContent = dropdown.querySelector(".dropdown-content");
+const nameInput = document.getElementById("full-name")
+const emailInput = document.getElementById("email")
+var imgElement = document.querySelector('.frame-icon69');
+
 
 // const currentDomain = window.location.origin
 const currentDomain = "http://localhost:8080"
@@ -18,10 +22,20 @@ document.addEventListener("DOMContentLoaded", function () {
         if (event.target.tagName === "A") {
             event.preventDefault();
             dropdownText.textContent = event.target.textContent;
+            console.log(event.target.textContent);
+
+            if (event.target.textContent === "경찰직공무원(남)" || event.target.textContent === "경찰직공무원(여)") {
+                imgElement.src ="../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
+            } else if (event.target.textContent === "소방직공무원(남)" || event.target.textContent === "소방직공무원(여)") {
+                imgElement.src ="../files/type_icon2.jpeg"; // 소방직 이미지 경로로 변경
+            } else if (event.target.textContent === "교정직공무원(남)" || event.target.textContent === "교정직공무원(여)") {
+                imgElement.src ="../files/type_icon3.png";// 교정직 이미지 경로로 변경
+                }
             dropdownText.id = event.target.id;
             dropdown.classList.remove("active");
         }
     });
+
 
     window.addEventListener("click", function (event) {
         if (!dropdown.contains(event.target)) {
@@ -190,6 +204,18 @@ async function fetchMemberInfo() {
     console.log("Name:", name);
     console.log("Email:", email);
     console.log("applicationTypeStandardName:", applicationTypeStandardName);
+
+
+    dropdownText.textContent=applicationTypeStandardName;
+    nameInput.textContent=name;
+    emailInput.textContent=email;
+    if (applicationTypeStandardName === "경찰직공무원(남)" || applicationTypeStandardName === "경찰직공무원(여)") {
+        imgElement.src ="../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
+    } else if (applicationTypeStandardName === "소방직공무원(남)" || applicationTypeSta쇼ndardName === "소방직공무원(여)") {
+        imgElement.src ="../files/type_icon2.jpeg"; // 소방직 이미지 경로로 변경
+    } else if (applicationTypeStandardName === "교정직공무원(남)" || applicationTypeStandardName === "교정직공무원(여)") {
+        imgElement.src ="../files/type_icon3.png";// 교정직 이미지 경로로 변경
+}
 }
 
 async function fetchApplicationTypeName() {
