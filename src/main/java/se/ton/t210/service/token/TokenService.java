@@ -47,6 +47,12 @@ public class TokenService {
         return new MemberTokens(accessToken, refreshToken);
     }
 
+    public MemberTokens reissue(String refreshToken) {
+        tokenSecret.validateToken(refreshToken);
+        final String userEmail = tokenSecret.getPayloadValue(tokenKey, refreshToken);
+        return issue(userEmail);
+    }
+
     public MemberTokens reissue(String accessToken, String refreshToken) {
         tokenSecret.validateToken(refreshToken);
         if (tokenSecret.isExpired(accessToken)) {

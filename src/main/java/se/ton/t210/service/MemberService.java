@@ -11,10 +11,7 @@ import se.ton.t210.domain.Member;
 import se.ton.t210.domain.MemberRepository;
 import se.ton.t210.domain.TokenSecret;
 import se.ton.t210.domain.type.ApplicationType;
-import se.ton.t210.dto.ApplicantCountResponse;
-import se.ton.t210.dto.MemberTokens;
-import se.ton.t210.dto.SignInRequest;
-import se.ton.t210.dto.SignUpRequest;
+import se.ton.t210.dto.*;
 import se.ton.t210.exception.AuthException;
 import se.ton.t210.service.mail.MailServiceInterface;
 import se.ton.t210.service.mail.form.SignUpAuthMailForm;
@@ -89,6 +86,11 @@ public class MemberService {
         responseTokens(response, tokens);
     }
 
+    public void reissueToken(String refreshToken, HttpServletResponse response) {
+        final MemberTokens tokens = tokenService.issue(refreshToken);
+        responseTokens(response, tokens);
+    }
+
     public void reissuePwd(String email, String newPwd) {
         Member member = memberRepository.findByEmail(email).orElseThrow(() ->
                 new AuthException(HttpStatus.NOT_FOUND, "User is not found"));
@@ -150,5 +152,10 @@ public class MemberService {
         if (memberRepository.existsByEmail(email)) {
             throw new AuthException(HttpStatus.CONFLICT, "Email is already exists");
         }
+    }
+
+    public MemberPersonalInfoResponse getPersonalInfo(String accessToken) {
+        final String email = tokenSecret.getPayloadValue(tokenKey, accessToken);
+        return memberRepository.getMemberByEmail(email);
     }
 }

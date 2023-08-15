@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const email = emailInput.value;
                 const userEmail = emailInput.value
                 // 이메일 인증
-                const responseDupEmail = await fetch(currentDomain + "/api/isNotExist/email?" + new URLSearchParams({
+                const responseDupEmail = await fetch(currentDomain + "/api/notExist/email?" + new URLSearchParams({
                     email: userEmail
                 }))
 

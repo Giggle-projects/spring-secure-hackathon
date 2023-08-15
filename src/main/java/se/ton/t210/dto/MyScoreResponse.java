@@ -17,11 +17,14 @@ public class MyScoreResponse {
     }
 
     public static MyScoreResponse of(List<MonthlyScore> scores) {
+        if (scores.isEmpty()) {
+            return new MyScoreResponse(0, 0);
+        }
         final int lastScore = scores.get(scores.size() - 1).getScore();
         final int maxScore = scores.stream()
-            .mapToInt(MonthlyScore::getScore)
-            .max()
-            .orElse(0);
+                .mapToInt(MonthlyScore::getScore)
+                .max()
+                .orElse(0);
         return new MyScoreResponse(lastScore, maxScore);
     }
 }

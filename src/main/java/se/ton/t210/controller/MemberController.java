@@ -51,7 +51,7 @@ public class MemberController {
 
     @PostMapping("/api/signUp/valid/authCode")
     public ResponseEntity<Void> validateAuthCodeFromSignUp(@RequestBody ValidateAuthCodeRequest request,
-                                                 HttpServletResponse response) {
+                                                           HttpServletResponse response) {
         memberService.validateEmailAuthCode(request.getEmail(), request.getAuthCode());
         memberService.issueEmailToken(response, request.getEmail());
         return ResponseEntity.ok().build();
@@ -59,7 +59,7 @@ public class MemberController {
 
     @PostMapping("/api/forgetPwd/valid/authCode")
     public ResponseEntity<Void> validateAuthCodeFromForgetPwd(@RequestBody ValidateAuthCodeRequest request,
-                                                 HttpServletResponse response) {
+                                                              HttpServletResponse response) {
         memberService.validateEmailAuthCode(request.getEmail(), request.getAuthCode());
         memberService.issueToken(response, request.getEmail());
         return ResponseEntity.ok().build();
@@ -91,10 +91,24 @@ public class MemberController {
         return ResponseEntity.ok(applicantCountResponse);
     }
 
+    @GetMapping("/api/member/personal/info")
+    public ResponseEntity<MemberPersonalInfoResponse> personalInfo(@CookieValue String accessToken) {
+        final MemberPersonalInfoResponse response = memberService.getPersonalInfo(accessToken);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/api/member/me")
     public ResponseEntity<MemberResponse> me() {
         final Member member = new Member(1L, "name", "email", "password", ApplicationType.PoliceOfficerMale);
         final MemberResponse response = MemberResponse.of(member);
         return ResponseEntity.ok(response);
+    }
+
+    // 이후 적용
+    @GetMapping("/api/refreshToken/logIn")
+    public ResponseEntity<Void> logInByRefreshToken(@CookieValue String refreshToken,
+                                                    HttpServletResponse response) {
+        memberService.reissueToken(refreshToken, response);
+        return ResponseEntity.ok().build();
     }
 }
