@@ -47,6 +47,11 @@ class DummyData {
     public void create() {
         createMembers(100);
         createEvaluationItemTable();
+        memberRepository.save(new Member("test", "test@naver.com", "12345", ApplicationType.PoliceOfficerMale));
+
+        final List<Member> members = createMembers(100);
+        itemTable = createEvaluationItemTable();
+
         for (var member : members) {
             records(member);
         }
