@@ -44,6 +44,8 @@ class DummyData {
 
     @PostConstruct
     public void create() {
+        memberRepository.save(new Member("test", "test@naver.com", "12345", ApplicationType.PoliceOfficerMale));
+
         final List<Member> members = createMembers(100);
         itemTable = createEvaluationItemTable();
 
