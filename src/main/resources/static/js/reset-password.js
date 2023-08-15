@@ -28,52 +28,59 @@ function updateMergedEmail() {
   }
 
   if (errorMessage) {
+    mergedEmailResult.style.opacity = 1;
     mergedEmailResult.textContent = errorMessage;
+    mergedEmailResult.style.color="red"
   } else {
+    mergedEmailResult.style.opacity = 0;
     mergedEmailResult.textContent = emailFront + "@" + emailAfterAt;
+    mail_result = 1
+    mergedEmailResult.style.color = "black"; // Change text color to black
+
   }
 }
+
 function isValidDomain(domain) {
-return validDomains.includes(domain);
+  return validDomains.includes(domain);
 }
 
 function isValidDomainInList(domain) {
-return validDomains.includes(domain);
+  return validDomains.includes(domain);
 }
 
 function getCookieValue(name) {
-var cookieValue = "";
-var cookies = document.cookie.split("; ");
-for (var i = 0; i < cookies.length; i++) {
-var cookie = cookies[i].split("=");
-if (cookie[0] === name) {
-  cookieValue = decodeURIComponent(cookie[1]);
-  break;
-}
-}
-return cookieValue;
+  var cookieValue = "";
+  var cookies = document.cookie.split("; ");
+  for (var i = 0; i < cookies.length; i++) {
+    var cookie = cookies[i].split("=");
+    if (cookie[0] === name) {
+      cookieValue = decodeURIComponent(cookie[1]);
+      break;
+    }
+  }
+  return cookieValue;
 }
 
 
 var sendEmail = document.getElementById("sendEmail");
 if (sendEmail) {
-sendEmail.addEventListener("click", function (e) {
-updateMergedEmail();
+  sendEmail.addEventListener("click", function (e) {
+    updateMergedEmail();
 
-var mergedEmail = mergedEmailResult.textContent; // 업데이트된 값 읽어오기
-console.log("!!!",mergedEmail);
-console.log(mergedEmail);
+    var mergedEmail = mergedEmailResult.textContent; // 업데이트된 값 읽어오기
+    console.log("!!!",mergedEmail);
+    console.log(mergedEmail);
 
-document.cookie = "userEmail=" + encodeURIComponent(mergedEmail);
-console.log("!!!쿠키", document.cookie);
+    document.cookie = "userEmail=" + encodeURIComponent(mergedEmail);
+    console.log("!!!쿠키", document.cookie);
 
-window.location.href = "../html/reset-password-auth.html";
-});
+    window.location.href = "./reset-password-auth.html";
+  });
 }
 
 var sendEmail = document.getElementById("sendEmail");
 if (sendEmail) {
   sendEmail.addEventListener("click", function (e) {
-    window.location.href = "../html/reset-password-auth.html";
+    window.location.href = "./reset-password-auth.html";
   });
 }

@@ -1,8 +1,8 @@
 const emailInput = document.getElementById("email"); // 변경된 이메일 입력 요소 가져오기
 const passwordInput = document.getElementById("password1");
 const passwordInput2 = document.getElementById("password2");
-const passwordResult = document.getElementById("password_result");
-const passwordResult2 = document.getElementById("password_result2");
+const passwordResult = document.getElementById("password-1-error");
+const passwordResult2 = document.getElementById("password-2-error");
 const nameInput = document.getElementById("name");
 const nameCheckResult = document.getElementById("name_check");
 const mergedEmailResult = document.getElementById("mergedEmail");
@@ -14,6 +14,7 @@ const dropdownText = dropdown.querySelector(".text704");
 const dropdownContent = dropdown.querySelector(".dropdown-content");
 
 let mail_result = 0
+let passwordMachResult = false;
 
 /* 쿠키 가져오는 함수
 function getCookie(name) {
@@ -40,12 +41,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (/[!@#$%^&*()_+{}\[\]:;<>,.?~\\/`'" ]/.test(name)) {
             nameCheckResult.textContent = "특수 문자 또는 공백은 입력할 수 없습니다.";
+            nameCheckResult.style.color="red"
+            nameCheckResult.style.opacity = 1;
         } else if (!/^[가-힣]+$/.test(name)) {
             nameCheckResult.textContent = "한글만 입력 가능합니다.";
+            nameCheckResult.style.color="red"
+            nameCheckResult.style.opacity = 1;
         } else if (name.length < 2 || name.length > 4) {
             nameCheckResult.textContent = "이름은 2글자 이상, 4글자 이하로 입력해주세요.";
+            nameCheckResult.style.color="red"
+            nameCheckResult.style.opacity = 1;
         } else {
             nameCheckResult.textContent = "올바른 이름입니다.";
+            nameCheckResult.style.opacity = 0;
+            nameCheckResult.style.color = "black"
             name_result = 1
         }
     });
@@ -69,10 +78,14 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
         if (errorMessage) {
+            mergedEmailResult.style.opacity = 1;
             mergedEmailResult.textContent = errorMessage;
+            mergedEmailResult.style.color="red"
         } else {
+            mergedEmailResult.style.opacity = 0;
             mergedEmailResult.textContent = emailFront + "@" + emailAfterAt;
             mail_result = 1
+            mergedEmailResult.style.color = "black"; // Change text color to black
         }
     });
 
@@ -80,7 +93,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const email_Auth = document.getElementById("email_auth");
     if (email_Auth) {
         email_Auth.addEventListener("click", async function (e) {
-            console.log(emailInput)
             const emailInputValue = emailInput.value.trim();
             if (!emailInputValue) {
                 alert("이메일을 입력하세요.");
@@ -97,26 +109,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // 이메일 인증 버튼 클릭 시 인증 코드를 메일로 보내는 로직
                 const email = emailInput.value;
-                fetch(`http://localhost:8080/api/send/mail?email=${email}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .catch(error => {
-                        console.error('Failed to fetch data');
-                    });
-
+                let response = await fetch(`http://localhost:8080/api/send/mail?email=${email}`)
+                if (!response.ok) {
+                    throw new Error('fetch error');
+                }
                 window.open("./sign-up-email-auth.html", "SignUpEmailAuth", "width=800,height=600");
             }
         });
     }
 
+    function handlePasswordInput() {
+        checkPasswordValidity();
+        checkPasswordMatch();
+    }
+
     // password 처리
-    passwordInput.addEventListener("change", checkPasswordValidity);
+    passwordInput.addEventListener("change", handlePasswordInput);
 
     function checkPasswordValidity() {
+        if (passwordMachResult) {
+            if (!(passwordInput.value === passwordInput2.value)) {
+                passwordResult2.textContent = "비밀번호가 일치하지 않습니다.";
+                passwordResult2.style.color = "red"; // Change text color to black
+                passwordMachResult = 0;
+            }
+        }
+
         const password = passwordInput.value;
         var errorMessage = '';
 
@@ -124,10 +142,16 @@ document.addEventListener("DOMContentLoaded", function () {
         const alphanumericRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
 
         if (!lengthRegex.test(password)) {
+            passwordResult.style.color = 'red';
             errorMessage = "비밀번호는 9자 이상 16자 이하로 입력하세요.";
+            passwordMachResult = 0;
         } else if (!alphanumericRegex.test(password)) {
+            passwordResult.style.color = 'red';
             errorMessage = "비밀번호는 영어, 숫자, 특수문자를 모두 포함해야 합니다.";
+            passwordMachResult = 0;
         }
+
+        console.log("password1 error", errorMessage)
 
         /*
         else if (!nameCheck) {
@@ -136,12 +160,16 @@ document.addEventListener("DOMContentLoaded", function () {
             errorMessage = "비밀번호가 과거에 사용된 적이 있습니다.";
         }
         */
-
-        passwordResult.textContent = errorMessage || "비밀번호가 유효합니다.";
+        if (errorMessage) {
+            passwordResult.textContent = errorMessage;
+        } else {
+            passwordResult.style.color = 'black';
+            passwordResult.textContent = "비밀번호가 유효합니다.";
+        }
     }
 
     // repassword 처리
-    passwordInput2.addEventListener("change", checkPasswordMatch);
+    passwordInput2.addEventListener("input", checkPasswordMatch);
 
     function checkPasswordMatch() {
         const password1 = passwordInput.value;
@@ -149,10 +177,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (password1 === password2) {
             passwordResult2.textContent = "비밀번호가 일치합니다.";
-            password1_result = 1
-            password2_result = 1
+            passwordResult2.style.color = "black"; // Change text color to black
+            passwordMachResult = 1
         } else {
             passwordResult2.textContent = "비밀번호가 일치하지 않습니다.";
+            passwordResult2.style.color = "red"; // Change text color to black
+            passwordMachResult = 0
         }
     }
 
@@ -179,30 +209,27 @@ document.addEventListener("DOMContentLoaded", function () {
     //회원가입 버튼 클릭
     const signUpBtn = document.querySelector(".sign-up-btn");
     signUpBtn.addEventListener("click", async function () {
-        var nameInputValue = ""
+        let nameInputValue = ""
         if (name_result) {
             nameInputValue = nameInput.value;
+        } else {
+            sAlert("이름이 올바르지 않습니다.")
         }
 
-        var emailInputValue = "";
+        let emailInputValue = "";
         mail_result = 1
         if (mail_result) {
             emailInputValue = emailInput.value; // Get the value from the email input
+        } else {
+            sAlert("이메일이 올바르지 않습니다.")
         }
 
-        var password1InputValue = ""
-        if (password_result) {
-            password1InputValue = passwordInput.value; // Get the value from the first password input
-        }
+        let passwordInputValue = ""
+        if (passwordMachResult) {
+            passwordInputValue = passwordInput.value;
+        } else {
+            sAlert("비밀번호와 재비밀번호의 값은 같아야합니다.")
 
-        var password2InputValue = ""
-        if (password2_result) {
-            password2InputValue = passwordInput2.value; // Get the value from the second password input
-        }
-
-        if (password1InputValue !== password2InputValue) {
-            alert("비밀번호와 재비밀번호의 값은 같아야합니다.");
-            return;
         }
 
         const checkBoxSelected = check_box.classList.contains("selected_box");
@@ -210,17 +237,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (checkBoxSelected) {
             // // 프론트 로그
-            // console.log("이름 입력 값:", nameInputValue);
-            // console.log("이메일 입력 값:", emailInputValue);
-            // console.log("비밀번호 입력 값:", password1InputValue);
-            // console.log("개인정보 이용 동의 여부:", checkBoxSelected);
-            // console.log("희망 지망 직렬 선택:", applicationTypeKey);
+            console.log("이름 입력 값:", nameInputValue);
+            console.log("이메일 입력 값:", emailInputValue);
+            console.log("비밀번호 입력 값:", passwordInputValue);
+            console.log("개인정보 이용 동의 여부:", checkBoxSelected);
+            console.log("희망 지망 직렬 선택:", applicationTypeKey);
 
             // 회원가입 - 서버에 요청
             const userData = {
                 name: nameInputValue,
                 email: emailInputValue,
-                password: password1InputValue,
+                password: passwordInputValue,
                 applicationType: applicationTypeKey
             };
             try {
@@ -238,13 +265,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // 이메일 정보 리셋 후 dashboard로 이동
                 eraseCookie("userEmail");
+                eraseCookie("emailAuthToken");
                 window.location.href = "../html/dashboard.html";
                 alert("회원가입을 성공했습니다.");
             } catch (error) {
                 alert(error.message);
             }
         } else {
-            alert("개인정보 이용 동의 여부를 체크해주세요");
+            sAlert("개인정보 이용 동의 여부를 체크해주세요")
         }
     });
 });
@@ -317,3 +345,12 @@ async function fetchApplicationTypeName() {
 }
 
 fetchApplicationTypeName()
+
+// sAlert('custom alert example!');
+function sAlert(txt, title = 'ERROR',) {
+    Swal.fire({
+        title: title,
+        text: txt,
+        confirmButtonText: '닫기'
+    });
+}
