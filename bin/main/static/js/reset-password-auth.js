@@ -18,7 +18,6 @@ const mergedEmailResult = document.getElementById("mergedEmail");
 
 // 쿠키 가져오는 함수
 function getCookie(name) {
-    console.log("쿠키", name)
     var value = "; " + document.cookie;
     var parts = value.split("; " + name + "=");
     if (parts.length === 2) {

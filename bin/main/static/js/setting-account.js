@@ -78,16 +78,6 @@ document.addEventListener("DOMContentLoaded", function () {
             errorMessage = "비밀번호는 영어, 숫자, 특수문자를 모두 포함해야 합니다.";
             passwordMachResult = 0;
         }
-        console.log("password1 error", errorMessage)
-
-        /*
-        else if (!nameCheck) {
-            errorMessage = "비밀번호에 사용자 이름이 포함되어 있습니다.";
-        } else if (!pastPasswordsCheck) {
-            errorMessage = "비밀번호가 과거에 사용된 적이 있습니다.";
-        }
-        */
-
         passwordResult.textContent = errorMessage || "비밀번호가 유효합니다.";
     }
 
@@ -128,8 +118,6 @@ document.addEventListener("DOMContentLoaded", function () {
             // alert("Passwords must match.");
             return;
         } else {
-            console.log(passwordMachResult);
-            // Call API to save password 여기서 저장 api 호출~~!!
         }
     });
 

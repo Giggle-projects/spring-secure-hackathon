@@ -161,16 +161,6 @@ document.addEventListener("DOMContentLoaded", function () {
             errorMessage = "비밀번호는 영어, 숫자, 특수문자를 모두 포함해야 합니다.";
             passwordMachResult = 0;
         }
-
-        console.log("password1 error", errorMessage)
-
-        /*
-        else if (!nameCheck) {
-            errorMessage = "비밀번호에 사용자 이름이 포함되어 있습니다.";
-        } else if (!pastPasswordsCheck) {
-            errorMessage = "비밀번호가 과거에 사용된 적이 있습니다.";
-        }
-        */
         if (errorMessage) {
             passwordResult.textContent = errorMessage;
         } else {
@@ -247,14 +237,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const applicationTypeKey = dropdownText.id;
 
         if (checkBoxSelected) {
-            // // 프론트 로그
-            console.log("이름 입력 값:", nameInputValue);
-            console.log("이메일 입력 값:", emailInputValue);
-            console.log("비밀번호 입력 값:", passwordInputValue);
-            console.log("개인정보 이용 동의 여부:", checkBoxSelected);
-            console.log("희망 지망 직렬 선택:", applicationTypeKey);
-
-            // 회원가입 - 서버에 요청
             const userData = {
                 name: nameInputValue,
                 email: emailInputValue,

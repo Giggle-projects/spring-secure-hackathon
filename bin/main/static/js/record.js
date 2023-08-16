@@ -106,7 +106,6 @@ function saveData() {
             }
         })
         .catch(error => {
-            console.error("에러 발생:", error);
             sAlert("데이터 저장 중에 오류가 발생했습니다.");
         });
 }
@@ -154,8 +153,6 @@ async function monthlyRecordsGraph() {
     const expectedScores = await fetch(currentDomain + "/api/score/expect")
 
     const percentage = 100-(await expectedScores.json()).currentPercentile
-    console.log(percentage)
-
     const container = d3.select("#gauge-container");
     const width = 256;
     const height = 214;

@@ -28,7 +28,6 @@ async function fetchMyInfo() {
 
 
     // 아이콘 추가하기 코드
-    console.log(responseMemberInfoValue.applicationTypeName)
     if (responseMemberInfoValue.applicationTypeName === "경찰직공무원(남)" || responseMemberInfoValue.applicationTypeName === "경찰직공무원(여)") {
         imgElement.src = "../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
     } else if (responseMemberInfoValue.applicationTypeName === "소방직공무원(남)" || responseMemberInfoValue.applicationTypeName === "소방직공무원(여)") {
@@ -119,11 +118,9 @@ async function showBarChart() {
         return element.evaluationItemName;
     });
     var myScore = (scoresMe).map(function(element){
-        console.log("a" + element.evaluationScore)
         return element.evaluationScore;
     });
     var top30Score = (scoresTop).map(function(element){
-        console.log("b" + element.evaluationScore)
         return element.evaluationScore;
     });
 
