@@ -25,12 +25,12 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(event.target.textContent);
 
             if (event.target.textContent === "경찰직공무원(남)" || event.target.textContent === "경찰직공무원(여)") {
-                imgElement.src ="../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
+                imgElement.src = "../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
             } else if (event.target.textContent === "소방직공무원(남)" || event.target.textContent === "소방직공무원(여)") {
-                imgElement.src ="../files/type_icon2.jpeg"; // 소방직 이미지 경로로 변경
+                imgElement.src = "../files/type_icon2.jpeg"; // 소방직 이미지 경로로 변경
             } else if (event.target.textContent === "교정직공무원(남)" || event.target.textContent === "교정직공무원(여)") {
-                imgElement.src ="../files/type_icon3.png";// 교정직 이미지 경로로 변경
-                }
+                imgElement.src = "../files/type_icon3.png";// 교정직 이미지 경로로 변경
+            }
             dropdownText.id = event.target.id;
             dropdown.classList.remove("active");
         }
@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
     passwordInput2.addEventListener("input", checkPasswordMatch)
 
     const signUpBtn = document.querySelector(".button2");
-    signUpBtn.addEventListener("click", function () {
+    signUpBtn.addEventListener("click", async function () {
         if (!passwordMachResult) {
             sAlert("비밀번호가 일치하지 않습니다.")
             // alert("Passwords must match.");
@@ -146,10 +146,32 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             console.log(passwordMachResult);
             // Call API to save password 여기서 저장 api 호출~~!!
+            const restPassword = passwordInput.value
+            const resetApplicationTypeKey = dropdownText.id
+
+            // 회원가입 - 서버에 요청
+            const userData = {
+                password: restPassword,
+                applicationType: resetApplicationTypeKey
+            };
+            try {
+                const response = await fetch(currentDomain + "/api/reset/userInfo", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(userData),
+                });
+                if (!response.ok) {
+                    const data = await response.text();
+                    throw new Error(data || "회원 정보 수정 실패");
+                }
+                sAlert("회원정보 수정이 완료되었습니다.");
+            } catch (error) {
+                sAlert("수정에 실패했습니다.");
+            }
         }
     });
-
-
 });
 
 // Password toggle
@@ -206,16 +228,16 @@ async function fetchMemberInfo() {
     console.log("applicationTypeStandardName:", applicationTypeStandardName);
 
 
-    dropdownText.textContent=applicationTypeStandardName;
-    nameInput.textContent=name;
-    emailInput.textContent=email;
+    dropdownText.textContent = applicationTypeStandardName;
+    nameInput.textContent = name;
+    emailInput.textContent = email;
     if (applicationTypeStandardName === "경찰직공무원(남)" || applicationTypeStandardName === "경찰직공무원(여)") {
-        imgElement.src ="../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
+        imgElement.src = "../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
     } else if (applicationTypeStandardName === "소방직공무원(남)" || applicationTypeSta쇼ndardName === "소방직공무원(여)") {
-        imgElement.src ="../files/type_icon2.jpeg"; // 소방직 이미지 경로로 변경
+        imgElement.src = "../files/type_icon2.jpeg"; // 소방직 이미지 경로로 변경
     } else if (applicationTypeStandardName === "교정직공무원(남)" || applicationTypeStandardName === "교정직공무원(여)") {
-        imgElement.src ="../files/type_icon3.png";// 교정직 이미지 경로로 변경
-}
+        imgElement.src = "../files/type_icon3.png";// 교정직 이미지 경로로 변경
+    }
 }
 
 async function fetchApplicationTypeName() {

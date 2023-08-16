@@ -159,8 +159,11 @@ public class MemberService {
         return memberRepository.getMemberByEmail(email);
     }
 
-    public void resetUserInfo(Member member, ResetPersonalInfoRequest request) {
+    public void resetUserInfo(LoginMemberInfo memberInfo, ResetPersonalInfoRequest request) {
+        Member member = memberRepository.findById(memberInfo.getId()).orElseThrow(() -> {
+                    throw new AuthException(HttpStatus.CONFLICT, "Email is not exists");
+                }
+        );
         member.resetPersonalInfo(request);
-        memberRepository.save(member);
     }
 }
