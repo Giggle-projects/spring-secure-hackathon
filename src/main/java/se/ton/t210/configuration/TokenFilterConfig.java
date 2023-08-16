@@ -6,7 +6,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import se.ton.t210.configuration.filter.AccessTokenFilter;
-import se.ton.t210.configuration.filter.TokenFilter;
+import se.ton.t210.configuration.filter.EmailAuthTokenFilter;
 import se.ton.t210.domain.TokenSecret;
 import se.ton.t210.service.token.TokenService;
 
@@ -52,20 +52,10 @@ public class TokenFilterConfig {
         return filterRegistrationBean;
     }
 
-//    @Bean
-//    public FilterRegistrationBean<Filter> addRefreshTokenFilter() {
-//        FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-//        filterRegistrationBean.setFilter(new TokenFilter(tokenSecret, refreshTokenCookieKey));
-//        filterRegistrationBean.addUrlPatterns(
-//            "/api/reissue/token"
-//        );
-//        return filterRegistrationBean;
-//    }
-
     @Bean
     public FilterRegistrationBean<Filter> addEmailTokenFilter() {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new TokenFilter(tokenSecret, emailAuthTokenCookieKey));
+        filterRegistrationBean.setFilter(new EmailAuthTokenFilter(tokenSecret, emailAuthTokenCookieKey));
         filterRegistrationBean.addUrlPatterns(
             "/api/member/signUp"
         );

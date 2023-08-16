@@ -17,18 +17,19 @@ public class TokenCache {
     private final String email;
     private final String accessToken;
     private final String refreshToken;
-    private final LocalTime createdTime = LocalTime.now();
+    private final LocalTime createdTime;
 
-    public TokenCache(String email, String accessToken, String refreshToken) {
+    public TokenCache(String email, String accessToken, String refreshToken, LocalTime createdTime) {
         this.email = email;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.createdTime =  createdTime;
     }
 
     public void validate(String accessToken, String refreshToken, int refreshTokenExpireTime) {
         final boolean isValid = this.accessToken.equals(accessToken)
             && this.refreshToken.equals(refreshToken)
-            && Duration.between(this.createdTime, LocalTime.now()).getSeconds() > refreshTokenExpireTime;
+            && Duration.between(this.createdTime, LocalTime.now()).getSeconds() < refreshTokenExpireTime;
         if(!isValid) {
             throw new AuthException(HttpStatus.UNAUTHORIZED, "Reissue request is invalid");
         }

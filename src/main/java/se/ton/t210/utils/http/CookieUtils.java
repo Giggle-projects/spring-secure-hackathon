@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 
 @Component
 public class CookieUtils {
@@ -29,5 +30,16 @@ public class CookieUtils {
         cookie.setHttpOnly(true);
         cookie.setPath(path);
         response.addCookie(cookie);
+    }
+
+    public static String getTokenFromCookies(String keyName, Cookie[] cookies) {
+        if (cookies == null) {
+            return null;
+        }
+        return Arrays.stream(cookies)
+            .filter(cookie -> cookie.getName().equals(keyName))
+            .map(Cookie::getValue)
+            .findFirst()
+            .orElse(null);
     }
 }

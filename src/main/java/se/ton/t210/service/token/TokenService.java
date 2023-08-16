@@ -9,6 +9,8 @@ import se.ton.t210.domain.TokenSecret;
 import se.ton.t210.dto.MemberTokens;
 import se.ton.t210.exception.AuthException;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Map;
 
 @Service
@@ -43,26 +45,26 @@ public class TokenService {
         final Map<String, Object> tokenPayload = Map.of(tokenKey, email);
         final String accessToken = tokenSecret.createToken(tokenPayload, accessTokenExpireTime);
         final String refreshToken = tokenSecret.createToken(tokenPayload, refreshTokenExpireTime);
-        tokenCacheRepository.save(new TokenCache(email, accessToken, refreshToken));
+        tokenCacheRepository.save(new TokenCache(email, accessToken, refreshToken, LocalTime.now()));
         return new MemberTokens(accessToken, refreshToken);
     }
 
     public MemberTokens reissue(String accessToken, String refreshToken) {
         tokenSecret.validateToken(refreshToken);
-//        if (!tokenSecret.isExpired(accessToken)) {
-//            throw new AuthException(HttpStatus.UNAUTHORIZED, "You can't reissue token with unexpired access token");
-//        }
+        if (!tokenSecret.isExpired(accessToken)) {
+            throw new AuthException(HttpStatus.UNAUTHORIZED, "You can't reissue token with unexpired access token");
+        }
         final String userEmail = tokenSecret.getPayloadValue("email", accessToken, true);
         if (!userEmail.equals(tokenSecret.getPayloadValue(tokenKey, refreshToken))) {
             throw new AuthException(HttpStatus.UNAUTHORIZED, "Reissue request is invalid");
         }
-        validateCachedToken(accessToken, refreshToken, userEmail);
+        validateCachedToken(userEmail, accessToken, refreshToken);
         return issue(userEmail);
     }
 
     private void validateCachedToken(String email, String accessToken, String refreshToken) {
-        tokenCacheRepository.findById(email)
-            .orElseThrow(() -> new AuthException(HttpStatus.UNAUTHORIZED, "Token is invalid"))
-            .validate(accessToken, refreshToken, refreshTokenExpireTime);
+        final TokenCache token_is_invalid = tokenCacheRepository.findById(email)
+            .orElseThrow(() -> new AuthException(HttpStatus.UNAUTHORIZED, "Token is invalid"));
+        token_is_invalid.validate(accessToken, refreshToken, refreshTokenExpireTime);
     }
 }

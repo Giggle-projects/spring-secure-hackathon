@@ -21,12 +21,6 @@ menu04Container.addEventListener("click", function (e) {
     window.location.href = "../html/application-information";
 });
 
-// async function checkAccessTokenAndRefresh() {
-//     await fetch(currentDomain + "/api/member/me");
-// }
-
-// checkAccessTokenAndRefresh()
-
 let applicationTypeName;
 
 async function fetchTotalApplication() {

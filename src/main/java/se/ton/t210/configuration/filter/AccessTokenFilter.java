@@ -1,5 +1,7 @@
 package se.ton.t210.configuration.filter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.OncePerRequestFilter;
 import se.ton.t210.domain.TokenSecret;
@@ -16,7 +18,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static se.ton.t210.utils.http.CookieUtils.getTokenFromCookies;
+
 public class AccessTokenFilter extends OncePerRequestFilter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccessTokenFilter.class);
 
     private final String accessTokenCookieKey;
     private final String refreshTokenCookieKey;
@@ -32,39 +38,37 @@ public class AccessTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String accessToken = null;
         try {
-            final String accessToken = getTokenFromCookies(accessTokenCookieKey, request.getCookies());
+            accessToken = getTokenFromCookies(accessTokenCookieKey, request.getCookies());
             secret.validateToken(accessToken);
-            System.out.println("11");
         } catch (AuthException e) {
             try {
-                System.out.println("22");
-                final String refreshToken = getTokenFromCookies(refreshTokenCookieKey, request.getCookies());
-                System.out.println("33");
-                secret.validateToken(refreshToken);
-                System.out.println("44");
-
-                final MemberTokens tokens = tokenService.reissue(accessTokenCookieKey, refreshToken);
-                CookieUtils.loadHttpOnlyCookie(response, accessTokenCookieKey, tokens.getAccessToken());
-                CookieUtils.loadHttpOnlyCookie(response, refreshTokenCookieKey, tokens.getRefreshToken());
+                if (accessToken == null) {
+                    redirectLoginPage(response, e);
+                    return;
+                }
+                refreshTokenReIssue(request, response);
+                LOGGER.info("re-login with refresh token");
             } catch (AuthException ae) {
                 ae.printStackTrace();
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                response.sendRedirect("/html/sign-in.html");
-                return;
+                redirectLoginPage(response, e);
             }
         }
         filterChain.doFilter(request, response);
     }
 
-    private String getTokenFromCookies(String keyName, Cookie[] cookies) {
-        if (cookies == null) {
-            throw new AuthException(HttpStatus.UNAUTHORIZED, "Cookie corrupted");
-        }
-        return Arrays.stream(cookies)
-            .filter(cookie -> cookie.getName().equals(keyName))
-            .map(Cookie::getValue)
-            .findFirst()
-            .orElseThrow(() -> new AuthException(HttpStatus.UNAUTHORIZED, "JWT Token is not found"));
+    private void refreshTokenReIssue(HttpServletRequest request, HttpServletResponse response) {
+        final String accessToken = getTokenFromCookies(accessTokenCookieKey, request.getCookies());
+        final String refreshToken = getTokenFromCookies(refreshTokenCookieKey, request.getCookies());
+        final MemberTokens tokens = tokenService.reissue(accessToken, refreshToken);
+        CookieUtils.loadHttpOnlyCookie(response, accessTokenCookieKey, tokens.getAccessToken());
+        CookieUtils.loadHttpOnlyCookie(response, refreshTokenCookieKey, tokens.getRefreshToken());
+    }
+
+    private void redirectLoginPage(HttpServletResponse response, AuthException e) throws IOException {
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.sendRedirect("/html/sign-in.html");
+        response.getOutputStream().write(e.getMessage().getBytes());
     }
 }
