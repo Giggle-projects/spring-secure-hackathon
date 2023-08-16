@@ -99,10 +99,11 @@ function saveData() {
         .then(response => response.json())
         .then(result => {
             if (result.prediction === 1) {
-                sAlert("데이터가 저장되었습니다.\n결과: 합격");
-                reload()
+                noError_sAlert("데이터가 저장되었습니다.\n결과: 합격");
+                location.reload();
             } else {
-                sAlert("데이터가 저장되었습니다.\n결과: 불합격");
+                noError_sAlert("데이터가 저장되었습니다.\n결과: 불합격");
+                location.reload();
             }
         })
         .catch(error => {
@@ -292,6 +293,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 // sAlert('custom alert example!');
 function sAlert(txt, title = 'ERROR',) {
+    Swal.fire({
+        title: title,
+        text: txt,
+        confirmButtonText: '닫기'
+    });
+}
+// sAlert('custom alert example!');
+function noError_sAlert(txt, title = 'Success',) {
     Swal.fire({
         title: title,
         text: txt,

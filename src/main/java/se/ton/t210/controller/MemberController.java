@@ -51,8 +51,8 @@ public class MemberController {
     }
 
     @PostMapping("/api/reset/userInfo")
-    public ResponseEntity<Void> resetUserInfo(@RequestBody ResetPersonalInfoRequest request) {
-        final Member member = new Member(1L, "홍길동", "email@pawd.com", "password", ApplicationType.PoliceOfficerMale);
+    public ResponseEntity<Void> resetUserInfo(@LoginMember LoginMemberInfo member,
+                                              @RequestBody ResetPersonalInfoRequest request) {
         memberService.resetUserInfo(member, request);
         return ResponseEntity.ok().build();
     }
