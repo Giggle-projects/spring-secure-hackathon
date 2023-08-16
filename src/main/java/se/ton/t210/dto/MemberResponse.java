@@ -27,7 +27,7 @@ public class MemberResponse {
                 member.getName(),
                 member.getEmail(),
                 member.getApplicationType(),
-                member.getApplicationType().getStandardName()
+                member.getApplicationType().standardName()
         );
     }
 
@@ -37,7 +37,7 @@ public class MemberResponse {
             member.getName(),
             member.getEmail(),
             member.getApplicationType(),
-            member.getApplicationType().getStandardName()
+            member.getApplicationType().standardName()
         );
     }
 }

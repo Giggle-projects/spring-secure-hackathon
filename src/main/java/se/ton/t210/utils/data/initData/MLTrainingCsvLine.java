@@ -43,6 +43,6 @@ public class MLTrainingCsvLine implements CsvLineStrategy {
     private String randomApplicationTypeStandardName() {
         ApplicationType[] applicationTypes = ApplicationType.values();
         int randomNum = RANDOM.nextInt(applicationTypes.length);
-        return applicationTypes[randomNum].getStandardName();
+        return applicationTypes[randomNum].standardName();
     }
 }

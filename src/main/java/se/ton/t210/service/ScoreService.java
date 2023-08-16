@@ -88,6 +88,7 @@ public class ScoreService {
                 new HttpEntity<>(formData, httpHeaders),
                 String.class
         );
+        System.out.println(response.getBody());
         ExpectPassPointResponse expectedPassPointResponse = objectMapper.readValue(response.getBody(), ExpectPassPointResponse.class);
         return expectedPassPointResponse.getPrediction();
     }
