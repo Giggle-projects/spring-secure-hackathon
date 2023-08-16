@@ -5,8 +5,8 @@ public enum ApplicationType {
     PoliceOfficerFemale("/static/default.jpg", "경찰직공무원(여)"),
     FireOfficerMale("/static/default.jpg", "소방직공무원(남)"),
     FireOfficerFemale("/static/default.jpg", "소방직공무원(여)"),
-    CorrectionalOfficerMale("/static/default.jpg", "교정직공무원(남)"),
-    CorrectionalOfficerFemale("/static/default.jpg", "교정직공무원(여)");
+    CorrectionalOfficerMale("/static/default.jpg", "경호직공무원(남)"),
+    CorrectionalOfficerFemale("/static/default.jpg", "경호직공무원(여)");
 
     private final String iconImageUrl;
     private final String standardName;
