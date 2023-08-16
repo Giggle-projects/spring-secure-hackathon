@@ -1,3 +1,6 @@
+const currentDomain = window.location.origin
+// const currentDomain = "http://localhost:8080"
+
 // dropdown
 const dropdown = document.querySelector(".dropdown");
 const dropdownText = dropdown.querySelector(".text704");
@@ -5,11 +8,6 @@ const dropdownContent = dropdown.querySelector(".dropdown-content");
 const nameInput = document.getElementById("full-name")
 const emailInput = document.getElementById("email")
 var imgElement = document.querySelector('.frame-icon69');
-
-
-// const currentDomain = window.location.origin
-const currentDomain = "http://localhost:8080"
-
 
 document.addEventListener("DOMContentLoaded", function () {
 

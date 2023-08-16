@@ -11,12 +11,11 @@ import java.util.stream.Collectors;
 public class ApplicationTypeInfoResponse {
 
     private final ApplicationType applicationType;
-
     private final String applicationTypeStandardName;
 
     public ApplicationTypeInfoResponse(ApplicationType applicationType) {
         this.applicationType = applicationType;
-        this.applicationTypeStandardName = applicationType.getStandardName();
+        this.applicationTypeStandardName = applicationType.standardName();
     }
 
     public static List<ApplicationTypeInfoResponse> listOf() {

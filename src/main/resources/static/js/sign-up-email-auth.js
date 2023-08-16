@@ -1,6 +1,5 @@
-// const currentDomain = window.location.origin
-const currentDomain = "http://localhost:8080"
-
+const currentDomain = window.location.origin
+// const currentDomain = "http://localhost:8080"
 
 const codeInput = document.getElementById("code");
 const timerSpan = document.getElementById("timer");

@@ -32,7 +32,7 @@ public class TokenFilter extends OncePerRequestFilter {
             secret.validateToken(refreshToken);
         } catch (AuthException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.sendRedirect("/html/error-401.html");
+            response.sendRedirect("/html/sign-in.html");
             response.getOutputStream().write(e.getMessage().getBytes());
             return;
         }
