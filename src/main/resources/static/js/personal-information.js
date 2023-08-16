@@ -1,4 +1,5 @@
-const currentDomain = "http://localhost:8080"
+const currentDomain = window.location.origin
+// const currentDomain = "http://localhost:8080"
 var imgElement = document.querySelector('.frame-icon59');
 
 async function fetchMyInfo() {
