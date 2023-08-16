@@ -1,8 +1,15 @@
+buildscript {
+    dependencies {
+        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.3'
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.9'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'com.google.cloud.tools.jib' version '3.3.2'
+    id "org.sonarqube" version "4.3.0.3225"
 }
 
 group = 'se.ton'
@@ -71,4 +78,22 @@ bootJar {
 
 jar {
     enabled = false
+}
+
+sonarqube {
+    properties {
+        property "sonar.host.url", "http://localhost:9000"
+        property "sonar.login", "admin"
+        property "sonar.password", "0520"
+        property "sonar.sources", "src"
+        property "sonar.language", "java" // 분석을 Java로 제한
+        property "sonar.sourceEncoding", "UTF-8"
+//        property "sonar.exclusions", "**/*Test*.*, **/Q*.JAVA"
+//        property "sonar.test.inclusions", "**/*Test.groovy, **/*Test.java"
+//        property "sonar.coverage.exclusions", "**/*Test*.*, **/Q*.java"
+//        property "sonar.java.junit.reportPaths", "${buildDir}/test-results"
+//        property "sonar.jacoco.reportPaths", "${buildDir}/jacoco/jacoco.exec"
+//        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/coverageReport/coverageReport.xml"    // Test Coverage Report 생성한 경우 사용
+//        property 'sonar.exclusions', 'com/xxx/**/*_.java,com/**/QMyEntity.java,....'
+    }
 }
