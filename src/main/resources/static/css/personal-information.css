@@ -22,10 +22,17 @@
   flex-direction: column;
   align-items: center;
 }
-.frame-icon58 {
+.frame-icon58{
+    position: relative;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.frame-icon59{
   position: relative;
-  width: 24px;
-  height: 24px;
+  width: 48;
+  height: 48px;
   overflow: hidden;
   flex-shrink: 0;
 }

@@ -75,6 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (passwordMachResult) {
             if (!(passwordInput.value === passwordInput2.value)) {
                 passwordResult2.textContent = "비밀번호가 일치하지 않습니다.";
+                passwordResult2.style.color="red";
                 passwordMachResult = 0;
             }
         }
@@ -105,6 +106,13 @@ document.addEventListener("DOMContentLoaded", function () {
         // 재설정 로직
 
         passwordResult.textContent = errorMessage || "비밀번호가 유효합니다.";
+
+        if (passwordResult.textContent ==="비밀번호가 유효합니다."){
+            passwordResult.style.color='black';
+        }
+        else{
+            passwordResult.style.color='red';
+        }
     }
 
     function checkPasswordMatch() {
@@ -113,10 +121,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (password1 === password2) {
             passwordResult2.textContent = "비밀번호가 일치합니다.";
+            passwordResult2.style.color='black';
             passwordMachResult = 1
         } else {
             passwordResult2.textContent = "비밀번호가 일치하지 않습니다.";
             passwordMachResult = 0
+            passwordResult2.style.color='red';
         }
     }
 

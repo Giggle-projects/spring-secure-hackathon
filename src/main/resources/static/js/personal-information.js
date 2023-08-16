@@ -1,4 +1,5 @@
 const currentDomain = "http://localhost:8080"
+var imgElement = document.querySelector('.frame-icon59');
 
 async function fetchMyInfo() {
     const responseMemberInfo = await fetch(currentDomain + "/api/member/me");
@@ -23,6 +24,17 @@ async function fetchMyInfo() {
 
     name.innerText = responseMemberInfoValue.name
     applicationType.innerText = responseMemberInfoValue.applicationTypeName
+
+
+    // 아이콘 추가하기 코드
+    console.log(responseMemberInfoValue.applicationTypeName)
+    if (responseMemberInfoValue.applicationTypeName === "경찰직공무원(남)" || responseMemberInfoValue.applicationTypeName === "경찰직공무원(여)") {
+        imgElement.src = "../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
+    } else if (responseMemberInfoValue.applicationTypeName === "소방직공무원(남)" || responseMemberInfoValue.applicationTypeName === "소방직공무원(여)") {
+        imgElement.src = "../files/type_icon2.jpeg"; // 소방직 이미지 경로로 변경
+    } else if (responseMemberInfoValue.applicationTypeName === "교정직공무원(남)" || responseMemberInfoValue.applicationTypeName === "교정직공무원(여)") {
+        imgElement.src = "../files/type_icon3.png";// 교정직 이미지 경로로 변경
+    }
     currentScore.innerText = "현재 점수 : " + responseScoreInfoValue.score + "점"
     maxScore.innerText = "최고 점수 : " + responseScoreInfoValue.maxScore + "점"
 }
@@ -122,14 +134,14 @@ async function showBarChart() {
             datasets: [{
                 label: '나',
                 data: myScore,
-                backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                borderColor: 'rgba(0, 0, 0, 1)',
+                backgroundColor: "rgba(66, 135, 245, 0.5)",
+                borderColor: "rgba(66, 135, 245, 1)",
                 borderWidth: 1
             },{
                 label: '상위 30%',
                 data: top30Score,
-                backgroundColor: 'rgba(192, 192, 192, 0.2)',
-                borderColor: 'rgba(192, 192, 192, 1)',
+                backgroundColor: "rgba(66, 135, 245, 0.2)",
+                borderColor: "rgba(66, 135, 245, 1)",
                 borderWidth: 1
             }]
         },
