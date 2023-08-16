@@ -22,6 +22,9 @@ menu04Container.addEventListener("click", function (e) {
 // const currentDomain = window.location.origin
 const currentDomain = "http://localhost:8080"
 
+// 사용자의 applicationTypeName값
+let applicationTypeName;
+
 async function fetchTotalApplication() {
     const totalApplicationContainer = document.getElementById("total-application")
     const totalRecordsContainer = document.getElementById("total-records")
@@ -49,7 +52,9 @@ async function fetchMyInfo() {
     if (!responseMember.ok) {
         throw new Error('Error fetching.');
     } else {
-        memberName.innerText = (await responseMember.json()).name + "님 안녕하세요."
+        const body = await responseMember.json();
+        memberName.innerText = (body).name + "님 안녕하세요."
+        applicationTypeName = (body).applicationTypeName
     }
 
     let responseScore = await fetch(currentDomain + "/api/score/me");
@@ -75,7 +80,7 @@ async function fetchRank() {
 
         const tierDiv = document.createElement("div");
         tierDiv.className = "tier-01";
-        tierDiv.textContent = item.rank+"등";
+        tierDiv.textContent = item.rank + "등";
 
         const nameDiv = document.createElement("div");
         nameDiv.className = "name-01";
