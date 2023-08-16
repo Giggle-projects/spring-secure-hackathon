@@ -35,13 +35,12 @@ def data_preprocess(df):
 df=data_preprocess(df)
 
 
-
-type_1_df=df[df['applicationType']=='경찰직공무원(여)']
-type_2_df=df[df['applicationType']=='경찰직공무원(남)']
+type_1_df=df[df['applicationType']=='경찰직공무원(남)']
+type_2_df=df[df['applicationType']=='경찰직공무원(여)']
 type_3_df=df[df['applicationType']=='소방직공무원(남)']
-type_4_df=df[df['applicationType']=='교정직공무원(남)']
-type_5_df=df[df['applicationType']=='소방직공무원(여)']
-type_6_df=df[df['applicationType']=='교정직공무원(여)']
+type_4_df=df[df['applicationType']=='소방직공무원(여)']
+type_5_df=df[df['applicationType']=='경호직공무원(남)']
+type_6_df=df[df['applicationType']=='경호직공무원(여)']
 
 type_1_df=type_1_df.drop('applicationType',axis=1)
 type_2_df=type_2_df.drop('applicationType',axis=1)
@@ -50,7 +49,7 @@ type_4_df=type_4_df.drop('applicationType',axis=1)
 type_5_df=type_5_df.drop('applicationType',axis=1)
 type_6_df=type_6_df.drop('applicationType',axis=1)
 
-
+print(type_3_df)
 def convert(df):
 
     data = {
@@ -62,15 +61,15 @@ def convert(df):
 
     # 피벗 테이블 생성
     pivot_table = df.groupby(['member_id', 'month'])['score'].sum().unstack()
-    
+
     return pivot_table
 
-type_1_df=convert(type_1_df)   
-type_2_df=convert(type_2_df)   
-type_3_df=convert(type_3_df)   
-type_4_df=convert(type_4_df)   
-type_5_df=convert(type_5_df)   
-type_6_df=convert(type_6_df)   
+type_1_df=convert(type_1_df)
+type_2_df=convert(type_2_df)
+type_3_df=convert(type_3_df)
+type_4_df=convert(type_4_df)
+type_5_df=convert(type_5_df)
+type_6_df=convert(type_6_df)
 
 
 type_1_df=type_1_df.fillna(type_1_df.mean())
@@ -81,19 +80,16 @@ type_5_df=type_5_df.fillna(type_1_df.mean())
 type_6_df=type_6_df.fillna(type_1_df.mean())
 
 
-
 def set_label(df):
     # 각 회원의 월별 점수 총합 계산
     df["total_score"] = df.sum(axis=1)
 
     # 총합 점수의 백분위수 계산
-    percentile_5 = df["total_score"].quantile(0.95)  # 상위 5% 기준
-    percentile_10 = df["total_score"].quantile(0.90)  # 상위 6~10% 기준
-    percentile_15 = df["total_score"].quantile(0.85)  # 상위 11~15% 기준
+    percentile_93 = df["total_score"].quantile(0.93)  # 상위 7% 기준
 
     # 레이블 생성
     df["label"] = df["total_score"].apply(
-        lambda x: 0 if x >= percentile_5 else (1 if x >= percentile_10 else (2 if x >= percentile_15 else 3))
+        lambda x: 1 if x >= percentile_93 else 0
     )
     return df
 
@@ -106,6 +102,14 @@ type_5_df = set_label(type_5_df)
 type_6_df = set_label(type_6_df)
 
 
+type_1_df=type_1_df.drop("total_score",axis=1)
+type_2_df=type_2_df.drop("total_score",axis=1)
+type_3_df=type_3_df.drop("total_score",axis=1)
+type_4_df=type_4_df.drop("total_score",axis=1)
+type_5_df=type_5_df.drop("total_score",axis=1)
+type_6_df=type_6_df.drop("total_score",axis=1)
+
+
 
 
 class LSTMModel(nn.Module):
@@ -113,20 +117,21 @@ class LSTMModel(nn.Module):
         super(LSTMModel, self).__init__()
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True)
         self.fc = nn.Linear(hidden_size, output_size)
-    
+
     def forward(self, x):
-        out, _ = self.lstm(x)
+        out,_= self.lstm(x)
         out = self.fc(out)  # Remove this line
-        
+        out = torch.sigmoid(out)
+
         return out
-        
+
 df_list=[type_1_df,type_2_df,type_3_df,type_4_df,type_5_df,type_6_df]
 num=1
 for i in df_list:
-    
+
     # Convert the DataFrame to PyTorch tensors
     data_tensor = torch.tensor(i.drop(columns=['label']).values, dtype=torch.float32)
-    label_tensor = torch.tensor(i['label'].values, dtype=torch.long)  # Change dtype to long
+    label_tensor = torch.tensor(i['label'].values, dtype=torch.float32)  # Change dtype to long
 
 
 
@@ -138,28 +143,28 @@ for i in df_list:
     test_labels = label_tensor[train_size:]
 
     # Create an instance of the LSTMModel
-    input_size = 13
+    input_size = 12
     hidden_size = 64
     num_layers = 2
-    output_size = 4
+    output_size = 1
 
     model = LSTMModel(input_size, hidden_size, num_layers, output_size)
 
     # Define loss function and optimizer
-    criterion = nn.CrossEntropyLoss()  # Change to CrossEntropyLoss
+    criterion = nn.BCEWithLogitsLoss()  # Change to CrossEntropyLoss
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
     num_epochs = 100
     for epoch in range(num_epochs):
         model.train()
         optimizer.zero_grad()
-        
+
         outputs = model(train_data)
         loss = criterion(outputs.squeeze(), train_labels)  # Remove the dimension from outputs
-        
+
         loss.backward()
         optimizer.step()
-        
+
         if (epoch + 1) % 10 == 0:
             print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
 
