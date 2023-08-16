@@ -1,11 +1,14 @@
 package se.ton.t210.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import se.ton.t210.configuration.filter.AccessTokenFilter;
 import se.ton.t210.configuration.filter.TokenFilter;
 import se.ton.t210.domain.TokenSecret;
+import se.ton.t210.service.token.TokenService;
 
 import javax.servlet.Filter;
 
@@ -21,6 +24,9 @@ public class TokenFilterConfig {
     @Value("${auth.jwt.token.email.cookie:emailAuthToken}")
     private String emailAuthTokenCookieKey;
 
+    @Autowired
+    private TokenService tokenService;
+
     private final TokenSecret tokenSecret;
 
     public TokenFilterConfig(TokenSecret tokenSecret) {
@@ -30,7 +36,7 @@ public class TokenFilterConfig {
     @Bean
     public FilterRegistrationBean<Filter> addAccessTokenFilter() {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new TokenFilter(tokenSecret, accessTokenCookieKey));
+        filterRegistrationBean.setFilter(new AccessTokenFilter(tokenSecret, accessTokenCookieKey, refreshTokenCookieKey, tokenService));
         filterRegistrationBean.addUrlPatterns(
             "/html/dashboard.html",
             "/html/personal-information.html",
@@ -46,15 +52,15 @@ public class TokenFilterConfig {
         return filterRegistrationBean;
     }
 
-    @Bean
-    public FilterRegistrationBean<Filter> addRefreshTokenFilter() {
-        FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new TokenFilter(tokenSecret, refreshTokenCookieKey));
-        filterRegistrationBean.addUrlPatterns(
-            "/api/reissue/token"
-        );
-        return filterRegistrationBean;
-    }
+//    @Bean
+//    public FilterRegistrationBean<Filter> addRefreshTokenFilter() {
+//        FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
+//        filterRegistrationBean.setFilter(new TokenFilter(tokenSecret, refreshTokenCookieKey));
+//        filterRegistrationBean.addUrlPatterns(
+//            "/api/reissue/token"
+//        );
+//        return filterRegistrationBean;
+//    }
 
     @Bean
     public FilterRegistrationBean<Filter> addEmailTokenFilter() {

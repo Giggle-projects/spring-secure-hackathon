@@ -49,10 +49,10 @@ public class TokenService {
 
     public MemberTokens reissue(String accessToken, String refreshToken) {
         tokenSecret.validateToken(refreshToken);
-        if (tokenSecret.isExpired(accessToken)) {
-            throw new AuthException(HttpStatus.UNAUTHORIZED, "You can't reissue token with unexpired access token");
-        }
-        final String userEmail = tokenSecret.getPayloadValue(tokenKey, accessToken, true);
+//        if (!tokenSecret.isExpired(accessToken)) {
+//            throw new AuthException(HttpStatus.UNAUTHORIZED, "You can't reissue token with unexpired access token");
+//        }
+        final String userEmail = tokenSecret.getPayloadValue("email", accessToken, true);
         if (!userEmail.equals(tokenSecret.getPayloadValue(tokenKey, refreshToken))) {
             throw new AuthException(HttpStatus.UNAUTHORIZED, "Reissue request is invalid");
         }

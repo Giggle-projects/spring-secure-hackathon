@@ -21,9 +21,12 @@ menu04Container.addEventListener("click", function (e) {
     window.location.href = "../html/application-information";
 });
 
+// async function checkAccessTokenAndRefresh() {
+//     await fetch(currentDomain + "/api/member/me");
+// }
 
+// checkAccessTokenAndRefresh()
 
-// 사용자의 applicationTypeName값
 let applicationTypeName;
 
 async function fetchTotalApplication() {
