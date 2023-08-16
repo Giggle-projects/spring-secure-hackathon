@@ -40,6 +40,9 @@ class DummyData {
     @Autowired
     private ScoreService scoreService;
 
+    @Autowired
+    private PasswordSaltRepository passwordSaltRepository;
+
     private List<Member> members;
     private Map<ApplicationType, List<EvaluationItem>> itemTable;
 
@@ -47,10 +50,15 @@ class DummyData {
     public void create() {
         createMembers(100);
         createEvaluationItemTable();
-        var testMember = memberRepository.save(new Member("test", "test@naver.com", "12345", ApplicationType.PoliceOfficerMale));
+
+        var testMember = new Member("test", "test@naver.com", "12345", ApplicationType.PoliceOfficerMale);
+        final EncryptPassword encryptPassword = EncryptPassword.encryptFrom("12345");
+        final Member member = testMember.updatePasswordWith(encryptPassword.getEncrypted());
+        memberRepository.save(member);
+        passwordSaltRepository.save(new PasswordSalt(member.getId(), encryptPassword.getSalt()));
         members.add(testMember);
-        for (var member : members) {
-            records(member);
+        for (var mem : members) {
+            records(mem);
         }
     }
 

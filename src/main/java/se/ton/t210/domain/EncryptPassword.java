@@ -9,11 +9,11 @@ import se.ton.t210.utils.encript.SHA256Utils;
 public class EncryptPassword {
 
   private final String encrypted;
-  private final String sort;
+  private final String salt;
 
-  private EncryptPassword(String encrypted, String sort) {
+  private EncryptPassword(String encrypted, String salt) {
     this.encrypted = encrypted;
-    this.sort = sort;
+    this.salt = salt;
   }
 
   public static EncryptPassword encryptFrom(String plainText) {

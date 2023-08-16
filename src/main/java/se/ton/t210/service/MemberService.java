@@ -19,12 +19,9 @@ import se.ton.t210.service.mail.MailServiceInterface;
 import se.ton.t210.service.mail.form.SignUpAuthMailForm;
 import se.ton.t210.service.token.TokenService;
 import se.ton.t210.utils.auth.RandomCodeUtils;
-import se.ton.t210.utils.encript.SHA256Utils;
-import se.ton.t210.utils.encript.SupportedAlgorithmType;
 import se.ton.t210.utils.http.CookieUtils;
 
 import javax.servlet.http.HttpServletResponse;
-import java.time.Duration;
 import java.time.LocalTime;
 
 @Transactional
@@ -78,7 +75,7 @@ public class MemberService {
         final Member member = request.toEntity()
             .updatePasswordWith(encryptPassword.getEncrypted());
         memberRepository.save(member);
-        saltRepository.save(new PasswordSalt(member.getId(), encryptPassword.getSort()));
+        saltRepository.save(new PasswordSalt(member.getId(), encryptPassword.getSalt()));
 
         final MemberTokens tokens = tokenService.issue(member.getEmail());
         responseTokens(response, tokens);
@@ -111,7 +108,7 @@ public class MemberService {
         final EncryptPassword encryptPassword = EncryptPassword.encryptFrom(newPwd);
         final Member member = oldMember.updatePasswordWith(encryptPassword.getEncrypted());
         memberRepository.save(member);
-        saltRepository.save(new PasswordSalt(member.getId(), encryptPassword.getSort()));
+        saltRepository.save(new PasswordSalt(member.getId(), encryptPassword.getSalt()));
     }
 
     public void validateEmailAuthCode(String email, String authCode) {
