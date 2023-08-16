@@ -108,8 +108,6 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!emailRegex.test(emailInputValue)) {
                 alert("올바른 이메일 주소 형식이 아닙니다.");
             } else {
-                document.cookie = "userEmail=" + emailInputValue;
-
                 // 이메일 인증 버튼 클릭 시 인증 코드를 메일로 보내는 로직
                 const userEmail = emailInput.value
                 // 이메일 인증
@@ -122,8 +120,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     throw new Error('fetch error');
                 }
 
+                document.cookie = "userEmail=" + emailInputValue;
+
                 let response = await fetch(currentDomain + "/api/send/mail?" + new URLSearchParams({
-                      email: userEmail
+                    email: userEmail
                 }))
                 if (!response.ok) {
                     throw new Error('fetch error');
@@ -155,11 +155,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const lengthRegex = /^.{9,16}$/;
         const alphanumericRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
-        if (!(password)){
+        if (!(password)) {
             errorMessage = "비밀번호를 입력하세요";
             passwordMachResult = 0;
-        }
-        else if (!lengthRegex.test(password)) {
+        } else if (!lengthRegex.test(password)) {
             passwordResult.style.color = 'red';
             errorMessage = "비밀번호는 9자 이상 16자 이하로 입력하세요.";
             passwordMachResult = 0;
@@ -192,10 +191,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function checkPasswordMatch() {
         const password1 = passwordInput.value;
         const password2 = passwordInput2.value;
-        if(!(password2)){
+        if (!(password2)) {
             passwordResult2.textContent = "비밀번호를 입력하세요.";
-        }
-        else if (password1 === password2) {
+        } else if (password1 === password2) {
             passwordResult2.textContent = "비밀번호가 일치합니다.";
             passwordResult2.style.color = "black"; // Change text color to black
             passwordMachResult = 1
@@ -285,7 +283,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // 이메일 정보 리셋 후 dashboard로 이동
                 eraseCookie("userEmail");
-                eraseCookie("emailAuthToken");
+
+                const cookieKey = "emailAuthToken"
+                const removeTokenResponse = await fetch(currentDomain + "/api/remove/token?" + new URLSearchParams({
+                    cookieKey: cookieKey
+                }))
+
+                if (!removeTokenResponse.ok) {
+                    window.location.href = "../html/error-500.html";
+                    throw new Error('token remove fail');
+                }
+
                 window.location.href = "../html/dashboard.html";
                 alert("회원가입을 성공했습니다.");
             } catch (error) {

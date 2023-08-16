@@ -18,4 +18,16 @@ public class CookieUtils {
         cookie.setPath(path);
         response.addCookie(cookie);
     }
+
+    public static void removeHttpOnlyCookie(HttpServletResponse response, String key) {
+        removeHttpOnlyCookie(response, key, "/");
+    }
+
+    public static void removeHttpOnlyCookie(HttpServletResponse response, String key, String path) {
+        final Cookie cookie = new Cookie(key, null);
+        cookie.setMaxAge(0);
+        cookie.setHttpOnly(true);
+        cookie.setPath(path);
+        response.addCookie(cookie);
+    }
 }

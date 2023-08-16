@@ -44,6 +44,13 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/api/remove/token")
+    public ResponseEntity<Void> removeCookie(HttpServletResponse response,
+                                             String cookieKey) {
+        memberService.removeToken(response, cookieKey);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/api/send/mail")
     public ResponseEntity<Void> sendEmailAuthMail(@Valid @Email String email) {
         memberService.sendEmailAuthMail(email);

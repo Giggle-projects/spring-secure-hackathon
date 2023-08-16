@@ -6,12 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import se.ton.t210.cache.EmailAuthCodeCache;
 import se.ton.t210.cache.EmailAuthCodeCacheRepository;
-import se.ton.t210.domain.EncryptPassword;
-import se.ton.t210.domain.Member;
-import se.ton.t210.domain.MemberRepository;
-import se.ton.t210.domain.PasswordSalt;
-import se.ton.t210.domain.PasswordSaltRepository;
-import se.ton.t210.domain.TokenSecret;
+import se.ton.t210.domain.*;
 import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.*;
 import se.ton.t210.exception.AuthException;
@@ -51,9 +46,9 @@ public class MemberService {
     private final MailServiceInterface mailServiceInterface;
 
     public MemberService(TokenSecret tokenSecret, MemberRepository memberRepository,
-        PasswordSaltRepository saltRepository, TokenService tokenService,
-        EmailAuthCodeCacheRepository emailAuthCodeCacheRepository,
-        MailServiceInterface mailServiceInterface) {
+                         PasswordSaltRepository saltRepository, TokenService tokenService,
+                         EmailAuthCodeCacheRepository emailAuthCodeCacheRepository,
+                         MailServiceInterface mailServiceInterface) {
         this.tokenSecret = tokenSecret;
         this.memberRepository = memberRepository;
         this.saltRepository = saltRepository;
@@ -64,16 +59,16 @@ public class MemberService {
 
     public void signUp(SignUpRequest request, String emailAuthToken, HttpServletResponse response) {
         if (memberRepository.existsByEmail(request.getEmail())) {
-          throw new AuthException(HttpStatus.CONFLICT, "Email is already exists");
+            throw new AuthException(HttpStatus.CONFLICT, "Email is already exists");
         }
         final String emailFromToken = tokenSecret.getPayloadValue(tokenKey, emailAuthToken);
         if (!request.getEmail().equals(emailFromToken)) {
-          throw new AuthException(HttpStatus.FORBIDDEN, "It is different from the previous email information you entered.");
+            throw new AuthException(HttpStatus.FORBIDDEN, "It is different from the previous email information you entered.");
         }
 
         final EncryptPassword encryptPassword = EncryptPassword.encryptFrom(request.getPassword());
         final Member member = request.toEntity()
-            .updatePasswordWith(encryptPassword.getEncrypted());
+                .updatePasswordWith(encryptPassword.getEncrypted());
         memberRepository.save(member);
         saltRepository.save(new PasswordSalt(member.getId(), encryptPassword.getSalt()));
 
@@ -123,6 +118,10 @@ public class MemberService {
     public void issueEmailToken(HttpServletResponse response, String email) {
         final String emailAuthToken = tokenService.issueMailToken(email);
         CookieUtils.loadHttpOnlyCookie(response, emailAuthTokenCookieKey, emailAuthToken);
+    }
+
+    public void removeToken(HttpServletResponse response, String cookieKey) {
+        CookieUtils.removeHttpOnlyCookie(response, cookieKey);
     }
 
     public void issueToken(HttpServletResponse response, String email) {
