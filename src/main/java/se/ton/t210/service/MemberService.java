@@ -18,7 +18,7 @@ import se.ton.t210.exception.AuthException;
 import se.ton.t210.service.mail.MailServiceInterface;
 import se.ton.t210.service.mail.form.SignUpAuthMailForm;
 import se.ton.t210.service.token.TokenService;
-import se.ton.t210.utils.auth.AuthCodeUtils;
+import se.ton.t210.utils.auth.RandomCodeUtils;
 import se.ton.t210.utils.encript.EncryptUtils;
 import se.ton.t210.utils.encript.SupportedAlgorithmType;
 import se.ton.t210.utils.http.CookieUtils;
@@ -45,9 +45,6 @@ public class MemberService {
 
     @Value("${auth.mail.valid.time}")
     private Long mailValidTime;
-
-    @Value("${auth.code.length}")
-    private int authCodeLength;
 
     private final TokenSecret tokenSecret;
     private final MemberRepository memberRepository;
@@ -158,7 +155,7 @@ public class MemberService {
     }
 
     public void sendEmailAuthMail(String email) {
-        final String emailAuthCode = AuthCodeUtils.generate(authCodeLength);
+        final String emailAuthCode = RandomCodeUtils.generate();
         mailServiceInterface.sendMail(email, new SignUpAuthMailForm(emailAuthCode));
         emailAuthCodeCacheRepository.save(new EmailAuthCodeCache(email, emailAuthCode, LocalTime.now()));
     }

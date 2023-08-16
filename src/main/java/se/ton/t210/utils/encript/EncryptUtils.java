@@ -3,12 +3,9 @@ package se.ton.t210.utils.encript;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.Random;
+import se.ton.t210.utils.auth.RandomCodeUtils;
 
 public class EncryptUtils {
-
-    private static final Random RANDOM = new SecureRandom();
 
     public static String encrypt(SupportedAlgorithmType algorithm, String planText, String salt) throws NoSuchAlgorithmException {
         final MessageDigest md = algorithm.messageDigestInstance();
@@ -30,12 +27,6 @@ public class EncryptUtils {
     }
 
     public static String generateSalt() {
-      byte[] salt = new byte[16];
-      RANDOM.nextBytes(salt);
-      final StringBuilder sb = new StringBuilder();
-      for(byte b : salt) {
-        sb.append(String.format("%02x", b));
-      }
-      return sb.toString();
+       return RandomCodeUtils.generate();
     }
 }
