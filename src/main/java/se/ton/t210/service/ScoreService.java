@@ -1,13 +1,22 @@
 package se.ton.t210.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import se.ton.t210.domain.*;
 import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.*;
+import se.ton.t210.dto.ml.ExpectPassPointResponse;
 import se.ton.t210.utils.date.LocalDateUtils;
 
 import java.time.LocalDate;
@@ -21,22 +30,26 @@ import java.util.stream.Collectors;
 @Service
 public class ScoreService {
 
+    private static final String ML_URL = "http://localhost:8000/predict";
+
     private final MemberRepository memberRepository;
     private final EvaluationItemRepository evaluationItemRepository;
     private final EvaluationItemScoreItemRepository evaluationItemScoreItemRepository;
     private final MonthlyScoreRepository monthlyScoreRepository;
     private final EvaluationScoreSectionRepository evaluationScoreSectionRepository;
+    private final RestTemplate restTemplate;
+    private final HttpHeaders httpHeaders;
+    private final ObjectMapper objectMapper;
 
-    public ScoreService(MemberRepository memberRepository,
-        EvaluationItemRepository evaluationItemRepository,
-        EvaluationItemScoreItemRepository evaluationItemScoreItemRepository,
-        MonthlyScoreRepository monthlyScoreRepository,
-        EvaluationScoreSectionRepository evaluationScoreSectionRepository) {
+    public ScoreService(MemberRepository memberRepository, EvaluationItemRepository evaluationItemRepository, EvaluationItemScoreItemRepository evaluationItemScoreItemRepository, MonthlyScoreRepository monthlyScoreRepository, EvaluationScoreSectionRepository evaluationScoreSectionRepository, RestTemplate restTemplate, HttpHeaders httpHeaders, ObjectMapper objectMapper) {
         this.memberRepository = memberRepository;
         this.evaluationItemRepository = evaluationItemRepository;
         this.evaluationItemScoreItemRepository = evaluationItemScoreItemRepository;
         this.monthlyScoreRepository = monthlyScoreRepository;
         this.evaluationScoreSectionRepository = evaluationScoreSectionRepository;
+        this.restTemplate = restTemplate;
+        this.httpHeaders = httpHeaders;
+        this.objectMapper = objectMapper;
     }
 
     public ScoreCountResponse count(ApplicationType applicationType) {
@@ -44,17 +57,39 @@ public class ScoreService {
         return new ScoreCountResponse(recordCnt);
     }
 
-    public ExpectScoreResponse expect(Long memberId, ApplicationType applicationType, LocalDate yearMonth) {
+    public ExpectScoreResponse expect(LoginMemberInfo member, LocalDate yearMonth) throws JsonProcessingException {
+        Long memberId = member.getId();
+        ApplicationType applicationType = member.getApplicationType();
         final MonthlyScore monthlyScore = monthlyScoreRepository.findByMemberIdAndYearMonth(memberId, yearMonth)
-            .orElse(MonthlyScore.empty(applicationType));
+                .orElse(MonthlyScore.empty(applicationType));
         final int currentScore = monthlyScore.getScore();
 
         final int greaterThanMine = monthlyScoreRepository.countByApplicationTypeAndYearMonthAndScoreGreaterThan(applicationType, yearMonth, currentScore);
         final int totalCount = monthlyScoreRepository.countByApplicationTypeAndYearMonth(applicationType, yearMonth);
         final float currentPercentile = (float) (Math.floor(((float) greaterThanMine / totalCount * 100) * 100) / 100.0);
 
-        final float expectedPassPercent = 0; // TODO :: expectedGrade
-        return new ExpectScoreResponse(currentScore, currentPercentile, expectedPassPercent);
+        final List<MonthlyScoreResponse> monthlyScoreResponses = scoresYear(member, LocalDate.now());
+
+        final int expectedPassPoint = getExpectedPassPoint(monthlyScoreResponses, applicationType.mlServerIndex());
+        return new ExpectScoreResponse(currentScore, currentPercentile, expectedPassPoint);
+    }
+
+    private int getExpectedPassPoint(List<MonthlyScoreResponse> monthlyScoreResponses, int mlServerIndex) throws JsonProcessingException {
+        final List<Integer> scores = monthlyScoreResponses.stream()
+                .map(MonthlyScoreResponse::getScore)
+                .collect(Collectors.toList());
+
+        final MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
+        formData.add("input_data", scores);
+        formData.add("type_num", mlServerIndex);
+        final ResponseEntity<String> response = restTemplate.exchange(
+                ML_URL,
+                HttpMethod.POST,
+                new HttpEntity<>(formData, httpHeaders),
+                String.class
+        );
+        ExpectPassPointResponse expectedPassPointResponse = objectMapper.readValue(response.getBody(), ExpectPassPointResponse.class);
+        return expectedPassPointResponse.getPrediction();
     }
 
     public MyScoreResponse myScores(Long memberId) {
@@ -64,17 +99,17 @@ public class ScoreService {
 
     public List<EvaluationScoreByItemResponse> evaluationScores(Long memberId, ApplicationType applicationType, LocalDate yearMonth) {
         return evaluationItemRepository.findAllByApplicationType(applicationType).stream()
-            .map(item -> {
-                final float evaluationItemScore = evaluationItemScore(memberId, item, yearMonth);
-                final int evaluationScore = evaluate(item.getId(), evaluationItemScore);
-                return new EvaluationScoreByItemResponse(item.getId(), item.getName(), evaluationScore);
-            }).collect(Collectors.toList());
+                .map(item -> {
+                    final float evaluationItemScore = evaluationItemScore(memberId, item, yearMonth);
+                    final int evaluationScore = evaluate(item.getId(), evaluationItemScore);
+                    return new EvaluationScoreByItemResponse(item.getId(), item.getName(), evaluationScore);
+                }).collect(Collectors.toList());
     }
 
     private float evaluationItemScore(Long memberId, EvaluationItem item, LocalDate yearMonth) {
         return evaluationItemScoreItemRepository.findByEvaluationItemIdAndMemberIdAndYearMonth(item.getId(), memberId, yearMonth)
-            .orElse(new EvaluationItemScore(memberId, item.getId(), 0))
-            .getScore();
+                .orElse(new EvaluationItemScore(memberId, item.getId(), 0))
+                .getScore();
     }
 
     @Transactional
@@ -103,10 +138,10 @@ public class ScoreService {
 
     public int evaluate(Long evaluationItemId, float score) {
         return evaluationScoreSectionRepository.findAllByEvaluationItemId(evaluationItemId).stream()
-            .filter(it -> it.getSectionBaseScore() <= score)
-            .max(Comparator.comparingInt(EvaluationScoreSection::getEvaluationScore))
-            .map(EvaluationScoreSection::getEvaluationScore)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid evaluationItemId or score"));
+                .filter(it -> it.getSectionBaseScore() <= score)
+                .max(Comparator.comparingInt(EvaluationScoreSection::getEvaluationScore))
+                .map(EvaluationScoreSection::getEvaluationScore)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid evaluationItemId or score"));
     }
 
     public List<RankResponse> rank(ApplicationType applicationType, int rankCnt, LocalDate date) {
@@ -133,9 +168,11 @@ public class ScoreService {
     public List<MonthlyScoreResponse> scoresYear(LoginMemberInfo member, LocalDate year) {
         final ApplicationType applicationType = member.getApplicationType();
         return LocalDateUtils.monthsOfYear(year).stream()
-            .map(yearMonth -> MonthlyScoreResponse.of(monthlyScoreRepository.findByMemberIdAndYearMonth(member.getId(), yearMonth)
-                .orElse(MonthlyScore.empty(applicationType)))
-            ).collect(Collectors.toList());
+                .map(yearMonth -> MonthlyScoreResponse.of(
+                                monthlyScoreRepository.findByMemberIdAndYearMonth(member.getId(), yearMonth)
+                                        .orElse(MonthlyScore.empty(applicationType))
+                        )
+                ).collect(Collectors.toList());
     }
 
     // avg evaluation scores of each evaluation item per monthly rankers
@@ -145,9 +182,9 @@ public class ScoreService {
         for (Long itemId : rankersScoresByItem.keySet()) {
             final String itemName = evaluationItemRepository.findById(itemId).orElseThrow().getName();
             final double avgEvaluationScore = rankersScoresByItem.get(itemId).stream()
-                .mapToInt(score -> evaluate(itemId, score.getScore()))
-                .average()
-                .orElseThrow();
+                    .mapToInt(score -> evaluate(itemId, score.getScore()))
+                    .average()
+                    .orElseThrow();
             responses.add(new EvaluationScoreByItemResponse(itemId, itemName, (int) avgEvaluationScore));
         }
         return responses;
@@ -156,7 +193,7 @@ public class ScoreService {
     private Map<Long, List<EvaluationItemScore>> rankerScoresByItem(ApplicationType applicationType, int top, LocalDate yearMonth) {
         final List<Long> rankerIds = rankersByMonthlyScore(applicationType, top, yearMonth);
         return evaluationItemScoreItemRepository.findAllByMemberIdInAndYearMonth(rankerIds, yearMonth).stream()
-            .collect(Collectors.groupingBy(EvaluationItemScore::getEvaluationItemId));
+                .collect(Collectors.groupingBy(EvaluationItemScore::getEvaluationItemId));
     }
 
     private List<Long> rankersByMonthlyScore(ApplicationType applicationType, int top, LocalDate yearMonth) {
@@ -164,7 +201,7 @@ public class ScoreService {
         final int fetchCount = (int) (scoreCnt * ((float) top / 100));
         final PageRequest page = PageRequest.of(0, fetchCount, Sort.by(Sort.Order.desc("score"), Sort.Order.asc("id")));
         return monthlyScoreRepository.findAllByApplicationTypeAndYearMonth(applicationType, yearMonth, page).stream()
-            .map(MonthlyScore::getMemberId)
-            .collect(Collectors.toList());
+                .map(MonthlyScore::getMemberId)
+                .collect(Collectors.toList());
     }
 }

@@ -13,6 +13,6 @@ public class MemberPersonalInfoResponse {
     public MemberPersonalInfoResponse(String name, String email, ApplicationType applicationType) {
         this.name = name;
         this.email = email;
-        this.applicationTypeStandardName = applicationType.getStandardName();
+        this.applicationTypeStandardName = applicationType.standardName();
     }
 }
