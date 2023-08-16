@@ -20,6 +20,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (event.target.tagName === "A") {
             event.preventDefault();
             dropdownText.textContent = event.target.textContent;
+            console.log(event.target.textContent);
+
             if (event.target.textContent === "경찰직공무원(남)" || event.target.textContent === "경찰직공무원(여)") {
                 imgElement.src = "../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
             } else if (event.target.textContent === "소방직공무원(남)" || event.target.textContent === "소방직공무원(여)") {
@@ -64,8 +66,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const passwordResult = document.getElementById("password-1-error");
     const passwordResult2 = document.getElementById("password-2-error");
 
-    let passwordMachResult1 = false;
-    let passwordMachResult2 = false;
+    let passwordMachResult1 = true;
+    let passwordMachResult2 = true;
 
     function checkPasswordValidity() {
 
@@ -85,14 +87,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const lengthRegex = /^.{9,16}$/;
         const alphanumericRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
-
-        if (!lengthRegex.test(password)) {
-            errorMessage = "비밀번호는 9자 이상 16자 이하로 입력하세요.";
-            passwordMachResult1 = 0;
-        } else if (!alphanumericRegex.test(password)) {
-            errorMessage = "비밀번호는 영어, 숫자, 특수문자를 모두 포함해야 합니다.";
-            passwordMachResult1 = 0;
+        if (password){
+            if (!lengthRegex.test(password)) {
+                errorMessage = "비밀번호는 9자 이상 16자 이하로 입력하세요.";
+                passwordMachResult1 = 0;
+            } else if (!alphanumericRegex.test(password)) {
+                errorMessage = "비밀번호는 영어, 숫자, 특수문자를 모두 포함해야 합니다.";
+                passwordMachResult1 = 0;
+            }
+            console.log("password1 error", errorMessage)
         }
+
+
         // 재설정 로직
 
         passwordResult.textContent = errorMessage || "비밀번호가 유효합니다.";
@@ -134,33 +140,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const signUpBtn = document.querySelector(".button2");
     signUpBtn.addEventListener("click", async function () {
-        var errorMessage = '';
-        const lengthRegex = /^.{9,16}$/;
-        const password = document.getElementById("password11").value;
-        const alphanumericRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
 
-        if (!lengthRegex.test(password)) {
-            errorMessage = "비밀번호는 9자 이상 16자 이하로 입력하세요.";
-            passwordMachResult1 = 0;
-        } else if (!alphanumericRegex.test(password)) {
-            errorMessage = "비밀번호는 영어, 숫자, 특수문자를 모두 포함해야 합니다.";
-            passwordMachResult1 = 0;
-        }
-        passwordResult.textContent = errorMessage || "비밀번호가 유효합니다.";
 
-        if (!(passwordResult.textContent ==="비밀번호가 유효합니다.")){
-            sAlert("유효하지 않은 비밀번호입니다.")
-            return;
-        } else if (!(passwordMachResult1 && passwordMachResult2)) {
-            sAlert("비밀번호가 일치하지 않습니다.")
-
+        if(!(passwordMachResult1 && passwordMachResult2)) {
+            sAlert("비밀번호가 유효하지 않습니다.")
             return;
         } else {
+            console.log(passwordMachResult1,passwordMachResult2);
+            // Call API to save password 여기서 저장 api 호출~~!!
             const restPassword = passwordInput.value
             const resetApplicationTypeKey = dropdownText.id
 
-            alert(restPassword)
-            alert(resetApplicationTypeKey)
+
 
             // 회원가입 - 서버에 요청
             const userData = {
@@ -235,6 +226,12 @@ async function fetchMemberInfo() {
     name = data.name;
     email = data.email;
     applicationTypeStandardName = data.applicationTypeStandardName;
+
+    console.log("Name:", name);
+    console.log("Email:", email);
+    console.log("applicationTypeStandardName:", applicationTypeStandardName);
+
+
     dropdownText.textContent = applicationTypeStandardName;
     nameInput.textContent = name;
     emailInput.textContent = email;
@@ -284,6 +281,29 @@ function noError_sAlert(txt, title = 'Success',) {
 }
 fetchApplicationTypeName()
 fetchMemberInfo()
+
+// 희망 지망 직렬 선택 처럼 이름이랑 닉네임 자동으로 호출하는 api 필요합니다.
+//from gpt 참고 코드
+// JavaScript 코드
+// document.getElementById('call-api-button').addEventListener('click', callAPI);
+
+// function callAPI() {
+//     var fullName = document.getElementById('full-name').value;
+//     var email = document.getElementById('email').value;
+
+//     // API 호출 로직 추가
+//     // 여기서는 가상의 API 호출을 시뮬레이션하도록 하겠습니다.
+//     simulateAPIResponse(fullName, email);
+// }
+
+// function simulateAPIResponse(name, email) {
+//     // 실제 API 호출을 대신하여 결과를 시뮬레이션하는 함수입니다.
+//     // 여기서는 결과를 임의로 생성하여 보여줍니다.
+//     var resultDiv = document.getElementById('result');
+//     var resultHTML = `<p>이름: ${name}</p><p>이메일: ${email}</p>`;
+//     resultDiv.innerHTML = resultHTML;
+// }
+
 
 // logout component
 const logoutContainer = document.getElementById("logoutContainer");
