@@ -1,6 +1,7 @@
 package se.ton.t210.domain;
 
 import lombok.Getter;
+import se.ton.t210.domain.converter.SymmetricEncryptionConverter;
 import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.ResetPersonalInfoRequest;
 
@@ -19,9 +20,11 @@ public class Member {
     @Id
     private Long id;
 
+    @Convert(converter = SymmetricEncryptionConverter.class)
     @NotNull
     private String name;
 
+    @Convert(converter = SymmetricEncryptionConverter.class)
     @Email
     @NotNull
     private String email;
@@ -73,7 +76,7 @@ public class Member {
 
     public void validatePassword(String input, PasswordSalt salt) {
         try {
-            final String encryptedInput = SHA256Utils.encrypt(SupportedAlgorithmType.SHA256, input, salt.getSalt());
+            final String encryptedInput = SHA256Utils.encrypt(input, salt.getSalt());
             if(!this.password.equals(encryptedInput)) {
                 throw new IllegalArgumentException();
             }
