@@ -7,9 +7,9 @@ import se.ton.t210.domain.EvaluationItemScore;
 public class EvaluationScoreRequest {
 
     private final Long evaluationItemId;
-    private final int score;
+    private final Float score;
 
-    public EvaluationScoreRequest(Long evaluationItemId, int score) {
+    public EvaluationScoreRequest(Long evaluationItemId, Float score) {
         this.evaluationItemId = evaluationItemId;
         this.score = score;
     }

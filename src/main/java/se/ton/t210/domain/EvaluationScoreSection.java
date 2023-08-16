@@ -14,20 +14,20 @@ public class EvaluationScoreSection {
     @Id
     private Long id;
     private Long evaluationItemId;
-    private int sectionBaseScore;
+    private float sectionBaseScore;
     private int evaluationScore;
 
     public EvaluationScoreSection() {
     }
 
-    public EvaluationScoreSection(Long id, Long evaluationItemId, int sectionBaseScore, int evaluationScore) {
+    public EvaluationScoreSection(Long id, Long evaluationItemId, float sectionBaseScore, int evaluationScore) {
         this.id = id;
         this.evaluationItemId = evaluationItemId;
         this.sectionBaseScore = sectionBaseScore;
         this.evaluationScore = evaluationScore;
     }
 
-    public EvaluationScoreSection(Long evaluationItemId, int sectionBaseScore, int evaluationScore) {
+    public EvaluationScoreSection(Long evaluationItemId, float sectionBaseScore, int evaluationScore) {
         this(null, evaluationItemId, sectionBaseScore, evaluationScore);
     }
 }

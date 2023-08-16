@@ -153,8 +153,7 @@ async function monthlyRecordsGraph() {
     const yearScores = await fetch(currentDomain + "/api/score/year")
     const expectedScores = await fetch(currentDomain + "/api/score/expect")
 
-    let percentage = (100-((await expectedScores.json()).currentPercentile)).toFixed(2)
-    percentage = percentage.toFixed(2)
+    let percentage = (100-((await expectedScores.json()).currentPercentile))
 
     const container = d3.select("#gauge-container");
     const width = 256;

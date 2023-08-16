@@ -15,7 +15,7 @@ public class EvaluationItemScore {
     private Long id;
     private Long memberId;
     private Long evaluationItemId;
-    private int score;
+    private float score;
 
     @Convert(converter = ScoreRecordYearAndMonthConverter.class)
     private final LocalDate yearMonth = LocalDate.now();
@@ -23,18 +23,18 @@ public class EvaluationItemScore {
     public EvaluationItemScore() {
     }
 
-    public EvaluationItemScore(Long id, Long memberId, Long evaluationItemId, int score) {
+    public EvaluationItemScore(Long id, Long memberId, Long evaluationItemId, float score) {
         this.id = id;
         this.memberId = memberId;
         this.evaluationItemId = evaluationItemId;
         this.score = score;
     }
 
-    public EvaluationItemScore(Long memberId, Long evaluationItemId, int score) {
+    public EvaluationItemScore(Long memberId, Long evaluationItemId, float score) {
         this(null, memberId, evaluationItemId, score);
     }
 
-    public static EvaluationItemScore of(Member member, EvaluationItem evaluationItem, int score) {
+    public static EvaluationItemScore of(Member member, EvaluationItem evaluationItem, float score) {
         return new EvaluationItemScore(
             member.getId(),
             evaluationItem.getId(),

@@ -37,9 +37,9 @@ public class EvaluationItemService {
         for (EvaluationItem evaluationItem : evaluationItems) {
             final List<EvaluationSectionInfo> evaluationSectionInfos = new ArrayList<>();
             final List<EvaluationScoreSection> sections = evaluationScoreSectionRepository.findAllByEvaluationItemId(evaluationItem.getId());
-            sections.sort(Comparator.comparingInt(EvaluationScoreSection::getSectionBaseScore));
+            sections.sort(Comparator.comparingDouble(EvaluationScoreSection::getSectionBaseScore));
 
-            int prevItemBaseScore = 100;
+            float prevItemBaseScore = 100f;
             for (EvaluationScoreSection section : sections) {
                 final EvaluationSectionInfo sectionInfo = new EvaluationSectionInfo(
                         evaluationItem.getId(),

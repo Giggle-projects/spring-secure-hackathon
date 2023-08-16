@@ -7,11 +7,11 @@ public class EvaluationSectionInfo {
 
     private final Long evaluationId;
     private final String evaluationName;
-    private final int maxScore;
-    private final int minScore;
+    private final float maxScore;
+    private final float minScore;
     private final int evaluationScore;
 
-    public EvaluationSectionInfo(Long evaluationId, String evaluationName, int maxScore, int minScore, int evaluationScore) {
+    public EvaluationSectionInfo(Long evaluationId, String evaluationName, float maxScore, float minScore, int evaluationScore) {
         this.evaluationId = evaluationId;
         this.evaluationName = evaluationName;
         this.maxScore = maxScore;

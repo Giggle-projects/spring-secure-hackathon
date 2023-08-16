@@ -25,15 +25,18 @@ public class ScoreService {
     private final EvaluationItemRepository evaluationItemRepository;
     private final EvaluationItemScoreItemRepository evaluationItemScoreItemRepository;
     private final MonthlyScoreRepository monthlyScoreRepository;
+    private final EvaluationScoreSectionRepository evaluationScoreSectionRepository;
 
-    @Autowired
-    private EvaluationScoreSectionRepository evaluationScoreSectionRepository;
-
-    public ScoreService(MemberRepository memberRepository, EvaluationItemRepository evaluationItemRepository, EvaluationItemScoreItemRepository evaluationItemScoreItemRepository, MonthlyScoreRepository monthlyScoreRepository) {
+    public ScoreService(MemberRepository memberRepository,
+        EvaluationItemRepository evaluationItemRepository,
+        EvaluationItemScoreItemRepository evaluationItemScoreItemRepository,
+        MonthlyScoreRepository monthlyScoreRepository,
+        EvaluationScoreSectionRepository evaluationScoreSectionRepository) {
         this.memberRepository = memberRepository;
         this.evaluationItemRepository = evaluationItemRepository;
         this.evaluationItemScoreItemRepository = evaluationItemScoreItemRepository;
         this.monthlyScoreRepository = monthlyScoreRepository;
+        this.evaluationScoreSectionRepository = evaluationScoreSectionRepository;
     }
 
     public ScoreCountResponse count(ApplicationType applicationType) {
@@ -62,13 +65,13 @@ public class ScoreService {
     public List<EvaluationScoreByItemResponse> evaluationScores(Long memberId, ApplicationType applicationType, LocalDate yearMonth) {
         return evaluationItemRepository.findAllByApplicationType(applicationType).stream()
             .map(item -> {
-                final int evaluationItemScore = evaluationItemScore(memberId, item, yearMonth);
+                final float evaluationItemScore = evaluationItemScore(memberId, item, yearMonth);
                 final int evaluationScore = evaluate(item.getId(), evaluationItemScore);
                 return new EvaluationScoreByItemResponse(item.getId(), item.getName(), evaluationScore);
             }).collect(Collectors.toList());
     }
 
-    private int evaluationItemScore(Long memberId, EvaluationItem item, LocalDate yearMonth) {
+    private float evaluationItemScore(Long memberId, EvaluationItem item, LocalDate yearMonth) {
         return evaluationItemScoreItemRepository.findByEvaluationItemIdAndMemberIdAndYearMonth(item.getId(), memberId, yearMonth)
             .orElse(new EvaluationItemScore(memberId, item.getId(), 0))
             .getScore();
@@ -98,7 +101,7 @@ public class ScoreService {
         monthlyScoreRepository.save(MonthlyScore.of(member, evaluationScoreSum));
     }
 
-    public int evaluate(Long evaluationItemId, int score) {
+    public int evaluate(Long evaluationItemId, float score) {
         return evaluationScoreSectionRepository.findAllByEvaluationItemId(evaluationItemId).stream()
             .filter(it -> it.getSectionBaseScore() <= score)
             .max(Comparator.comparingInt(EvaluationScoreSection::getEvaluationScore))

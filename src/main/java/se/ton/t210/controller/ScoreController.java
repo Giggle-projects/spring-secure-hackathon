@@ -31,10 +31,11 @@ public class ScoreController {
     }
 
     @GetMapping("/api/score/evaluate")
-    public ResponseEntity<ScoreResponse> evaluationScore(@Valid @NotNull Long evaluationItemId,
-                                                         @Valid @NotNull Integer score) {
+    public ResponseEntity<CalculateEvaluationScoreResponse> evaluationScore(
+                                                         @Valid @NotNull Long evaluationItemId,
+                                                         @Valid @NotNull Float score) {
         final int evaluationScore = scoreService.evaluate(evaluationItemId, score);
-        return ResponseEntity.ok(new ScoreResponse(evaluationScore));
+        return ResponseEntity.ok(new CalculateEvaluationScoreResponse(evaluationScore));
     }
 
     @GetMapping("/api/score/year")
