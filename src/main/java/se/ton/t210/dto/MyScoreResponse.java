@@ -8,10 +8,10 @@ import java.util.List;
 @Getter
 public class MyScoreResponse {
 
-    private final int score;
-    private final int maxScore;
+    private final float score;
+    private final float maxScore;
 
-    public MyScoreResponse(int score, int maxScore) {
+    public MyScoreResponse(float score, float maxScore) {
         this.score = score;
         this.maxScore = maxScore;
     }

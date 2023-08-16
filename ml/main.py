@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:1234"],
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -48,7 +48,7 @@ def predict_single_input(input_data):
 
 
 
-@app.post("/predict/")
+@app.post("/predict")
 async def predict(input_data: str = Form(...),type_num: int = Form(...)):
 
 
@@ -59,19 +59,13 @@ async def predict(input_data: str = Form(...),type_num: int = Form(...)):
 
     input_data = ast.literal_eval(input_data)
     # 모두 0이면 리스트에 0 추가
-    if all(value == 0 for value in input_data):
-        input_data.append(0)
-    else:
-        # 0 값을 제외한 리스트 생성
-        filtered_values = [value for value in input_data if value != 0]
+    # 0 값을 제외한 리스트 생성
+    filtered_values = [value for value in input_data if value != 0]
 
-        # 0이 없을 때만 평균값 계산 및 처리
-        if filtered_values:
-            mean_value = np.mean(filtered_values)
-            input_data = [mean_value if value == 0 else value for value in input_data]
-            input_data.append(sum(input_data))
-        else:
-            input_data.append(sum(input_data))
+    # 0이 없을 때만 평균값 계산 및 처리
+    if filtered_values:
+    	mean_value = np.mean(filtered_values)
+    	input_data = [mean_value if value == 0 else value for value in input_data]
 
     print(f"model input data is {input_data}")
 
