@@ -1,4 +1,4 @@
-// const currentDomain = window.location.origin
+//const currentDomain = window.location.origin
 const currentDomain = "http://localhost:8080"
 const scorePattern = /^(?!-)(?!.*[a-zA-Z])(?!.*[!@#$%^&*()])(?!.*\d{5,})(?=.*\d)[^\s]+$/;
 
@@ -137,16 +137,16 @@ async function fetchMyInfo() {
     currentScore.innerText = "현재 점수 : " + responseScoreInfoValue.currentScore + "점"
     expectedPassPercent.innerText = "합격 예상 :" + responseScoreInfoValue.expectedPassPercent.toFixed(2) + "%"
 
-    if(responseScoreInfoValue.expectedPassPercent >= 95) {
+    if(responseScoreInfoValue.expectedPassPercent == 0) {
         expectedGrade.innerText = "예측 결과 : 합격 확실"
     }
-    if(responseScoreInfoValue.expectedPassPercent < 95 && responseScoreInfoValue.expectedPassPercent >= 90) {
+    if(responseScoreInfoValue.expectedPassPercent ==1) {
         expectedGrade.innerText = "예측 결과 : 합격 유력"
     }
-    if(responseScoreInfoValue.expectedPassPercent < 90 && responseScoreInfoValue.expectedPassPercent >= 85) {
+    if(responseScoreInfoValue.expectedPassPercent == 2) {
         expectedGrade.innerText = "예측 결과 : 탈락 예상"
     }
-    if(responseScoreInfoValue.expectedPassPercent < 85) {
+    if(responseScoreInfoValue.expectedPassPercent == 3) {
         expectedGrade.innerText = "예측 결과 : 탈락 유력"
     }
 }

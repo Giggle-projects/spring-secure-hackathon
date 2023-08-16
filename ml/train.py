@@ -107,15 +107,6 @@ type_6_df = set_label(type_6_df)
 
 
 
-type_1_df=type_1_df.drop('total_score',axis=1)
-type_2_df=type_2_df.drop('total_score',axis=1)
-type_3_df=type_3_df.drop('total_score',axis=1)
-type_4_df=type_4_df.drop('total_score',axis=1)
-type_5_df=type_5_df.drop('total_score',axis=1)
-type_6_df=type_6_df.drop('total_score',axis=1)
-
-
-
 
 class LSTMModel(nn.Module):
     def __init__(self, input_size, hidden_size, num_layers, output_size):
