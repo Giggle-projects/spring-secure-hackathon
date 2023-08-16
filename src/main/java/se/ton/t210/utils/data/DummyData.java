@@ -47,11 +47,11 @@ class DummyData {
     public void create() {
         createMembers(100);
         createEvaluationItemTable();
-//        var testMemb er = memberRepository.save(new Member("test", "test@naver.com", "12345", ApplicationType.PoliceOfficerMale));
-//        members.add(testMember);
-//        for (var member : members) {
-//            records(member);
-//        }
+        var testMember = memberRepository.save(new Member("test", "test@naver.com", "12345", ApplicationType.PoliceOfficerMale));
+        members.add(testMember);
+        for (var member : members) {
+            records(member);
+        }
     }
 
     private void createMembers(int number) {
