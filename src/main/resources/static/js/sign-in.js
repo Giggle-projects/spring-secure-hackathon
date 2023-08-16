@@ -3,7 +3,6 @@ const currentDomain = "http://localhost:8080"
 
 const emailInput = document.getElementById("email"); // 변경된 이메일 입력 요소 가져오기
 const passwordInput = document.getElementById("password1");
-const check_box = document.querySelector(".check-box");
 const eyeIcon = document.querySelector(".password-toggle"); // Select the eye icon element
 const signUpText = document.getElementById("signUpText");
 const logInBtn = document.getElementById("logInBtn");
@@ -25,11 +24,6 @@ function togglePasswordVisibility() {
       <path fill-rule="evenodd" clip-rule="evenodd" d="M12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9ZM7.5 12C7.5 9.51472 9.51472 7.5 12 7.5C14.4853 7.5 16.5 9.51472 16.5 12C16.5 14.4853 14.4853 16.5 12 16.5C9.51472 16.5 7.5 14.4853 7.5 12Z" fill="#21272A"/>`;
     }
 }
-
-// 로그인 정보 저장
-check_box.addEventListener("click", function () {
-    check_box.classList.toggle("selected_box");
-});
 
 logInBtn.addEventListener("click", async function () {
     const email = emailInput.value;
@@ -57,14 +51,6 @@ logInBtn.addEventListener("click", async function () {
             sAlert("회원 정보가 맞지 않습니다.")
             return
             //throw new Error("회원 정보가 맞지 않습니다.");
-        }
-
-        const checkBoxSelected = check_box.classList.contains("selected_box");
-
-        if (checkBoxSelected) {
-            document.cookie = "isSavedUserInfo=" + true;
-        } else {
-            document.cookie = "isSavedUserInfo=" + false;
         }
 
         window.location.href = "../html/dashboard.html";

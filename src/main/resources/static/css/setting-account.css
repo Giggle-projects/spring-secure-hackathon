@@ -55,12 +55,13 @@
   line-height: 100%;
   font-weight: 500;
 }
+.logout,
 .menu-018 {
   align-self: stretch;
   border-bottom: 1px solid var(--coolgray-10);
   display: flex;
   flex-direction: row;
-  padding: var(--padding-xs) var(--padding-5xs);
+  padding: var(--padding-xs) var(--padding-5xs);s
   align-items: center;
   justify-content: flex-start;
   gap: var(--gap-5xs);

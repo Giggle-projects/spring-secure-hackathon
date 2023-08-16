@@ -1,6 +1,6 @@
 // const currentDomain = window.location.origin
 const currentDomain = "http://localhost:8080"
-const scorePattern = /^(?!-)(?!.*[a-zA-Z])(?!.*[!@#$%^&*()])(?!.*\d{5,})(?=.*\d).+$/;
+const scorePattern = /^(?!-)(?!.*[a-zA-Z])(?!.*[!@#$%^&*()])(?!.*\d{5,})(?=.*\d)[^\s]+$/;
 
 async function fetchEvaluationItem() {
     let response = await fetch(currentDomain + "/api/evaluation/items");

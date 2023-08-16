@@ -53,6 +53,7 @@
   line-height: 100%;
   font-weight: 500;
 }
+.logout,
 .menu-012 {
   align-self: stretch;
   border-bottom: 1px solid var(--coolgray-10);

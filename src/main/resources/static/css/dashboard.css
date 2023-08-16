@@ -78,6 +78,7 @@
   color: var(--coolgray-90);
   text-align: left;
 }
+.logout,
 .menu-0210 {
   align-self: stretch;
   border-bottom: 1px solid var(--coolgray-10);
