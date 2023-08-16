@@ -74,6 +74,9 @@ document.addEventListener("DOMContentLoaded", function () {
         let errorMessage = '';
         const regex = /^[a-z0-9]+$/i;  // 대소문자 구분 없이 검사하는 정규식
 
+        const regex-after = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\/\\])(?=.*[A-Z])(?=.*[a-z])(?=.*\S).{1,320}$/;
+
+
         if (!email) {
             errorMessage = "이메일을 입력하세요.";
         } else if (!email.includes("@")) {
@@ -81,6 +84,10 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             if (!regex.test(emailFront)) {
                 errorMessage = "올바른 이메일 앞 부분을 입력하세요.";
+            }
+            else if (!regex-after.test(emailAfterAt)){
+                errorMessage = "올바른 도매인을 입력하세요.";
+            }
             }
         }
         if (errorMessage) {
@@ -107,7 +114,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             //이메일 형식
-            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+[a-zA-Z0-9]{0,}\.[a-zA-Z]{2,4}$/;
+            const emailRegex = /^(?=.*[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-])(?=.*[a-zA-Z0-9.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4})(?=.*\S).{1,320}$/;
+
 
 
             if (!emailRegex.test(emailInputValue)) {
@@ -159,7 +167,8 @@ document.addEventListener("DOMContentLoaded", function () {
         var errorMessage = '';
 
         const lengthRegex = /^.{9,16}$/;
-        const alphanumericRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
+        const alphanumericRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[\sA-Za-z\d@$!%*?&]+$/;
+
         if (!(password)) {
             errorMessage = "비밀번호를 입력하세요";
             passwordResult.style.color = "red"; // Change text color to black
@@ -170,7 +179,7 @@ document.addEventListener("DOMContentLoaded", function () {
             passwordMachResult = 0;
         } else if (!alphanumericRegex.test(password)) {
             passwordResult.style.color = 'red';
-            errorMessage = "비밀번호는 영어, 숫자, 특수문자를 모두 포함해야 합니다.";
+            errorMessage = "비밀번호는 공백없이 영어, 숫자, 특수문자를 모두 포함해야 합니다.";
             passwordMachResult = 0;
         }
 
