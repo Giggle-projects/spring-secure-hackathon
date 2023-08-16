@@ -1,5 +1,5 @@
-// const currentDomain = window.location.origin
-const currentDomain = "http://localhost:8080"
+const currentDomain = window.location.origin
+// const currentDomain = "http://localhost:8080"
 
 const emailInput = document.getElementById("email"); // 변경된 이메일 입력 요소 가져오기
 const passwordInput = document.getElementById("password1");

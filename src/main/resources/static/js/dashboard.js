@@ -1,3 +1,6 @@
+const currentDomain = window.location.origin
+// const currentDomain = "http://localhost:8080"
+
 const settingContainer = document.getElementById("settingContainer");
 settingContainer.addEventListener("click", function (e) {
     window.location.href = "../html/setting-account.html";
@@ -19,8 +22,6 @@ menu04Container.addEventListener("click", function (e) {
 });
 
 
-// const currentDomain = window.location.origin
-const currentDomain = "http://localhost:8080"
 
 // 사용자의 applicationTypeName값
 let applicationTypeName;

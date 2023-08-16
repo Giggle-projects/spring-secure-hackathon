@@ -1,5 +1,5 @@
-// const currentDomain = window.location.origin
-const currentDomain = "http://localhost:8080"
+const currentDomain = window.location.origin
+// const currentDomain = "http://localhost:8080"
 
 // reset-password-auth.html 페이지의 JavaScript 부분
 document.addEventListener("DOMContentLoaded", function () {
