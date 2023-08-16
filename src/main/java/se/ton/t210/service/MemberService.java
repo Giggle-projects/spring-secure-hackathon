@@ -1,12 +1,12 @@
 package se.ton.t210.service;
 
-import java.security.NoSuchAlgorithmException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import se.ton.t210.cache.EmailAuthCodeCache;
 import se.ton.t210.cache.EmailAuthCodeCacheRepository;
+import se.ton.t210.domain.EncryptPassword;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.MemberRepository;
 import se.ton.t210.domain.PasswordSalt;
@@ -19,7 +19,7 @@ import se.ton.t210.service.mail.MailServiceInterface;
 import se.ton.t210.service.mail.form.SignUpAuthMailForm;
 import se.ton.t210.service.token.TokenService;
 import se.ton.t210.utils.auth.RandomCodeUtils;
-import se.ton.t210.utils.encript.EncryptUtils;
+import se.ton.t210.utils.encript.SHA256Utils;
 import se.ton.t210.utils.encript.SupportedAlgorithmType;
 import se.ton.t210.utils.http.CookieUtils;
 
@@ -66,7 +66,6 @@ public class MemberService {
     }
 
     public void signUp(SignUpRequest request, String emailAuthToken, HttpServletResponse response) {
-      try {
         if (memberRepository.existsByEmail(request.getEmail())) {
           throw new AuthException(HttpStatus.CONFLICT, "Email is already exists");
         }
@@ -75,18 +74,14 @@ public class MemberService {
           throw new AuthException(HttpStatus.FORBIDDEN, "It is different from the previous email information you entered.");
         }
 
-        final Member member = request.toEntity();
-        final String salt = EncryptUtils.generateSalt();
-        final String encryptedNewPassword = EncryptUtils.encrypt(SupportedAlgorithmType.SHA256, member.getPassword(), salt);
-        member.reissuePwd(encryptedNewPassword);
+        final EncryptPassword encryptPassword = EncryptPassword.encryptFrom(request.getPassword());
+        final Member member = request.toEntity()
+            .updatePasswordWith(encryptPassword.getEncrypted());
         memberRepository.save(member);
-        saltRepository.save(new PasswordSalt(member.getId(), salt));
+        saltRepository.save(new PasswordSalt(member.getId(), encryptPassword.getSort()));
 
         final MemberTokens tokens = tokenService.issue(member.getEmail());
         responseTokens(response, tokens);
-      } catch (NoSuchAlgorithmException e) {
-        throw new IllegalArgumentException("Error on signup");
-      }
     }
 
     public void signIn(SignInRequest request, HttpServletResponse response) {
@@ -108,20 +103,15 @@ public class MemberService {
     }
 
     public void reissuePwd(String email, String newPwd) {
-        try {
-            Member member = memberRepository.findByEmail(email).orElseThrow(() ->
-                    new AuthException(HttpStatus.NOT_FOUND, "User is not found"));
-            if (member.getEmail().equals(newPwd)) {
-                throw new IllegalArgumentException("Password can't be same with email");
-            }
-            final String salt = EncryptUtils.generateSalt();
-            final String encryptedNewPassword = EncryptUtils.encrypt(SupportedAlgorithmType.SHA256, newPwd, salt);
-            member.reissuePwd(encryptedNewPassword);
-            memberRepository.save(member);
-            saltRepository.save(new PasswordSalt(member.getId(), salt));
-        } catch (Exception e) {
-            throw new IllegalArgumentException("There is error on reissue password");
+        final Member oldMember = memberRepository.findByEmail(email).orElseThrow(() ->
+                new AuthException(HttpStatus.NOT_FOUND, "User is not found"));
+        if (oldMember.getEmail().equals(newPwd)) {
+            throw new IllegalArgumentException("Password can't be same with email");
         }
+        final EncryptPassword encryptPassword = EncryptPassword.encryptFrom(newPwd);
+        final Member member = oldMember.updatePasswordWith(encryptPassword.getEncrypted());
+        memberRepository.save(member);
+        saltRepository.save(new PasswordSalt(member.getId(), encryptPassword.getSort()));
     }
 
     public void validateEmailAuthCode(String email, String authCode) {

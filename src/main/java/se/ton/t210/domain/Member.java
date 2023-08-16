@@ -1,6 +1,5 @@
 package se.ton.t210.domain;
 
-import java.security.NoSuchAlgorithmException;
 import lombok.Getter;
 import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.ResetPersonalInfoRequest;
@@ -9,7 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import se.ton.t210.utils.encript.EncryptUtils;
+import se.ton.t210.utils.encript.SHA256Utils;
 import se.ton.t210.utils.encript.SupportedAlgorithmType;
 
 @Getter
@@ -25,7 +24,7 @@ public class Member {
 
     @Email
     @NotNull
-    String email;
+    private String email;
 
     @NotNull
     private String password;
@@ -67,10 +66,6 @@ public class Member {
         this(id, name, email, password, applicationType, LocalDate.now(), LocalDate.now());
     }
 
-    public void reissuePwd(String newPwd) {
-        this.password = newPwd;
-    }
-
     public void resetPersonalInfo(ResetPersonalInfoRequest request) {
         this.applicationType = request.getApplicationType();
         this.password = request.getPassword();
@@ -78,14 +73,24 @@ public class Member {
 
     public void validatePassword(String input, PasswordSalt salt) {
         try {
-            final String encryptedInput = EncryptUtils.encrypt(SupportedAlgorithmType.SHA256, input, salt.getSalt());
+            final String encryptedInput = SHA256Utils.encrypt(SupportedAlgorithmType.SHA256, input, salt.getSalt());
             if(!this.password.equals(encryptedInput)) {
                 throw new IllegalArgumentException();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
-
+    public Member updatePasswordWith(String password) {
+        return new Member(
+            this.id,
+            this.name,
+            this.email,
+            password,
+            this.applicationType,
+            this.createdAt,
+            this.updatedAt
+        );
     }
 }

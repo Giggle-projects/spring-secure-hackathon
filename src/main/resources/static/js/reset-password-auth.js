@@ -67,10 +67,6 @@ document.addEventListener("DOMContentLoaded", function () {
     authButton.addEventListener("click", async function () {
         const authCode = codeInput.value;
 
-        // 입력값이 숫자인지 확인
-        if (!(/^\d+$/.test(authCode))) {
-            authNumberResult.textContent = "숫자를 입력해주세요."; // 숫자가 아닐 경우 메시지 변경
-        } else {
             // 인증 코드 검증 로직
             const validAuthApiData = {
                 email: userEmail,
@@ -94,7 +90,6 @@ document.addEventListener("DOMContentLoaded", function () {
             } catch (error) {
                 alert(error.message);
             }
-        }
     });
 });
 
