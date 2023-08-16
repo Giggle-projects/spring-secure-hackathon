@@ -107,7 +107,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             //이메일 형식
-            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+[a-zA-Z0-9]{0,}\.[a-zA-Z]{2,4}$/;
+
 
             if (!emailRegex.test(emailInputValue)) {
                 alert("올바른 이메일 주소 형식이 아닙니다.");
@@ -161,6 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const alphanumericRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
         if (!(password)) {
             errorMessage = "비밀번호를 입력하세요";
+            passwordResult.style.color = "red"; // Change text color to black
             passwordMachResult = 0;
         } else if (!lengthRegex.test(password)) {
             passwordResult.style.color = 'red';
@@ -174,13 +176,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         console.log("password1 error", errorMessage)
 
-        /*
-        else if (!nameCheck) {
-            errorMessage = "비밀번호에 사용자 이름이 포함되어 있습니다.";
-        } else if (!pastPasswordsCheck) {
-            errorMessage = "비밀번호가 과거에 사용된 적이 있습니다.";
-        }
-        */
         if (errorMessage) {
             passwordResult.textContent = errorMessage;
         } else {
@@ -190,13 +185,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // repassword 처리
-    passwordInput2.addEventListener("input", checkPasswordMatch);
+    passwordInput2.addEventListener("input", handlePasswordInput);
 
     function checkPasswordMatch() {
         const password1 = passwordInput.value;
         const password2 = passwordInput2.value;
         if (!(password2)) {
             passwordResult2.textContent = "비밀번호를 입력하세요.";
+
         } else if (password1 === password2) {
             passwordResult2.textContent = "비밀번호가 일치합니다.";
             passwordResult2.style.color = "black"; // Change text color to black
@@ -239,7 +235,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         let emailInputValue = "";
-        mail_result = 1
+
         if (mail_result) {
             emailInputValue = emailInput.value; // Get the value from the email input
         } else {
