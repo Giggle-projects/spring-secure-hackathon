@@ -244,7 +244,7 @@ async function fetchMemberInfo() {
     emailInput.textContent = email;
     if (applicationTypeStandardName === "경찰직공무원(남)" || applicationTypeStandardName === "경찰직공무원(여)") {
         imgElement.src = "../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
-    } else if (applicationTypeStandardName === "소방직공무원(남)" || applicationTypeSta쇼ndardName === "소방직공무원(여)") {
+    } else if (applicationTypeStandardName === "소방직공무원(남)" || applicationTypeStandardName === "소방직공무원(여)") {
         imgElement.src = "../files/type_icon2.jpeg"; // 소방직 이미지 경로로 변경
     } else if (applicationTypeStandardName === "경호직공무원(남)" || applicationTypeStandardName === "경호직공무원(여)") {
         imgElement.src = "../files/type_icon3.png";// 경호직 이미지 경로로 변경
