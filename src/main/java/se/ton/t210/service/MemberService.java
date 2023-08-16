@@ -115,18 +115,12 @@ public class MemberService {
     }
 
     public void validateEmailAuthCode(String email, String authCode) {
-        EmailAuthCodeCache emailAuthCodeCache = emailAuthCodeCacheRepository.findById(email).orElseThrow(() ->
-                new AuthException(HttpStatus.NOT_FOUND, "Email not found"));
-        long afterSeconds = Duration.between(emailAuthCodeCache.getCreatedTime(), LocalTime.now()).getSeconds();
-        if (afterSeconds > mailValidTime) {
-            throw new AuthException(HttpStatus.REQUEST_TIMEOUT, "Email valid time is exceed");
-        }
-        if (!emailAuthCodeCache.getAuthCode().equals(authCode)) {
-            throw new AuthException(HttpStatus.UNAUTHORIZED, "AuthCode is not correct");
-        }
-        if (!emailAuthCodeCache.getEmail().equals(email)) {
-            throw new AuthException(HttpStatus.UNAUTHORIZED, "email is not correct");
-        }
+        final EmailAuthCodeCache emailAuthCodeCache = emailAuthCodeCacheRepository.findById(email).orElseThrow(() ->
+                new AuthException(HttpStatus.NOT_FOUND, "Email not found")
+        );
+        emailAuthCodeCache.checkValidTime(mailValidTime);
+        emailAuthCodeCache.checkAuthCodeSame(authCode);
+        emailAuthCodeCache.checkEmailSame(email);
     }
 
     public void issueEmailToken(HttpServletResponse response, String email) {
