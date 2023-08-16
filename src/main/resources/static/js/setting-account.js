@@ -146,9 +146,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const signUpBtn = document.querySelector(".button2");
     signUpBtn.addEventListener("click", async function () {
-        console.log(passwordMachResult1,passwordMachResult2);
-        if (!(passwordMachResult1 && passwordMachResult2)) {
+        var errorMessage = '';
+        const lengthRegex = /^.{9,16}$/;
+        const password = document.getElementById("password11").value;
+        const alphanumericRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
 
+        if (!lengthRegex.test(password)) {
+            errorMessage = "비밀번호는 9자 이상 16자 이하로 입력하세요.";
+            passwordMachResult1 = 0;
+        } else if (!alphanumericRegex.test(password)) {
+            errorMessage = "비밀번호는 영어, 숫자, 특수문자를 모두 포함해야 합니다.";
+            passwordMachResult1 = 0;
+        }
+        console.log("password1 error", errorMessage)
+
+        console.log(passwordMachResult1,passwordMachResult2);
+        passwordResult.textContent = errorMessage || "비밀번호가 유효합니다.";
+
+        if (!(passwordResult.textContent ==="비밀번호가 유효합니다.")){
+            sAlert("유효하지 않은 비밀번호입니다.")
+            return;
+        } else if (!(passwordMachResult1 && passwordMachResult2)) {
             sAlert("비밀번호가 일치하지 않습니다.")
 
             return;
@@ -157,6 +175,9 @@ document.addEventListener("DOMContentLoaded", function () {
             // Call API to save password 여기서 저장 api 호출~~!!
             const restPassword = passwordInput.value
             const resetApplicationTypeKey = dropdownText.id
+
+            alert(restPassword)
+            alert(resetApplicationTypeKey)
 
             // 회원가입 - 서버에 요청
             const userData = {
