@@ -1,6 +1,6 @@
 package se.ton.t210.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.security.NoSuchAlgorithmException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -9,6 +9,8 @@ import se.ton.t210.cache.EmailAuthCodeCache;
 import se.ton.t210.cache.EmailAuthCodeCacheRepository;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.MemberRepository;
+import se.ton.t210.domain.PasswordSalt;
+import se.ton.t210.domain.PasswordSaltRepository;
 import se.ton.t210.domain.TokenSecret;
 import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.*;
@@ -17,6 +19,8 @@ import se.ton.t210.service.mail.MailServiceInterface;
 import se.ton.t210.service.mail.form.SignUpAuthMailForm;
 import se.ton.t210.service.token.TokenService;
 import se.ton.t210.utils.auth.AuthCodeUtils;
+import se.ton.t210.utils.encript.EncryptUtils;
+import se.ton.t210.utils.encript.SupportedAlgorithmType;
 import se.ton.t210.utils.http.CookieUtils;
 
 import javax.servlet.http.HttpServletResponse;
@@ -45,39 +49,54 @@ public class MemberService {
     @Value("${auth.code.length}")
     private int authCodeLength;
 
-    @Autowired
-    TokenSecret tokenSecret;
-
+    private final TokenSecret tokenSecret;
     private final MemberRepository memberRepository;
+    private final PasswordSaltRepository saltRepository;
     private final TokenService tokenService;
     private final EmailAuthCodeCacheRepository emailAuthCodeCacheRepository;
     private final MailServiceInterface mailServiceInterface;
 
-    public MemberService(MemberRepository memberRepository, TokenService tokenService, EmailAuthCodeCacheRepository emailAuthCodeCacheRepository, MailServiceInterface mailServiceInterface) {
+    public MemberService(TokenSecret tokenSecret, MemberRepository memberRepository,
+        PasswordSaltRepository saltRepository, TokenService tokenService,
+        EmailAuthCodeCacheRepository emailAuthCodeCacheRepository,
+        MailServiceInterface mailServiceInterface) {
+        this.tokenSecret = tokenSecret;
         this.memberRepository = memberRepository;
+        this.saltRepository = saltRepository;
         this.tokenService = tokenService;
         this.emailAuthCodeCacheRepository = emailAuthCodeCacheRepository;
         this.mailServiceInterface = mailServiceInterface;
     }
 
     public void signUp(SignUpRequest request, String emailAuthToken, HttpServletResponse response) {
+      try {
         if (memberRepository.existsByEmail(request.getEmail())) {
-            throw new AuthException(HttpStatus.CONFLICT, "Email is already exists");
+          throw new AuthException(HttpStatus.CONFLICT, "Email is already exists");
         }
         final String emailFromToken = tokenSecret.getPayloadValue(tokenKey, emailAuthToken);
         if (!request.getEmail().equals(emailFromToken)) {
-            throw new AuthException(HttpStatus.FORBIDDEN, "It is different from the previous email information you entered.");
+          throw new AuthException(HttpStatus.FORBIDDEN, "It is different from the previous email information you entered.");
         }
-        final Member member = memberRepository.save(request.toEntity());
+
+        final Member member = request.toEntity();
+        final String salt = EncryptUtils.generateSalt();
+        final String encryptedNewPassword = EncryptUtils.encrypt(SupportedAlgorithmType.SHA256, member.getPassword(), salt);
+        member.reissuePwd(encryptedNewPassword);
+        memberRepository.save(member);
+        saltRepository.save(new PasswordSalt(member.getId(), salt));
+
         final MemberTokens tokens = tokenService.issue(member.getEmail());
         responseTokens(response, tokens);
+      } catch (NoSuchAlgorithmException e) {
+        throw new IllegalArgumentException("Error on signup");
+      }
     }
 
     public void signIn(SignInRequest request, HttpServletResponse response) {
-        if (!memberRepository.existsByEmailAndPassword(request.getEmail(), request.getPassword())) {
-            throw new AuthException(HttpStatus.UNAUTHORIZED, "The username or password is not valid.");
-        }
-        final MemberTokens tokens = tokenService.issue(request.getEmail());
+        final Member member = memberRepository.findByEmail(request.getEmail()).orElseThrow();
+        final PasswordSalt salt = saltRepository.findByMemberId(member.getId()).orElseThrow();
+        member.validatePassword(request.getPassword(), salt);
+        final MemberTokens tokens = tokenService.issue(member.getEmail());
         responseTokens(response, tokens);
     }
 
@@ -92,13 +111,20 @@ public class MemberService {
     }
 
     public void reissuePwd(String email, String newPwd) {
-        Member member = memberRepository.findByEmail(email).orElseThrow(() ->
-                new AuthException(HttpStatus.NOT_FOUND, "User is not found"));
-        if (member.getEmail().equals(newPwd)) {
-            throw new IllegalArgumentException("Password can't be same with email");
+        try {
+            Member member = memberRepository.findByEmail(email).orElseThrow(() ->
+                    new AuthException(HttpStatus.NOT_FOUND, "User is not found"));
+            if (member.getEmail().equals(newPwd)) {
+                throw new IllegalArgumentException("Password can't be same with email");
+            }
+            final String salt = EncryptUtils.generateSalt();
+            final String encryptedNewPassword = EncryptUtils.encrypt(SupportedAlgorithmType.SHA256, newPwd, salt);
+            member.reissuePwd(encryptedNewPassword);
+            memberRepository.save(member);
+            saltRepository.save(new PasswordSalt(member.getId(), salt));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("There is error on reissue password");
         }
-        member.reissuePwd(newPwd);
-        memberRepository.save(member);
     }
 
     public void validateEmailAuthCode(String email, String authCode) {
@@ -131,10 +157,10 @@ public class MemberService {
         CookieUtils.loadHttpOnlyCookie(response, refreshTokenCookieKey, tokens.getRefreshToken());
     }
 
-    public void sendEmailAuthMail(String userEmailAddress) {
-        String emailAuthCode = AuthCodeUtils.generate(authCodeLength);
-        mailServiceInterface.sendMail(userEmailAddress, new SignUpAuthMailForm(emailAuthCode));
-        emailAuthCodeCacheRepository.save(new EmailAuthCodeCache(userEmailAddress, emailAuthCode, LocalTime.now()));
+    public void sendEmailAuthMail(String email) {
+        final String emailAuthCode = AuthCodeUtils.generate(authCodeLength);
+        mailServiceInterface.sendMail(email, new SignUpAuthMailForm(emailAuthCode));
+        emailAuthCodeCacheRepository.save(new EmailAuthCodeCache(email, emailAuthCode, LocalTime.now()));
     }
 
     public ApplicantCountResponse countApplicant(ApplicationType applicationType) {
@@ -165,9 +191,5 @@ public class MemberService {
                 }
         );
         member.resetPersonalInfo(request);
-    }
-
-    private void encryptPassword(String plainPassword) {
-
     }
 }

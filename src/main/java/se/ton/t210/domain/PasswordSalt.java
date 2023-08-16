@@ -1,17 +1,10 @@
 package se.ton.t210.domain;
 
-import java.time.LocalDate;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import lombok.Getter;
-import se.ton.t210.domain.type.ApplicationType;
-import se.ton.t210.dto.ResetPersonalInfoRequest;
 
 @Getter
 @Entity

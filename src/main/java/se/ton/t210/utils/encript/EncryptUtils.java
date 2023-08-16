@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
 
-public class EncryptCodeUtils {
+public class EncryptUtils {
 
     private static final Random RANDOM = new SecureRandom();
 
@@ -29,7 +29,7 @@ public class EncryptCodeUtils {
         return hexString.toString();
     }
 
-    private static String generateSalt() {
+    public static String generateSalt() {
       byte[] salt = new byte[16];
       RANDOM.nextBytes(salt);
       final StringBuilder sb = new StringBuilder();

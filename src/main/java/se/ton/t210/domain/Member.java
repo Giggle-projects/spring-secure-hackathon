@@ -1,5 +1,6 @@
 package se.ton.t210.domain;
 
+import java.security.NoSuchAlgorithmException;
 import lombok.Getter;
 import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.ResetPersonalInfoRequest;
@@ -8,6 +9,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import se.ton.t210.utils.encript.EncryptUtils;
+import se.ton.t210.utils.encript.SupportedAlgorithmType;
 
 @Getter
 @Entity
@@ -71,5 +74,18 @@ public class Member {
     public void resetPersonalInfo(ResetPersonalInfoRequest request) {
         this.applicationType = request.getApplicationType();
         this.password = request.getPassword();
+    }
+
+    public void validatePassword(String input, PasswordSalt salt) {
+        try {
+            final String encryptedInput = EncryptUtils.encrypt(SupportedAlgorithmType.SHA256, input, salt.getSalt());
+            if(!this.password.equals(encryptedInput)) {
+                throw new IllegalArgumentException();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 }
