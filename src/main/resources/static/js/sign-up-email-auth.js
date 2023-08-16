@@ -67,14 +67,6 @@ document.addEventListener("DOMContentLoaded", function () {
             authNumberResult.style.color='red'
             return
         }
-        else if(!(/^\d+$/.test(codeInputData))) {
-            authNumberResult.textContent = "숫자를 입력해주세요."; // 숫자가 아닐 경우 메시지 변
-            authNumberResult.style.opacity = 1;
-            authNumberResult.style.color='red'
-            return
-        }
-        else if(codeInputData && (/^\d+$/.test(codeInputData))){
-            authNumberResult.style.opacity = 0;}
     });
 
 
@@ -82,10 +74,6 @@ document.addEventListener("DOMContentLoaded", function () {
     authButton.addEventListener("click", async function () {
         const authCode = codeInput.value;
 
-        // 입력값이 숫자인지 확인
-        if (!(/^\d+$/.test(authCode))) {
-            authNumberResult.textContent = "숫자를 입력해주세요."; // 숫자가 아닐 경우 메시지 변경
-        } else {
             // 인증 코드 검증 로직
             const validAuthApiData = {
                 email: userEmail,
@@ -108,7 +96,6 @@ document.addEventListener("DOMContentLoaded", function () {
             } catch (error) {
                 alert(error.message);
             }
-        }
     });
 });
 
