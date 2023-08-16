@@ -46,7 +46,7 @@ public class ScoreService {
 
     public ExpectScoreResponse expect(Long memberId, ApplicationType applicationType, LocalDate yearMonth) {
         final MonthlyScore monthlyScore = monthlyScoreRepository.findByMemberIdAndYearMonth(memberId, yearMonth)
-            .orElse(MonthlyScore.empty(applicationType));
+            .orElse(MonthlyScore.empty(applicationType, yearMonth));
         final int currentScore = monthlyScore.getScore();
 
         final int greaterThanMine = monthlyScoreRepository.countByApplicationTypeAndYearMonthAndScoreGreaterThan(applicationType, yearMonth, currentScore);
@@ -134,7 +134,7 @@ public class ScoreService {
         final ApplicationType applicationType = member.getApplicationType();
         return LocalDateUtils.monthsOfYear(year).stream()
             .map(yearMonth -> MonthlyScoreResponse.of(monthlyScoreRepository.findByMemberIdAndYearMonth(member.getId(), yearMonth)
-                .orElse(MonthlyScore.empty(applicationType)))
+                .orElse(MonthlyScore.empty(applicationType, yearMonth)))
             ).collect(Collectors.toList());
     }
 
