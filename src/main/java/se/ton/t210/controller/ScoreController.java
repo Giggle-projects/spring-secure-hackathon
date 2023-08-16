@@ -1,11 +1,13 @@
 package se.ton.t210.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import se.ton.t210.configuration.annotation.LoginMember;
-import se.ton.t210.domain.Member;
-import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.*;
 import se.ton.t210.service.ScoreService;
 
@@ -32,8 +34,8 @@ public class ScoreController {
 
     @GetMapping("/api/score/evaluate")
     public ResponseEntity<CalculateEvaluationScoreResponse> evaluationScore(
-                                                         @Valid @NotNull Long evaluationItemId,
-                                                         @Valid @NotNull Float score) {
+            @Valid @NotNull Long evaluationItemId,
+            @Valid @NotNull Float score) {
         final int evaluationScore = scoreService.evaluate(evaluationItemId, score);
         return ResponseEntity.ok(new CalculateEvaluationScoreResponse(evaluationScore));
     }
@@ -45,8 +47,8 @@ public class ScoreController {
     }
 
     @GetMapping("/api/score/expect")
-    public ResponseEntity<ExpectScoreResponse> expect(@LoginMember LoginMemberInfo member) {
-        final ExpectScoreResponse scoreResponse = scoreService.expect(member.getId(), member.getApplicationType(), LocalDate.now());
+    public ResponseEntity<ExpectScoreResponse> expect(@LoginMember LoginMemberInfo member) throws JsonProcessingException {
+        final ExpectScoreResponse scoreResponse = scoreService.expect(member, LocalDate.now());
         return ResponseEntity.ok(scoreResponse);
     }
 
