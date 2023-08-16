@@ -137,14 +137,17 @@ async function fetchMyInfo() {
     currentScore.innerText = "현재 점수 : " + responseScoreInfoValue.currentScore + "점"
     expectedPassPercent.innerText = "합격 예상 :" + responseScoreInfoValue.expectedPassPercent.toFixed(2) + "%"
 
-    if(responseScoreInfoValue.expectedPassPercent >= 90) {
+    if(responseScoreInfoValue.expectedPassPercent >= 95) {
         expectedGrade.innerText = "예측 결과 : 합격 확실"
     }
-    if(responseScoreInfoValue.expectedPassPercent < 90 && responseScoreInfoValue.expectedPassPercent >= 80) {
+    if(responseScoreInfoValue.expectedPassPercent < 95 && responseScoreInfoValue.expectedPassPercent >= 90) {
         expectedGrade.innerText = "예측 결과 : 합격 유력"
     }
-    if(responseScoreInfoValue.expectedPassPercent < 80) {
+    if(responseScoreInfoValue.expectedPassPercent < 90 && responseScoreInfoValue.expectedPassPercent >= 85) {
         expectedGrade.innerText = "예측 결과 : 탈락 예상"
+    }
+    if(responseScoreInfoValue.expectedPassPercent < 85) {
+        expectedGrade.innerText = "예측 결과 : 탈락 유력"
     }
 }
 
