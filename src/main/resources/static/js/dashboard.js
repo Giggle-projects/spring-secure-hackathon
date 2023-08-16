@@ -15,7 +15,7 @@ menu03Container.addEventListener("click", function (e) {
 
 const menu04Container = document.getElementById("menu04Container")
 menu04Container.addEventListener("click", function (e) {
-    window.location.href = "../html/application-information1.html";
+    window.location.href = "../html/application-information";
 });
 
 

@@ -39,5 +39,4 @@ public class SeedUtils {
       throw new InnerServiceException("fail seed cbc decrypt.");
     }
   }
-
 }
