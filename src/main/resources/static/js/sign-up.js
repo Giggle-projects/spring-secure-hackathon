@@ -72,23 +72,17 @@ document.addEventListener("DOMContentLoaded", function () {
         const emailFront = parts[0];
         const emailAfterAt = parts[1];
         let errorMessage = '';
-        const regex = /^[a-z0-9]+$/;  // 대소문자 구분 없이 검사하는 정규식
-
-        const regex_after = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\/\\])(?=.*[A-Z])(?=.*[a-z])(?=.*\S).{1,320}$/;
-
+        const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
         if (!email) {
             errorMessage = "이메일을 입력하세요.";
-        } else if (!email.includes("@")) {
-            errorMessage = "올바른 이메일 주소를 입력하세요.";
-        } else {
-            if (!regex.test(emailFront)) {
-                errorMessage = "올바른 이메일 앞 부분을 입력하세요.";
-            }
-            else if (!regex_after.test(emailAfterAt)){
-                errorMessage = "올바른 도매인을 입력하세요.";
+        }
+        else {
+            if (!regex.test(email)) {
+                errorMessage = "올바른 이메일을 입력하세요.";
             }
         }
+        console.log(errorMessage)
         if (errorMessage) {
             mergedEmailResult.style.opacity = 1;
             mergedEmailResult.textContent = errorMessage;
@@ -232,7 +226,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // 회원가입 버튼 클릭
+    //회원가입 버튼 클릭
     const signUpBtn = document.querySelector(".sign-up-btn");
     signUpBtn.addEventListener("click", async function () {
         let nameInputValue = ""
