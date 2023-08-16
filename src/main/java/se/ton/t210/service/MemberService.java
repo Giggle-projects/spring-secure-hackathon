@@ -95,7 +95,7 @@ public class MemberService {
         Member member = memberRepository.findByEmail(email).orElseThrow(() ->
                 new AuthException(HttpStatus.NOT_FOUND, "User is not found"));
         if (member.getEmail().equals(newPwd)) {
-            throw new IllegalArgumentException("The password you want to change must be different from the previous password.");
+            throw new IllegalArgumentException("Password can't be same with email");
         }
         member.reissuePwd(newPwd);
         memberRepository.save(member);
@@ -165,5 +165,9 @@ public class MemberService {
                 }
         );
         member.resetPersonalInfo(request);
+    }
+
+    private void encryptPassword(String plainPassword) {
+
     }
 }
