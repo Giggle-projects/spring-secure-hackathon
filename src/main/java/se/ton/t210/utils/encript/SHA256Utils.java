@@ -5,10 +5,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import se.ton.t210.utils.auth.RandomCodeUtils;
 
-public class EncryptUtils {
+public class SHA256Utils {
 
-    public static String encrypt(SupportedAlgorithmType algorithm, String planText, String salt) throws NoSuchAlgorithmException {
-        final MessageDigest md = algorithm.messageDigestInstance();
+    private static final SupportedAlgorithmType ALGORITHM_TYPE = SupportedAlgorithmType.SHA256;
+
+    public static String encrypt(String planText, String salt) throws NoSuchAlgorithmException {
+        final MessageDigest md = ALGORITHM_TYPE.messageDigestInstance();
         md.update(salt.getBytes());
         final byte[] digest = md.digest(planText.getBytes(StandardCharsets.UTF_8));
         return bytesToHex(digest);

@@ -10,6 +10,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import se.ton.t210.exception.AuthException;
 
 import javax.validation.ConstraintViolationException;
+import se.ton.t210.exception.InnerServiceException;
 
 @ControllerAdvice
 public class GlobalControllerAdvice {
@@ -34,6 +35,15 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handledException(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(InnerServiceException.class)
+    public ResponseEntity<String> onlyForLogging(InnerServiceException e) {
+        e.printStackTrace();
+        if(e.getMessage() != null) {
+            LOGGER.error(e.getMessage());
+        }
+        return ResponseEntity.badRequest().body("Invalid input request");
     }
 
     @ExceptionHandler(Exception.class)
