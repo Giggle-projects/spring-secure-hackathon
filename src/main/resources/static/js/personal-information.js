@@ -204,3 +204,22 @@ if (menu04Container) {
         window.location.href = "application-information1.html";
     });
 }
+
+// logout component
+const logoutContainer = document.getElementById("logoutContainer");
+logoutContainer.addEventListener("click", async function (e) {
+    // 로그아웃에 필요한 처리를 여기에 추가하세요.
+
+    const cookieKey = "accessToken"
+    const removeTokenResponse = await fetch(currentDomain + "/api/remove/token?" + new URLSearchParams({
+        cookieKey: cookieKey
+    }))
+
+    if (!removeTokenResponse.ok) {
+        window.location.href = "../html/error-500.html";
+        throw new Error('token remove fail');
+    }
+
+    // 로그아웃 후 리다이렉트 등의 동작을 수행할 수 있습니다.
+    window.location.href = '../html/sign-in.html'; // 로그인 페이지로 리다이렉트 예시
+});
