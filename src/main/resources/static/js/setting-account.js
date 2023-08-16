@@ -68,15 +68,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const passwordResult = document.getElementById("password-1-error");
     const passwordResult2 = document.getElementById("password-2-error");
 
-    let passwordMachResult = false;
+    let passwordMachResult1 = false;
+    let passwordMachResult2 = false;
 
     function checkPasswordValidity() {
 
-        if (passwordMachResult) {
+        if (passwordMachResult2) {
             if (!(passwordInput.value === passwordInput2.value)) {
                 passwordResult2.textContent = "비밀번호가 일치하지 않습니다.";
                 passwordResult2.style.color="red";
-                passwordMachResult = 0;
+                passwordMachResult1 = 0;
+            }
+            else{
+                passwordMachResult1=1;
             }
         }
         const password = passwordInput.value;
@@ -88,10 +92,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!lengthRegex.test(password)) {
             errorMessage = "비밀번호는 9자 이상 16자 이하로 입력하세요.";
-            passwordMachResult = 0;
+            passwordMachResult1 = 0;
         } else if (!alphanumericRegex.test(password)) {
             errorMessage = "비밀번호는 영어, 숫자, 특수문자를 모두 포함해야 합니다.";
-            passwordMachResult = 0;
+            passwordMachResult1 = 0;
         }
         console.log("password1 error", errorMessage)
 
@@ -109,9 +113,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (passwordResult.textContent ==="비밀번호가 유효합니다."){
             passwordResult.style.color='black';
+            passwordMachResult1 = 1;
         }
         else{
             passwordResult.style.color='red';
+            passwordMachResult1 = 0;
         }
     }
 
@@ -122,39 +128,34 @@ document.addEventListener("DOMContentLoaded", function () {
         if (password1 === password2) {
             passwordResult2.textContent = "비밀번호가 일치합니다.";
             passwordResult2.style.color='black';
-            passwordMachResult = 1
+            passwordMachResult2 = 1;
         } else {
             passwordResult2.textContent = "비밀번호가 일치하지 않습니다.";
-            passwordMachResult = 0
+            passwordMachResult2 = 0;
             passwordResult2.style.color='red';
         }
     }
 
-    // sAlert('custom alert example!');
-    function sAlert(txt, title = 'ERROR',) {
-        Swal.fire({
-            title: title,
-            text: txt,
-            confirmButtonText: '닫기'
-        });
-    }
+
 
     function handlePasswordInput() {
         checkPasswordValidity();
         checkPasswordMatch();
     }
 
-    passwordInput.addEventListener("input", checkPasswordValidity);
-    passwordInput2.addEventListener("input", checkPasswordMatch)
+    passwordInput.addEventListener("input", handlePasswordInput);
+    passwordInput2.addEventListener("input", handlePasswordInput)
 
     const signUpBtn = document.querySelector(".button2");
     signUpBtn.addEventListener("click", async function () {
-        if (!passwordMachResult) {
+        console.log(passwordMachResult1,passwordMachResult2);
+        if (!(passwordMachResult1 && passwordMachResult2)) {
+
             sAlert("비밀번호가 일치하지 않습니다.")
-            // alert("Passwords must match.");
+
             return;
         } else {
-            console.log(passwordMachResult);
+            console.log(passwordMachResult1,passwordMachResult2);
             // Call API to save password 여기서 저장 api 호출~~!!
             const restPassword = passwordInput.value
             const resetApplicationTypeKey = dropdownText.id
@@ -176,7 +177,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     const data = await response.text();
                     throw new Error(data || "회원 정보 수정 실패");
                 }
-                sAlert("회원정보 수정이 완료되었습니다.");
+                noError_sAlert("회원정보 수정이 완료되었습니다.");
             } catch (error) {
                 sAlert("수정에 실패했습니다.");
             }
@@ -268,6 +269,23 @@ async function fetchApplicationTypeName() {
         });
 }
 
+// sAlert('custom alert example!');
+function sAlert(txt, title = 'ERROR',) {
+    Swal.fire({
+        title: title,
+        text: txt,
+        confirmButtonText: '닫기'
+    });
+}
+
+// sAlert('custom alert example!');
+function noError_sAlert(txt, title = 'Success',) {
+    Swal.fire({
+        title: title,
+        text: txt,
+        confirmButtonText: '닫기'
+    });
+}
 fetchApplicationTypeName()
 fetchMemberInfo()
 
