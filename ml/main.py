@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from fastapi import FastAPI
+from fastapi import FastAPI,Form
 import ast
 import numpy as np
 from fastapi.middleware.cors import CORSMiddleware
@@ -42,7 +42,7 @@ def predict_single_input(input_data):
 
 
 @app.post("/predict/")
-async def predict(input_data: str,type_num: int):
+async def predict(input_data: str = Form(...),type_num: int = Form(...)):
 
 
     # 모델에 대한 타입 지정을 num 에 해줘야함
