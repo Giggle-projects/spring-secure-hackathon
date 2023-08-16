@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: api-server-config
+  namespace: t210
+data:
+  SPRING_PROFILES_ACTIVE: "dev"
+#  MYSQL_DATASOURCE_URL: "jdbc:mysql://api-mysql-svc:3306/t210?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul"

@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-server
+  namespace: t210
+  labels:
+    app: api-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-server
+  template:
+    metadata:
+      labels:
+        app: api-server
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - api-server
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+      containers:
+        - name: api-server
+          image: ghcr.io/giggle-projects/spring-secure-hackathon:0.0.1
+          envFrom:
+          - configMapRef:
+              name: api-server-config
+#          - secretRef:
+#              name: api-mysql-secret
+          ports:
+            - containerPort: 8080
+          startupProbe:
+            httpGet:
+              path: /
+              port: 8080
+            failureThreshold: 20
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 120
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            failureThreshold: 20
+            periodSeconds: 120
+          resources:
+            requests:
+              memory: 518Mi
+            limits:
+              memory: 518Mi
+      imagePullSecrets:
+        - name: ghcr-secret
