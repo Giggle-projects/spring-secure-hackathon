@@ -92,13 +92,6 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/api/reissue/pwd")
-    public ResponseEntity<Void> reissuePwd(@RequestBody ReissuePwdRequest request) {
-        String email = "devygwan@gmail.com"; //임시
-        memberService.reissuePwd(email, request.getPassword());
-        return ResponseEntity.ok().build();
-    }
-
     @GetMapping("/api/applicant/count")
     public ResponseEntity<ApplicantCountResponse> applicantCount() {
         final Member member = new Member(1L, "name", "email", "password", ApplicationType.PoliceOfficerMale);

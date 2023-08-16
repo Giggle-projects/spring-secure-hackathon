@@ -94,18 +94,6 @@ public class MemberService {
         responseTokens(response, tokens);
     }
 
-    public void reissuePwd(String email, String newPwd) {
-        final Member oldMember = memberRepository.findByEmail(email).orElseThrow(() ->
-                new AuthException(HttpStatus.NOT_FOUND, "User is not found"));
-        if (oldMember.getEmail().equals(newPwd)) {
-            throw new IllegalArgumentException("Password can't be same with email");
-        }
-        final EncryptPassword encryptPassword = EncryptPassword.encryptFrom(newPwd);
-        final Member member = oldMember.updatePasswordWith(encryptPassword.getEncrypted());
-        memberRepository.save(member);
-        saltRepository.save(new PasswordSalt(member.getId(), encryptPassword.getSalt()));
-    }
-
     public void validateEmailAuthCode(String email, String authCode) {
         final EmailAuthCodeCache emailAuthCodeCache = emailAuthCodeCacheRepository.findById(email).orElseThrow(() ->
                 new AuthException(HttpStatus.NOT_FOUND, "Email not found")
@@ -167,6 +155,16 @@ public class MemberService {
                     throw new AuthException(HttpStatus.CONFLICT, "Email is not exists");
                 }
         );
-        member.resetPersonalInfo(request);
+        request.getApplicationType().ifPresent(member::resetApplicationType);
+        request.getPassword().ifPresent(password -> reissuePwd(member, password));
+    }
+
+    private void reissuePwd(Member oldMember, String newPwd) {
+        if (oldMember.getEmail().equals(newPwd)) {
+            throw new IllegalArgumentException("Password can't be same with email");
+        }
+        final EncryptPassword encryptPassword = EncryptPassword.encryptFrom(newPwd);
+        final Member member = oldMember.updatePasswordWith(encryptPassword.getEncrypted());
+        saltRepository.save(new PasswordSalt(member.getId(), encryptPassword.getSalt()));
     }
 }

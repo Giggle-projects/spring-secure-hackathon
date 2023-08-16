@@ -1,6 +1,7 @@
 package se.ton.t210.domain;
 
 import lombok.Getter;
+import org.springframework.web.client.HttpServerErrorException;
 import se.ton.t210.domain.converter.SymmetricEncryptionConverter;
 import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.ResetPersonalInfoRequest;
@@ -9,6 +10,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+
+import se.ton.t210.exception.InnerServiceException;
 import se.ton.t210.utils.encript.SHA256Utils;
 import se.ton.t210.utils.encript.SupportedAlgorithmType;
 
@@ -69,9 +72,8 @@ public class Member {
         this(id, name, email, password, applicationType, LocalDate.now(), LocalDate.now());
     }
 
-    public void resetPersonalInfo(ResetPersonalInfoRequest request) {
-        this.applicationType = request.getApplicationType();
-        this.password = request.getPassword();
+    public void resetApplicationType(ApplicationType applicationType) {
+        this.applicationType = applicationType;
     }
 
     public void validatePassword(String input, PasswordSalt salt) {
@@ -82,6 +84,7 @@ public class Member {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            throw new InnerServiceException("Encryption server");
         }
     }
 
