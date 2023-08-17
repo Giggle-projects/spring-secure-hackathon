@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(passwordMachResult1,passwordMachResult2);
             // Call API to save password 여기서 저장 api 호출~~!!
             const restPassword = passwordInput.value
-            const resetApplicationTypeKey = dropdownText.id
+            const resetApplicationTypeKey = dropdownText.value
 
 
 
@@ -274,13 +274,13 @@ async function fetchMemberInfo() {
 //    else{
 //        imgElement.src = "../files/586-frame.svg"; // 불러오 이용자 이미지를 여기에 넣어주세요
 //    }
-//    if (applicationTypeStandardName === "경찰직공무원(남)" || applicationTypeStandardName === "경찰직공무원(여)") {
-//        imgElement.src = "../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
-//    } else if (applicationTypeStandardName === "소방직공무원(남)" || applicationTypeStandardName === "소방직공무원(여)") {
-//        imgElement.src = "../files/type_icon2.jpeg"; // 소방직 이미지 경로로 변경
-//    } else if (applicationTypeStandardName === "경호직공무원(남)" || applicationTypeStandardName === "경호직공무원(여)") {
-//        imgElement.src = "../files/type_icon3.png";// 경호직 이미지 경로로 변경
-//    }
+    if (applicationTypeStandardName === "경찰직공무원(남)" || applicationTypeStandardName === "경찰직공무원(여)") {
+        imgElement.src = "../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
+    } else if (applicationTypeStandardName === "소방직공무원(남)" || applicationTypeStandardName === "소방직공무원(여)") {
+        imgElement.src = "../files/type_icon2.jpeg"; // 소방직 이미지 경로로 변경
+    } else if (applicationTypeStandardName === "경호직공무원(남)" || applicationTypeStandardName === "경호직공무원(여)") {
+        imgElement.src = "../files/type_icon3.png";// 경호직 이미지 경로로 변경
+    }
 }
 
 

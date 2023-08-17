@@ -89,27 +89,40 @@ function saveData() {
             score : item5.value,
         },
     ]
-    fetch(currentDomain + "/api/score/me", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    })
-        .then(response => response.json())
-        .then(result => {
-            if (result.prediction === 1) {
-                noError_sAlert("데이터가 저장되었습니다.\n결과: 합격");
-                location.reload();
-            } else {
-                noError_sAlert("데이터가 저장되었습니다.\n결과: 불합격");
-                location.reload();
-            }
+    var isValidData = true;
+
+    data.forEach(function(item) {
+        if (item.score.length < 5 || /\s/.test(item.score) || /[^0-9]/.test(item.score)) {
+            isValidData = false;
+            sAlert("데이터를 정확하게 입력하세요.");
+            return; // 조건에 맞지 않으므로 더 이상 검사하지 않고 함수 종료
+        }
+    });
+
+
+    if (isValidData) {
+        fetch(currentDomain + "/api/score/me", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
         })
-        .catch(error => {
-            console.error("에러 발생:", error);
-            sAlert("데이터 저장 중에 오류가 발생했습니다.");
-        });
+            .then(response => response.json())
+            .then(result => {
+                if (result.prediction === 1) {
+                    noError_sAlert("데이터가 저장되었습니다.\n결과: 합격");
+                    location.reload();
+                } else {
+                    noError_sAlert("데이터가 저장되었습니다.\n결과: 불합격");
+                    location.reload();
+                }
+            })
+            .catch(error => {
+                console.error("에러 발생:", error);
+                sAlert("데이터 저장 중에 오류가 발생했습니다.");
+            });
+        }
 }
 
 async function fetchMyInfo() {
