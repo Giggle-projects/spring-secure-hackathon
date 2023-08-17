@@ -137,11 +137,25 @@ public class ScoreService {
     }
 
     public int evaluate(Long evaluationItemId, float score) {
-        return evaluationScoreSectionRepository.findAllByEvaluationItemId(evaluationItemId).stream()
+        final List<EvaluationScoreSection> scoreSections = evaluationScoreSectionRepository.findAllByEvaluationItemId(evaluationItemId);
+        scoreSections.sort(Comparator.comparingInt(EvaluationScoreSection::getEvaluationScore));
+        boolean isAsc = true;
+        if(scoreSections.size() > 1) {
+            isAsc = scoreSections.get(1).getSectionBaseScore() > scoreSections.get(0).getSectionBaseScore();
+        }
+        if(isAsc) {
+            return scoreSections.stream()
                 .filter(it -> it.getSectionBaseScore() <= score)
                 .max(Comparator.comparingInt(EvaluationScoreSection::getEvaluationScore))
                 .map(EvaluationScoreSection::getEvaluationScore)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid evaluationItemId or score"));
+        } else {
+            return scoreSections.stream()
+                .filter(it -> it.getSectionBaseScore() >= score)
+                .max(Comparator.comparingInt(EvaluationScoreSection::getEvaluationScore))
+                .map(EvaluationScoreSection::getEvaluationScore)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid evaluationItemId or score"));
+        }
     }
 
     public List<RankResponse> rank(ApplicationType applicationType, int rankCnt, LocalDate date) {
@@ -152,9 +166,6 @@ public class ScoreService {
         int prevScore = Integer.MAX_VALUE;
         int sameStack = 0;
         for (var score : scores) {
-//            System.out.println(score.getMemberId());
-//            System.out.println(score.getScore());
-//            System.out.println(score.getYearMonth());
             final Member member = memberRepository.findById(score.getMemberId()).orElseThrow();
             if (prevScore == score.getScore()) {
                 sameStack++;

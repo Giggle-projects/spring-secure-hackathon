@@ -96,7 +96,7 @@ class DummyData {
                 List.of(0F, 40F, 43F, 46F, 49F, 52F, 55F, 58F, 61F, 64F),
                 List.of(0F, 16F, 22F, 28F, 34F, 40F, 46F, 51F, 56F, 61F),
                 List.of(0F, 32F, 36F, 40F, 43F, 46F, 49F, 52F, 55F, 58F),
-                List.of(0F, 8.68F, 8.46F, 8.26F, 8.05F, 7.84F, 7.63F, 7.42F, 7.21F, 7F),
+                List.of(Float.MAX_VALUE, 8.68F, 8.46F, 8.26F, 8.05F, 7.84F, 7.63F, 7.42F, 7.21F, 7F),
                 List.of(0F, 35F, 41F, 47F, 52F, 57F, 62F, 67F, 72F, 77F)
         );
         saveEvaluationSectionScore(policeOfficerMaleData, policeOfficerMaleSectionData);
@@ -111,7 +111,7 @@ class DummyData {
                 List.of(0F, 25F, 28F, 31F, 34F, 36F, 38F, 40F, 42F, 44F),
                 List.of(0F, 7F, 10F, 13F, 16F, 19F, 22F, 25F, 28F, 31F),
                 List.of(0F, 23F, 27F, 31F, 35F, 39F, 43F, 47F, 51F, 55F),
-                List.of(0F, 10.15F, 9.91F, 9.67F, 9.43F, 9.19F, 8.95F, 8.71F, 8.47F, 8.23F),
+                List.of(Float.MAX_VALUE, 10.15F, 9.91F, 9.67F, 9.43F, 9.19F, 8.95F, 8.71F, 8.47F, 8.23F),
                 List.of(0F, 24F, 28F, 32F, 35F, 38F, 41F, 44F, 47F, 51F)
         );
         saveEvaluationSectionScore(policeOfficerFeMaleData, policeOfficeFeMaleEvaluationData);
@@ -156,8 +156,8 @@ class DummyData {
                 List.of(0F, 130F, 140F, 150F, 160F, 170F, 180F, 190F, 200F, 210F),
                 List.of(0F, 230F, 235F, 240F, 245F, 250F, 255F, 260F, 265F, 270F),
                 List.of(0F, 35F, 38F, 41F, 44F, 47F, 50F, 53F, 56F, 59F),
-                List.of(0F, 10.20F, 10.05F, 9.90F, 9.75F, 9.60F, 9.45F, 9.30F, 9.15F, 9.00F),
-                List.of(0F, 10.00F, 9.40F, 9.20F, 9.00F, 8.40F, 8.20F, 8.00F, 7.40F, 7.20F)
+                List.of(Float.MAX_VALUE, 10.20F, 10.05F, 9.90F, 9.75F, 9.60F, 9.45F, 9.30F, 9.15F, 9.00F),
+                List.of(Float.MAX_VALUE, 10.00F, 9.40F, 9.20F, 9.00F, 8.40F, 8.20F, 8.00F, 7.40F, 7.20F)
         );
         saveEvaluationSectionScore(correctionalOfficerMaleData, correctionalOfficerMaleSectionData);
         return correctionalOfficerMaleData;
@@ -171,8 +171,8 @@ class DummyData {
                 List.of(0F, 85F, 90F, 95F, 100F, 105F, 110F, 115F, 120F, 125F),
                 List.of(0F, 170F, 175F, 180F, 185F, 190F, 195F, 200F, 205F, 210F),
                 List.of(0F, 30F, 33F, 36F, 39F, 42F, 45F, 48F, 51F, 54F),
-                List.of(0F, 11.70F, 11.50F, 11.30F, 11.10F, 10.90F, 10.70F, 10.50F, 10.30F, 10.1F),
-                List.of(0F, 7.20F, 7.05F, 6.50F, 6.35F, 6.20F, 6.05F, 5.50F, 5.35F, 5.20F)
+                List.of(Float.MAX_VALUE, 11.70F, 11.50F, 11.30F, 11.10F, 10.90F, 10.70F, 10.50F, 10.30F, 10.1F),
+                List.of(Float.MAX_VALUE, 7.20F, 7.05F, 6.50F, 6.35F, 6.20F, 6.05F, 5.50F, 5.35F, 5.20F)
         );
         saveEvaluationSectionScore(correctionalOfficerFeMaleData, correctionalOfficerFeMaleSectionData);
         return correctionalOfficerFeMaleData;
