@@ -35,7 +35,6 @@ async function fetchMyInfo() {
         .then(response => response.json())
         .then(data => {
             image_data = data.url;
-            alert(image_data)
         })
         .catch(error => {
             console.error("Error fetching data:", error);

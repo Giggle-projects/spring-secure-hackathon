@@ -61,7 +61,7 @@
   border-bottom: 1px solid var(--coolgray-10);
   display: flex;
   flex-direction: row;
-  padding: var(--padding-xs) var(--padding-5xs);s
+  padding: var(--padding-xs) var(--padding-5xs);
   align-items: center;
   justify-content: flex-start;
   gap: var(--gap-5xs);

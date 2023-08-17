@@ -1,6 +1,7 @@
 package se.ton.t210.utils.data;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,7 @@ import se.ton.t210.service.EvaluationItemService;
 import se.ton.t210.service.ScoreService;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Profile("dev")
@@ -43,6 +45,9 @@ class DummyData {
     @Autowired
     private PasswordSaltRepository passwordSaltRepository;
 
+    @Autowired
+    private AccessDataTimeRepository accessDataTimeRepository;
+
     private List<Member> members;
     private Map<ApplicationType, List<EvaluationItem>> itemTable;
 
@@ -54,11 +59,27 @@ class DummyData {
         var testMember = new Member("test", "test@naver.com", "12345", ApplicationType.PoliceOfficerMale);
         final EncryptPassword encryptPassword = EncryptPassword.encryptFrom("12345");
         final Member member = testMember.updatePasswordWith(encryptPassword.getEncrypted());
-        memberRepository.save(member);
+        final Member save = memberRepository.save(member);
         passwordSaltRepository.save(new PasswordSalt(member.getId(), encryptPassword.getSalt()));
-        members.add(testMember);
+        members.add(save);
         for (var mem : members) {
             records(mem);
+        }
+
+        LocalDateTime prevDate = LocalDateTime.of(
+            2021,
+            3,
+            3,
+            3,
+            23
+        );
+        for (var mem : members) {
+            for(int i=0; i<5; i++) {
+                prevDate = prevDate.plusDays(1);
+                accessDataTimeRepository.save(
+                    new AccessDateTime(prevDate, mem.getId())
+                );
+            }
         }
     }
 

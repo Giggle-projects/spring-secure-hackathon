@@ -35,6 +35,7 @@
   height: 48px;
   overflow: hidden;
   flex-shrink: 0;
+  border-radius: 50%;
 }
 .frame1234,
 .setting6 {
@@ -169,6 +170,8 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
+
 }
 .application,
 .sex {
