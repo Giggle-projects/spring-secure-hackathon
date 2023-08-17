@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:1234"],
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -48,9 +48,8 @@ def predict_single_input(input_data):
 
 
 
-@app.post("/predict/")
+@app.post("/predict")
 async def predict(input_data: str = Form(...),type_num: int = Form(...)):
-
 
     # 모델에 대한 타입 지정을 num 에 해줘야함
     # 모델의 타입은 직렬 정보에 따라서 1 = 2 = 3 = 4 = 5 = 6 =
