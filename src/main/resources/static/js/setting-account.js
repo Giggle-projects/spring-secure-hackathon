@@ -7,7 +7,14 @@ const dropdownText = dropdown.querySelector(".text704");
 const dropdownContent = dropdown.querySelector(".dropdown-content");
 const nameInput = document.getElementById("full-name")
 const emailInput = document.getElementById("email")
-var imgElement = document.querySelector('.frame-icon69');
+const imgElement = document.querySelector('uploadedImage');
+const image = document.getElementById('image');
+
+
+
+
+
+
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -22,13 +29,13 @@ document.addEventListener("DOMContentLoaded", function () {
             dropdownText.textContent = event.target.textContent;
             console.log(event.target.textContent);
 
-            if (event.target.textContent === "경찰직공무원(남)" || event.target.textContent === "경찰직공무원(여)") {
-                imgElement.src = "../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
-            } else if (event.target.textContent === "소방직공무원(남)" || event.target.textContent === "소방직공무원(여)") {
-                imgElement.src = "../files/type_icon2.jpeg"; // 소방직 이미지 경로로 변경
-            } else if (event.target.textContent === "경호직공무원(남)" || event.target.textContent === "경호직공무원(여)") {
-                imgElement.src = "../files/type_icon3.png";//경호직 이미지 경로로 변경
-            }
+//            if (event.target.textContent === "경찰직공무원(남)" || event.target.textContent === "경찰직공무원(여)") {
+//                imgElement.src = "../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
+//            } else if (event.target.textContent === "소방직공무원(남)" || event.target.textContent === "소방직공무원(여)") {
+//                imgElement.src = "../files/type_icon2.jpeg"; // 소방직 이미지 경로로 변경
+//            } else if (event.target.textContent === "경호직공무원(남)" || event.target.textContent === "경호직공무원(여)") {
+//                imgElement.src = "../files/type_icon3.png";//경호직 이미지 경로로 변경
+//            }
             dropdownText.id = event.target.id;
             dropdown.classList.remove("active");
         }
@@ -176,7 +183,29 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
+
+
+
+
+    const imageContainer = document.getElementById('imageContainer');
+    const uploadedImage = document.getElementById('uploadedImage');
+    const imageInput = document.getElementById('imageInput');
+
+    imageContainer.addEventListener('click', () => {
+        imageInput.click();
+    });
+
+    imageInput.addEventListener('change', (event) => {
+        const selectedImage = event.target.files[0];
+        if (selectedImage) {
+            uploadedImage.src = URL.createObjectURL(selectedImage);
+            uploadedImage.alt = "Uploaded Image";
+        }
+    });
+
+
 });
+
 
 // Password toggle
 function togglePasswordVisibility(inputElementId) {
@@ -235,14 +264,26 @@ async function fetchMemberInfo() {
     dropdownText.textContent = applicationTypeStandardName;
     nameInput.textContent = name;
     emailInput.textContent = email;
-    if (applicationTypeStandardName === "경찰직공무원(남)" || applicationTypeStandardName === "경찰직공무원(여)") {
-        imgElement.src = "../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
-    } else if (applicationTypeStandardName === "소방직공무원(남)" || applicationTypeStandardName === "소방직공무원(여)") {
-        imgElement.src = "../files/type_icon2.jpeg"; // 소방직 이미지 경로로 변경
-    } else if (applicationTypeStandardName === "경호직공무원(남)" || applicationTypeStandardName === "경호직공무원(여)") {
-        imgElement.src = "../files/type_icon3.png";// 경호직 이미지 경로로 변경
-    }
+
+    // applicationTypeStandardName 를 이미지로 바꿔주세요!!
+//    image_data=0
+//    //586-frame.svg
+//    if (!(image_data)){
+//        imgElement.src = "../files/586-frame.svg";
+//    }
+//    else{
+//        imgElement.src = "../files/586-frame.svg"; // 불러오 이용자 이미지를 여기에 넣어주세요
+//    }
+//    if (applicationTypeStandardName === "경찰직공무원(남)" || applicationTypeStandardName === "경찰직공무원(여)") {
+//        imgElement.src = "../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
+//    } else if (applicationTypeStandardName === "소방직공무원(남)" || applicationTypeStandardName === "소방직공무원(여)") {
+//        imgElement.src = "../files/type_icon2.jpeg"; // 소방직 이미지 경로로 변경
+//    } else if (applicationTypeStandardName === "경호직공무원(남)" || applicationTypeStandardName === "경호직공무원(여)") {
+//        imgElement.src = "../files/type_icon3.png";// 경호직 이미지 경로로 변경
+//    }
 }
+
+
 
 async function fetchApplicationTypeName() {
     const applicationTypeDropDownContent = document.getElementById("applicationTypeDropDownContent");
@@ -323,3 +364,6 @@ logoutContainer.addEventListener("click", async function (e) {
     // 로그아웃 후 리다이렉트 등의 동작을 수행할 수 있습니다.
     window.location.href = '../html/sign-in.html'; // 로그인 페이지로 리다이렉트 예시
 });
+
+// ... (이전 코드 생략)
+

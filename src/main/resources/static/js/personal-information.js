@@ -28,13 +28,22 @@ async function fetchMyInfo() {
 
 
     // 아이콘 추가하기 코드
-    if (responseMemberInfoValue.applicationTypeName === "경찰직공무원(남)" || responseMemberInfoValue.applicationTypeName === "경찰직공무원(여)") {
-        imgElement.src = "../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
-    } else if (responseMemberInfoValue.applicationTypeName === "소방직공무원(남)" || responseMemberInfoValue.applicationTypeName === "소방직공무원(여)") {
-        imgElement.src = "../files/type_icon2.jpeg"; // 소방직 이미지 경로로 변경
-    } else if (responseMemberInfoValue.applicationTypeName === "교정직공무원(남)" || responseMemberInfoValue.applicationTypeName === "교정직공무원(여)") {
-        imgElement.src = "../files/type_icon3.png";// 교정직 이미지 경로로 변경
+    // 불러오 이용자 이미지를 여기에 넣어주세요
+    image_data=''
+    if (!(image_data)){
+        imgElement.src = "../files/586-frame.svg";
     }
+    else{
+        imgElement.src = "../files/586-frame.svg";
+    }
+
+//    if (responseMemberInfoValue.applicationTypeName === "경찰직공무원(남)" || responseMemberInfoValue.applicationTypeName === "경찰직공무원(여)") {
+//        imgElement.src = "../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
+//    } else if (responseMemberInfoValue.applicationTypeName === "소방직공무원(남)" || responseMemberInfoValue.applicationTypeName === "소방직공무원(여)") {
+//        imgElement.src = "../files/type_icon2.jpeg"; // 소방직 이미지 경로로 변경
+//    } else if (responseMemberInfoValue.applicationTypeName === "교정직공무원(남)" || responseMemberInfoValue.applicationTypeName === "교정직공무원(여)") {
+//        imgElement.src = "../files/type_icon3.png";// 교정직 이미지 경로로 변경
+//    }
     currentScore.innerText = "현재 점수 : " + responseScoreInfoValue.score + "점"
     maxScore.innerText = "최고 점수 : " + responseScoreInfoValue.maxScore + "점"
 }

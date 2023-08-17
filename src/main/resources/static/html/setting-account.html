@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="initial-scale=1, width=device-width"/>
-    <link rel="stylesheet" href="../css/global.css"/>
-    <link rel="stylesheet" href="../css/setting-account.css"/>
-    <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
-    />
-    <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
-    />
-</head>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="initial-scale=1, width=device-width"/>
+        <link rel="stylesheet" href="../css/global.css"/>
+        <link rel="stylesheet" href="../css/setting-account.css"/>
+        <link
+                rel="stylesheet"
+                href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+        />
+        <link
+                rel="stylesheet"
+                href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+        />
+    </head>
 <body>
 <div class="setting-account">
     <div class="frame1341">
@@ -30,11 +30,11 @@
 
                 <div class="text716">대시보드</div>
             </div>
-            <button class="menu-028" id="menu02">
+            <div class="menu-028" id="menu02">
                 <img class="frame-icon79" alt="" src="../files/743-frame1.svg"/>
 
                 <div class="text717">측정기록</div>
-            </button>
+            </div>
             <div class="menu-018" id="menu03Container">
                 <img class="frame-icon79" alt="" src="../files/748-frame.svg"/>
 
@@ -74,13 +74,11 @@
                     <div class="frame1356">
 
                         <div class="frame1316">
-                            <div class="frame1317">
-                                <img
-                                        class="frame-icon69"
-                                        alt=""
-                                        src="../files/586-frame.svg"
-                                />
+                            <div class="frame1317" id="imageContainer">
+                                <img class="uploadedimage" id="uploadedImage" src="../files/586-frame.svg"  alt="Uploaded Image">
+
                             </div>
+                            <input type="file" id="imageInput" style="display:none;" accept="image/*">
                             <div class="application1">
                                 <div class="frame1318 dropdown">
                                     <div class="menu-text">
@@ -96,7 +94,7 @@
                                 <div class="frame1359">
                                     <div class="text724">이름</div>
                                     <div class="name2">
-                                        <div type="text" id="full-name" class="text725" placeholder="Name"></div>
+                                        <div id="full-name" class="text725" ></div>
                                     </div>
                                 </div>
                             </div>
@@ -105,7 +103,7 @@
                             <div class="frame1359">
                                 <div class="text724">이메일</div>
                                 <div class="name2">
-                                    <div type="email" id="email" class="text725" placeholder="Email Address"></div>
+                                    <div  id="email" class="text725" ></div>
                                 </div>
                             </div>
                         </div>
