@@ -2,35 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Users</title>
+  <title>Admin</title>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/admin.css">
 </head>
 </br>
 <body>
-  <h1>Users</h1>
+  <h1>Access users</h1>
   <div id="table-container">
     <div id="search-container">
       <div id="userSearchForm">
-        <label for="userName">User name:</label>
+        <label for="userName">user name :</label>
         <input type="text" id="userName" name="userName">
         <br>
-        <label for="minScore">Min score:</label>
-        <input type="number" id="minScore" name="minScore" step="5">
+        <label for="dateFrom">date from :</label>
+        <input type="number" id="dateFrom" name="dateFrom" step="5">
         <br>
-        <label for="maxScore">Max score:</label>
-        <input type="number" id="maxScore" name="maxScore" step="5">
+        <label for="dateTo">date to :</label>
+        <input type="number" id="dateTo" name="dateTo" step="5">
         <br>
-        <label for="sortBy">Sort by :</label>
+        <label for="sortBy">sort by :</label>
         <select id="sortBy" name="sortBy">
-          <option value="id-asc">Id ascending</option>
-          <option value="name-asc">Name ascending</option>
-          <option value="name-desc">Name descending</option>
-          <option value="score-asc">Score ascending</option>
-          <option value="score-desc">Score descending</option>
+          <option value="accessTime,asc">ascending</option>
+          <option value="accessTime,desc">descending</option>
         </select>
         <br>
-        <label for="pageSize">Page size:</label>
+        <label for="pageSize">page size:</label>
         <select id="pageSize" name="pageSize">
             <option value="10" selected>10</option>
             <option value="50">50</option>
@@ -47,19 +44,11 @@
 
     <table id="user-table">
       <thead>
-      <colgroup>
-        <col width="10%" />
-        <col width="30%" />
-        <col width="30%" />
-        <col width="20%" />
-        <col width="10%" />
-      </colgroup>
       <tr>
-        <th>id</th>
+        <th>last login</th>
         <th>name</th>
         <th>email</th>
-        <th>score</th>
-        <th>date</th>
+        <th>encrypt password</th>
         <th>block</th>
       </tr>
       </thead>
@@ -73,7 +62,7 @@
     </br>
     </br>
   </div>
-  <script src="../js/admin.js"></script>
+  <script src="../js/admin-access.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   </body>

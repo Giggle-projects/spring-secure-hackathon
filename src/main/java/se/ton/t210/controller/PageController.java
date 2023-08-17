@@ -9,6 +9,11 @@ import se.ton.t210.dto.LoginMemberInfo;
 @Controller
 public class PageController {
 
+    @GetMapping("/admin")
+    public String admin() {
+        return "redirect:/html/admin.html";
+    }
+
     @GetMapping("/html/application-information")
     public String information(@LoginMember LoginMemberInfo memberInfo) {
         if(memberInfo.getApplicationType() == ApplicationType.PoliceOfficerMale) {

@@ -28,7 +28,7 @@ public class GlobalControllerAdvice {
         MethodArgumentTypeMismatchException.class,
         HttpMessageNotReadableException.class
     })
-    public ResponseEntity<String> invalidInputPrams() {
+    public ResponseEntity<String> invalidInputPrams(Exception e) {
         return ResponseEntity.badRequest().body("Invalid input request");
     }
 
@@ -39,7 +39,6 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler(InnerServiceException.class)
     public ResponseEntity<String> onlyForLogging(InnerServiceException e) {
-        e.printStackTrace();
         if(e.getMessage() != null) {
             LOGGER.error(e.getMessage());
         }
