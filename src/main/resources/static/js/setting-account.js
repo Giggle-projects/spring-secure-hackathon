@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(passwordMachResult1,passwordMachResult2);
             // Call API to save password 여기서 저장 api 호출~~!!
             const restPassword = passwordInput.value
-            const resetApplicationTypeKey = dropdownText.textContent
+            let resetApplicationTypeKey = dropdownText.textContent
 
 
             if (resetApplicationTypeKey==="경찰직공무원(남)"){
@@ -210,13 +210,30 @@ document.addEventListener("DOMContentLoaded", function () {
         imageInput.click();
     });
 
+    // 유효성 검사하기
     imageInput.addEventListener('change', (event) => {
         const selectedImage = event.target.files[0];
+
         if (selectedImage) {
-            uploadedImage.src = URL.createObjectURL(selectedImage);
-            uploadedImage.alt = "Uploaded Image";
+            // Check if the selected file is an image
+            if (selectedImage.type.startsWith('image/')) {
+                console.log("image url", URL.createObjectURL(selectedImage));
+                uploadedImage.src = URL.createObjectURL(selectedImage);
+                uploadedImage.alt = "Uploaded Image";
+            } else {
+                alert("Please select a valid image file.");
+                imageInput.value = ''; // Clear the input field
+            }
         }
     });
+//    imageInput.addEventListener('change', (event) => {
+//        const selectedImage = event.target.files[0];
+//        if (selectedImage) {
+//            console.log("image url",URL.createObjectURL(selectedImage))
+//            uploadedImage.src = URL.createObjectURL(selectedImage);
+//            uploadedImage.alt = "Uploaded Image";
+//        }
+//    });
 
 
 });
