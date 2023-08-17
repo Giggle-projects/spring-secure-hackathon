@@ -44,9 +44,9 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     public LoginMemberInfo resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         final Cookie[] cookies = ((HttpServletRequest) webRequest.getNativeRequest()).getCookies();
         final Cookie authCookie = Arrays.stream(cookies)
-            .filter(it -> it.getName().equals(accessTokenCookieKey))
-            .findAny()
-            .orElseThrow(() -> new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized access"));
+                .filter(it -> it.getName().equals(accessTokenCookieKey))
+                .findAny()
+                .orElseThrow(() -> new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized access"));
         final String email = tokenSecret.getPayloadValue(accessTokenPayloadKey, authCookie.getValue());
         return LoginMemberInfo.of(memberRepository.findByEmail(email).orElseThrow(() -> new AuthException(HttpStatus.UNAUTHORIZED, "Invalid user")));
     }

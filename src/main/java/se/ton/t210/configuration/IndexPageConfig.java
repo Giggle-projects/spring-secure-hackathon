@@ -10,6 +10,6 @@ public class IndexPageConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/")
-            .setViewName("redirect:./html/sign-in.html");
+                .setViewName("redirect:./html/sign-in.html");
     }
 }

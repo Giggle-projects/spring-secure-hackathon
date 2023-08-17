@@ -4,8 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.ton.t210.configuration.annotation.LoginMember;
-import se.ton.t210.domain.Member;
-import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.ApplicationTypeInfoResponse;
 import se.ton.t210.dto.EvaluationItemResponse;
 import se.ton.t210.dto.EvaluationSectionInfo;

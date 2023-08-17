@@ -1,15 +1,15 @@
 package se.ton.t210.configuration.http;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.ReadListener;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -18,14 +18,14 @@ public class XssCleanHttpRequestWrapper extends HttpServletRequestWrapper {
     private static final Logger LOGGER = LoggerFactory.getLogger(XssCleanHttpRequestWrapper.class);
 
     private static final Map<String, String> FILTER_CHARACTERS = Map.of(
-        "<", "& lt;",
-        ">", "& gt;",
-        "\\(", "& #40;",
-        "\\)", "& #41;",
-        "'", "& #39;",
-        "eval\\((.*)\\)", "",
-        "[\\\"\\'][\\s]*javascript:(.*)[\\\"\\']", "\"\"",
-        "script", ""
+            "<", "& lt;",
+            ">", "& gt;",
+            "\\(", "& #40;",
+            "\\)", "& #41;",
+            "'", "& #39;",
+            "eval\\((.*)\\)", "",
+            "[\\\"\\'][\\s]*javascript:(.*)[\\\"\\']", "\"\"",
+            "script", ""
     );
 
     private byte[] body;
@@ -36,7 +36,7 @@ public class XssCleanHttpRequestWrapper extends HttpServletRequestWrapper {
             InputStream is = request.getInputStream();
             if (is != null) {
                 StringBuilder sb = new StringBuilder();
-                while(true) {
+                while (true) {
                     int data = is.read();
                     if (data < 0) {
                         break;
@@ -60,8 +60,8 @@ public class XssCleanHttpRequestWrapper extends HttpServletRequestWrapper {
             return null;
         }
         return Arrays.stream(parameterValues)
-            .map(XssCleanHttpRequestWrapper::cleanXSS)
-            .toArray(String[]::new);
+                .map(XssCleanHttpRequestWrapper::cleanXSS)
+                .toArray(String[]::new);
     }
 
     public String getHeader(String name) {
@@ -100,7 +100,7 @@ public class XssCleanHttpRequestWrapper extends HttpServletRequestWrapper {
             return null;
         }
         final boolean needToClean = FILTER_CHARACTERS.keySet().stream()
-            .anyMatch(value::contains);
+                .anyMatch(value::contains);
         if (needToClean) {
             LOGGER.info("XssCleanFilter before : " + value);
             for (String blockChar : FILTER_CHARACTERS.keySet()) {

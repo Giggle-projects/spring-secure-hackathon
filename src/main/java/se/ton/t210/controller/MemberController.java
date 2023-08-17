@@ -2,11 +2,13 @@ package se.ton.t210.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import se.ton.t210.configuration.annotation.LoginMember;
 import se.ton.t210.domain.Member;
 import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.*;
 import se.ton.t210.service.MemberService;
+import se.ton.t210.service.image.S3Service;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -16,9 +18,11 @@ import javax.validation.constraints.Email;
 public class MemberController {
 
     private final MemberService memberService;
+    private final S3Service s3Service;
 
-    public MemberController(MemberService memberService) {
+    public MemberController(MemberService memberService, S3Service s3Service) {
         this.memberService = memberService;
+        this.s3Service = s3Service;
     }
 
     @PostMapping("/api/member/signUp")
@@ -116,5 +120,12 @@ public class MemberController {
         final String memberProfileUrl = memberService.getMemberProfileImage(memberInfo);
         final MemberProfileImageResponse response = new MemberProfileImageResponse(memberProfileUrl);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/upload/image")
+    public ResponseEntity<Void> post(@LoginMember LoginMemberInfo memberInfo,
+                                     @RequestPart("file") MultipartFile multipartFile) {
+        s3Service.saveMemberProfileImage(memberInfo, multipartFile);
+        return ResponseEntity.ok().build();
     }
 }

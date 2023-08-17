@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import se.ton.t210.exception.AuthException;
+import se.ton.t210.exception.InnerServiceException;
 
 import javax.validation.ConstraintViolationException;
-import se.ton.t210.exception.InnerServiceException;
 
 @ControllerAdvice
 public class GlobalControllerAdvice {
@@ -24,9 +24,9 @@ public class GlobalControllerAdvice {
     }
 
     @ExceptionHandler({
-        ConstraintViolationException.class,
-        MethodArgumentTypeMismatchException.class,
-        HttpMessageNotReadableException.class
+            ConstraintViolationException.class,
+            MethodArgumentTypeMismatchException.class,
+            HttpMessageNotReadableException.class
     })
     public ResponseEntity<String> invalidInputPrams(Exception e) {
         return ResponseEntity.badRequest().body("Invalid input request");
@@ -39,7 +39,7 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler(InnerServiceException.class)
     public ResponseEntity<String> onlyForLogging(InnerServiceException e) {
-        if(e.getMessage() != null) {
+        if (e.getMessage() != null) {
             LOGGER.error(e.getMessage());
         }
         return ResponseEntity.badRequest().body("Invalid input request");
@@ -47,7 +47,7 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> unhandledException(Exception e) {
-        if(e.getMessage() != null) {
+        if (e.getMessage() != null) {
             LOGGER.error(e.getMessage());
         }
         e.printStackTrace();
