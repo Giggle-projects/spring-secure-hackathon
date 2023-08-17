@@ -6,7 +6,13 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @ServletComponentScan
-@SpringBootApplication
+@SpringBootApplication(
+    exclude = {
+        org.springframework.cloud.aws.autoconfigure.context.ContextRegionProviderAutoConfiguration.class,
+        org.springframework.cloud.aws.autoconfigure.context.ContextRegionProviderAutoConfiguration.class,
+        org.springframework.cloud.aws.autoconfigure.context.ContextRegionProviderAutoConfiguration.class
+    }
+)
 public class T210Application {
 
     public static void main(String[] args) {
