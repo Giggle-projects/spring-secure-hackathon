@@ -10,7 +10,7 @@ const minScoreSelection = document.getElementById('minScore');
 const maxScoreSelection = document.getElementById('maxScore');
 const sortBySelection = document.getElementById('sortBy');
 
-let pageSize = 10
+let pageSize = 100
 let pageCount = 5
 let startPage = 1;
 let currentPage = 1;
