@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface PasswordSaltRepository extends JpaRepository<PasswordSalt, Long> {
 
    Optional<PasswordSalt> findByMemberId(Long memberId);
+
+    void deleteAllByMemberId(Long memberId);
 }

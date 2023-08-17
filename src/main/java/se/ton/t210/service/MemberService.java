@@ -18,6 +18,7 @@ import se.ton.t210.utils.http.CookieUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalTime;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,9 +73,9 @@ public class MemberService {
         }
 
         final EncryptPassword encryptPassword = EncryptPassword.encryptFrom(request.getPassword());
-        final Member member = request.toEntity()
-                .updatePasswordWith(encryptPassword.getEncrypted());
+        final Member member = request.toEntity().updatePasswordWith(encryptPassword.getEncrypted());
         memberRepository.save(member);
+        saltRepository.deleteAllByMemberId(member.getId());
         saltRepository.save(new PasswordSalt(member.getId(), encryptPassword.getSalt()));
 
         final MemberTokens tokens = tokenService.issue(member.getEmail());
@@ -164,6 +165,9 @@ public class MemberService {
     }
 
     private void reissuePwd(Member oldMember, String newPwd) {
+        if(Objects.equals(newPwd, "")) {
+            return;
+        }
         if (oldMember.getEmail().equals(newPwd)) {
             throw new IllegalArgumentException("Password can't be same with email");
         }
@@ -174,13 +178,16 @@ public class MemberService {
             throw new IllegalArgumentException("비밀번호 형식이 올바르지 않습니다.");
         }
         final EncryptPassword encryptPassword = EncryptPassword.encryptFrom(newPwd);
-        final Member member = oldMember.updatePasswordWith(encryptPassword.getEncrypted());
-        saltRepository.save(new PasswordSalt(member.getId(), encryptPassword.getSalt()));
+        oldMember.updateMember(encryptPassword.getEncrypted());
+//        final Member member = oldMember.updatePasswordWith(encryptPassword.getEncrypted());
+        memberRepository.save(oldMember);
+        saltRepository.deleteAllByMemberId(oldMember.getId());
+        saltRepository.save(new PasswordSalt(oldMember.getId(), encryptPassword.getSalt()));
     }
 
     public String getMemberProfileImage(LoginMemberInfo memberInfo) {
         final Long memberId = memberInfo.getId();
-        Optional<MemberProfileImage> memberProfileImage = memberProfileRepository.findById(memberId);
+        Optional<MemberProfileImage> memberProfileImage = memberProfileRepository.findByMemberId(memberId);
         if (memberProfileImage.isPresent()) {
             return memberProfileImage.get().getImageUrl();
         }
@@ -188,6 +195,8 @@ public class MemberService {
     }
 
     public void uploadProfileImage(LoginMemberInfo memberInfo, String imageUrl) {
+        memberProfileRepository.findByMemberId(memberInfo.getId())
+                        .ifPresent((memberProfileRepository::delete));
         memberProfileRepository.save(new MemberProfileImage(memberInfo.getId(), imageUrl));
     }
 }

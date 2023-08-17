@@ -1,19 +1,15 @@
 package se.ton.t210.domain;
 
 import lombok.Getter;
-import org.springframework.web.client.HttpServerErrorException;
 import se.ton.t210.domain.converter.SymmetricEncryptionConverter;
 import se.ton.t210.domain.type.ApplicationType;
-import se.ton.t210.dto.ResetPersonalInfoRequest;
+import se.ton.t210.exception.InnerServiceException;
+import se.ton.t210.utils.encript.SHA256Utils;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-
-import se.ton.t210.exception.InnerServiceException;
-import se.ton.t210.utils.encript.SHA256Utils;
-import se.ton.t210.utils.encript.SupportedAlgorithmType;
 
 @Getter
 @Entity
@@ -78,8 +74,10 @@ public class Member {
 
     public void validatePassword(String input, PasswordSalt salt) {
         try {
+            System.out.println(input);
+            System.out.println(salt.getSalt());
             final String encryptedInput = SHA256Utils.encrypt(input, salt.getSalt());
-            if(!this.password.equals(encryptedInput)) {
+            if (!this.password.equals(encryptedInput)) {
                 throw new IllegalArgumentException();
             }
         } catch (Exception e) {
@@ -88,15 +86,19 @@ public class Member {
         }
     }
 
+    public void updateMember(String password) {
+        this.password = password;
+    }
+
     public Member updatePasswordWith(String password) {
         return new Member(
-            this.id,
-            this.name,
-            this.email,
-            password,
-            this.applicationType,
-            this.createdAt,
-            this.updatedAt
+                this.id,
+                this.name,
+                this.email,
+                password,
+                this.applicationType,
+                this.createdAt,
+                this.updatedAt
         );
     }
 }

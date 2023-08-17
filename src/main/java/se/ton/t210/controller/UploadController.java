@@ -19,13 +19,12 @@ public class UploadController {
     private final String bucket = "nick-terraform-test-bucket";
     private final MemberService memberService;
 
-    @Autowired
     public UploadController(AmazonS3Client amazonS3Client, MemberService memberService) {
         this.amazonS3Client = amazonS3Client;
         this.memberService = memberService;
     }
 
-    @PostMapping("/api/image/upload")
+    @PostMapping("/upload/image")
     public ResponseEntity<String> post(@LoginMember LoginMemberInfo loginInfo,
                                        @RequestPart("file") MultipartFile multipartFile) {
         final String originalFilename = multipartFile.getOriginalFilename();
@@ -36,6 +35,7 @@ public class UploadController {
             amazonS3Client.putObject(bucket, originalFilename, multipartFile.getInputStream(), metadata);
             String image = amazonS3Client.getUrl(bucket, originalFilename).toString();
             memberService.uploadProfileImage(loginInfo, image);
+            System.out.println(image);
             return ResponseEntity.ok(image);
         } catch (Exception e) {
             e.printStackTrace();

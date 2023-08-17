@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             if (!emailRegex.test(emailInputValue)) {
-                alert("올바른 이메일 주소 형식이 아닙니다.");
+                sAlert("올바른 이메일 주소 형식이 아닙니다.");
             } else {
                 // 이메일 인증 버튼 클릭 시 인증 코드를 메일로 보내는 로직
                 const userEmail = emailInput.value
@@ -283,11 +283,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     window.location.href = "../html/error-500.html";
                     throw new Error('token remove fail');
                 }
+                NoeError_sAlert("회원가입을 성공했습니다.");
 
-                window.location.href = "../html/dashboard.html";
-                alert("회원가입을 성공했습니다.");
+
             } catch (error) {
-                alert(error.message);
+                sAlert(error.message);
             }
         } else {
             sAlert("회원가입 정보를 정확하게 입력하세요.")
@@ -367,5 +367,15 @@ function sAlert(txt, title = 'ERROR',) {
         title: title,
         text: txt,
         confirmButtonText: '닫기'
+    });
+}
+// sAlert('custom alert example!');
+function NoeError_sAlert(txt, title = 'Success',) {
+    Swal.fire({
+        title: title,
+        text: txt,
+        confirmButtonText: '닫기'
+    }).then((result) => {
+        window.location.href = "../html/dashboard.html";
     });
 }

@@ -25,4 +25,13 @@ public class EncryptPassword {
       throw new InnerServiceException("Inner service error in encrypt");
     }
   }
+
+  public static EncryptPassword encryptFrom(String plainText, String salt) {
+    try {
+      final String encryptedNewPassword = SHA256Utils.encrypt(plainText, salt);
+      return new EncryptPassword(encryptedNewPassword, salt);
+    } catch (NoSuchAlgorithmException e) {
+      throw new InnerServiceException("Inner service error in encrypt");
+    }
+  }
 }
