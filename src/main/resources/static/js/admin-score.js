@@ -1,4 +1,5 @@
-const currentDomain = window.location.origin
+// const currentDomain = window.location.origin
+const currentDomain = "http://localhost:8080"
 
 const tableBody = document.getElementById('table-body');
 const pagination = document.getElementById('pagination');
@@ -82,7 +83,7 @@ async function fetchAndDisplayUsers() {
     endPage = startPage + pageCount -1;
     startUserRead = undefined;
     lastUserRead = undefined
-    users = await fetchProducts();
+    users = await fetchUser();
     startUserRead = users[0];
     lastUserRead = users[users.length-1]
     endPage = startPage + users.length / pageSize -1
@@ -90,7 +91,7 @@ async function fetchAndDisplayUsers() {
     updatePagination()
 }
 
-async function fetchProducts() {
+async function fetchUser() {
     try {
         const containsName = userNameInput.value.trim();
         const minScore = minScoreSelection.value.trim();
@@ -105,7 +106,7 @@ async function fetchProducts() {
             minScore: minScore,
             maxScore: maxScore,
             pageSize: fetchSize,
-            productSortType : sortBy,
+            userSortType : sortBy,
             sortBy: sortBy
         }));
         if (!response.ok) {
@@ -119,7 +120,7 @@ async function fetchProducts() {
     }
 }
 
-async function fetchNextProducts() {
+async function fetchNextUsers() {
     try {
         const containsName = userNameInput.value.trim();
         const minScore = minScoreSelection.value.trim();
@@ -132,11 +133,11 @@ async function fetchNextProducts() {
             containsName: containsName,
             minScore: minScore,
             maxScore: maxScore,
-            pageSize: fetchSize,
+            size: 40,
             cursorUserId: lastProductRead.id,
             cursorUserName : lastProductRead.name,
             cursorUserScore : lastProductRead.score,
-            productSortType : sortBy,
+            UserortType : sortBy,
             sortBy: sortBy
         }));
         if (!response.ok) {
@@ -168,34 +169,35 @@ async function fetchPrevUsers() {
             cursorUserName: startUserRead.name,
             cursorUserScore: cursorUserScore.price,
             cursorUserDate: cursorUserDate.quantity,
-            productSortType : sortBy,
+            userSortType : sortBy,
             sortBy: sortBy
         }));
         if (!response.ok) {
-            throw new Error('Error fetching products.');
+            throw new Error('Error fetching users.');
         }
         return await response.json();
     } catch (error) {
         console.log(error)
-        alert('Error fetching products.')
+        alert('Error fetching users.')
         return [];
     }
 }
 
 // Function to display products in the table
-async function displayProducts() {
+async function displayUsers() {
     tableBody.innerHTML = '';
     for(let index = 0; index < pageSize; index++) {
         const productIndex = ((currentPage -1) % pageCount ) * pageSize + index
-        const user = products[productIndex]
+        const user = users[productIndex]
         const row = document.createElement('tr');
         row.id = `user-${user.id}`
         row.innerHTML = `
           <td>${user.id}</td>
           <td>${user.name}</td>
-          <td>${user.price}</td>
-          <td>${user.quantity}</td>
-          <td><button onclick="orderButtonEventHandler(${user.id})">Order</button></td>`;
+          <td>${user.email}</td>
+          <td>${user.score}</td>
+          <td>${user.lastLogin}</td>
+          <td><button onclick="blockButtonEventHandler(${user.id})">Block</button></td>`;
         tableBody.appendChild(row);
     }
 }
@@ -211,10 +213,10 @@ async function updatePagination() {
             currentPage = startPage - 1;
             endPage = currentPage
             startPage = startPage - pageCount
-            products = await fetchPrevProducts();
-            startProductRead = products[0];
-            lastProductRead = products[products.length-1]
-            await displayProducts();
+            users = await fetchPrevUsers();
+            startUserRead = users[0];
+            lastUserRead = users[users.length-1]
+            await displayUsers();
             await updatePagination()
         });
         pagination.appendChild(leftArrow);
@@ -230,13 +232,13 @@ async function updatePagination() {
         }
         link.addEventListener('click', async () => {
             currentPage = pageNumber;
-            await displayProducts();
+            await displayUsers();
             await updatePagination()
         });
         pagination.appendChild(link);
     }
 
-    if(products.length >= pageSize * pageCount) {
+    if(users.length >= pageSize * pageCount) {
         const rightArrow = document.createElement('a');
         rightArrow.href = '#';
         rightArrow.textContent = '>>';
@@ -244,11 +246,11 @@ async function updatePagination() {
         rightArrow.addEventListener('click', async () => {
             currentPage = endPage + 1;
             startPage = currentPage
-            products = await fetchNextProducts()
-            startProductRead = products[0];
-            lastProductRead = products[products.length-1]
-            endPage = startPage + products.length / pageSize -1
-            await displayProducts()
+            users = await fetchNextUsers()
+            startUserRead = users[0];
+            lastUserRead = users[users.length-1]
+            endPage = startPage + users.length / pageSize -1
+            await displayUsers()
             await updatePagination()
         });
         pagination.appendChild(rightArrow);

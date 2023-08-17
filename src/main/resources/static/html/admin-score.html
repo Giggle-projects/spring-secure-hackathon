@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+</br>
+<body>
+  <h1>User scores</h1>
+  <div id="table-container">
+    <div id="search-container">
+      <div id="userSearchForm">
+        <label for="userName">User name:</label>
+        <input type="text" id="userName" name="userName">
+        <br>
+        <label for="minScore">Min score:</label>
+        <input type="number" id="minScore" name="minScore" step="5">
+        <br>
+        <label for="maxScore">Max score:</label>
+        <input type="number" id="maxScore" name="maxScore" step="5">
+        <br>
+        <label for="sortBy">Sort by :</label>
+        <select id="sortBy" name="sortBy">
+          <option value="id,desc">Id ascending</option>
+          <option value="name,asc">Name ascending</option>
+          <option value="name,desc">Name descending</option>
+          <option value="score,asc">Score ascending</option>
+          <option value="score,desc">Score descending</option>
+        </select>
+        <br>
+        <label for="pageSize">Page size:</label>
+        <select id="pageSize" name="pageSize">
+            <option value="10" selected>10</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="200">200</option>
+            <option value="500">500</option>
+            <option value="1000">1000</option>
+            <option value="2000">2000</option>
+            <option value="5000">5000</option>
+            <option value="10000">10000</option>
+        </select>
+      </div>
+    </div>
+
+    <table id="user-table">
+      <thead>
+      <colgroup>
+        <col width="10%" />
+        <col width="30%" />
+        <col width="30%" />
+        <col width="20%" />
+        <col width="10%" />
+      </colgroup>
+      <tr>
+        <th>id</th>
+        <th>name</th>
+        <th>email</th>
+        <th>score</th>
+        <th>lastLogin</th>
+        <th>block</th>
+      </tr>
+      </thead>
+      <tbody id="table-body">
+        <!-- User rows will be dynamically added here -->
+      </tbody>
+    </table>
+    <div id="pagination">
+        <!-- Pagination links will be dynamically generated here -->
+    </div>
+    </br>
+    </br>
+  </div>
+  <script src="../js/admin1.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  </body>
+</html>

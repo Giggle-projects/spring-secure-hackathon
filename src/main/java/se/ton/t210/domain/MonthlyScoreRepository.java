@@ -2,13 +2,14 @@ package se.ton.t210.domain;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import se.ton.t210.domain.type.ApplicationType;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface MonthlyScoreRepository extends JpaRepository<MonthlyScore, Long> {
+public interface MonthlyScoreRepository extends JpaRepository<MonthlyScore, Long>, JpaSpecificationExecutor<MonthlyScore> {
 
     int countByApplicationType(ApplicationType applicationType);
 
