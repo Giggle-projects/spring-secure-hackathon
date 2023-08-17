@@ -5,6 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
 import se.ton.t210.domain.*;
 import se.ton.t210.dto.AccessDateTimeFilter;
 import se.ton.t210.dto.AccessDateTimeResponse;
@@ -19,13 +20,13 @@ import java.util.stream.Collectors;
 public class AdminService {
 
     private final MemberRepository memberRepository;
-    private final MonthlyScoreRepository monthlyScoreRepository;
     private final AccessDataTimeRepository accessDataTimeRepository;
+    private final BlackListRepository blackListRepository;
 
-    public AdminService(MemberRepository memberRepository, MonthlyScoreRepository monthlyScoreRepository, AccessDataTimeRepository accessDataTimeRepository) {
+    public AdminService(MemberRepository memberRepository, AccessDataTimeRepository accessDataTimeRepository, BlackListRepository blackListRepository) {
         this.memberRepository = memberRepository;
-        this.monthlyScoreRepository = monthlyScoreRepository;
         this.accessDataTimeRepository = accessDataTimeRepository;
+        this.blackListRepository = blackListRepository;
     }
 
     @Transactional
@@ -40,5 +41,10 @@ public class AdminService {
                 final Member member = memberRepository.findById(it.getMemberId()).orElseThrow();
                 return AccessDateTimeResponse.of(it, member);
             }).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void saveBlackList(Long memberId) {
+        blackListRepository.save(new BlackList(memberId, LocalDate.now()));
     }
 }

@@ -93,10 +93,13 @@ class DummyData {
                         "12345",
                         applicationType
                 );
-                members.add(member);
+                EncryptPassword encryptPassword = EncryptPassword.encryptFrom(member.getPassword());
+                Member updatedMember = member.updatePasswordWith(encryptPassword.getEncrypted());
+                members.add(updatedMember);
+                memberRepository.save(updatedMember);
+                passwordSaltRepository.save(new PasswordSalt(updatedMember.getId(), encryptPassword.getSalt()));
             }
         }
-        memberRepository.saveAll(members);
     }
 
     private void createEvaluationItemTable() {

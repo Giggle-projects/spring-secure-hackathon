@@ -48,8 +48,7 @@ public class ScoreController {
 
     @GetMapping("/api/score/expect")
     public ResponseEntity<ExpectScoreResponse> expect(@LoginMember LoginMemberInfo member) throws JsonProcessingException {
-//        final ExpectScoreResponse scoreResponse = scoreService.expect(member, LocalDate.now());
-        final ExpectScoreResponse scoreResponse = new ExpectScoreResponse(10, 10, 10.0f);
+        final ExpectScoreResponse scoreResponse = scoreService.expect(member, LocalDate.now());
         return ResponseEntity.ok(scoreResponse);
     }
 

@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -17,6 +14,7 @@ import se.ton.t210.domain.*;
 import se.ton.t210.domain.type.ApplicationType;
 import se.ton.t210.dto.*;
 import se.ton.t210.dto.ml.ExpectPassPercentResponse;
+import se.ton.t210.exception.AuthException;
 import se.ton.t210.utils.date.LocalDateUtils;
 
 import java.time.LocalDate;
@@ -40,8 +38,9 @@ public class ScoreService {
     private final RestTemplate restTemplate;
     private final HttpHeaders httpHeaders;
     private final ObjectMapper objectMapper;
+    private final BlackListRepository blackListRepository;
 
-    public ScoreService(MemberRepository memberRepository, EvaluationItemRepository evaluationItemRepository, EvaluationItemScoreItemRepository evaluationItemScoreItemRepository, MonthlyScoreRepository monthlyScoreRepository, EvaluationScoreSectionRepository evaluationScoreSectionRepository, RestTemplate restTemplate, HttpHeaders httpHeaders, ObjectMapper objectMapper) {
+    public ScoreService(MemberRepository memberRepository, EvaluationItemRepository evaluationItemRepository, EvaluationItemScoreItemRepository evaluationItemScoreItemRepository, MonthlyScoreRepository monthlyScoreRepository, EvaluationScoreSectionRepository evaluationScoreSectionRepository, RestTemplate restTemplate, HttpHeaders httpHeaders, ObjectMapper objectMapper, BlackListRepository blackListRepository) {
         this.memberRepository = memberRepository;
         this.evaluationItemRepository = evaluationItemRepository;
         this.evaluationItemScoreItemRepository = evaluationItemScoreItemRepository;
@@ -50,6 +49,7 @@ public class ScoreService {
         this.restTemplate = restTemplate;
         this.httpHeaders = httpHeaders;
         this.objectMapper = objectMapper;
+        this.blackListRepository = blackListRepository;
     }
 
     public ScoreCountResponse count(ApplicationType applicationType) {
@@ -114,6 +114,10 @@ public class ScoreService {
 
     @Transactional
     public ScoreResponse update(Long memberId, List<EvaluationScoreRequest> request, LocalDate yearMonth) {
+        if(blackListRepository.existsBlackListByMemberId(memberId)) {
+            throw new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+        }
+
         int monthlyScore = 0;
         final Member member = memberRepository.findById(memberId).orElseThrow();
         for (EvaluationScoreRequest scoreInfo : request) {
