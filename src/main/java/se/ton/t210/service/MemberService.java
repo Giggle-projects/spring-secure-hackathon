@@ -18,6 +18,7 @@ import se.ton.t210.utils.http.CookieUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalTime;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,17 +47,19 @@ public class MemberService {
     private final TokenService tokenService;
     private final EmailAuthCodeCacheRepository emailAuthCodeCacheRepository;
     private final MailServiceInterface mailServiceInterface;
+    private final MemberProfileRepository memberProfileRepository;
 
     public MemberService(TokenSecret tokenSecret, MemberRepository memberRepository,
                          PasswordSaltRepository saltRepository, TokenService tokenService,
                          EmailAuthCodeCacheRepository emailAuthCodeCacheRepository,
-                         MailServiceInterface mailServiceInterface) {
+                         MailServiceInterface mailServiceInterface, MemberProfileRepository memberProfileRepository) {
         this.tokenSecret = tokenSecret;
         this.memberRepository = memberRepository;
         this.saltRepository = saltRepository;
         this.tokenService = tokenService;
         this.emailAuthCodeCacheRepository = emailAuthCodeCacheRepository;
         this.mailServiceInterface = mailServiceInterface;
+        this.memberProfileRepository = memberProfileRepository;
     }
 
     public void signUp(SignUpRequest request, String emailAuthToken, HttpServletResponse response) {
@@ -154,8 +157,8 @@ public class MemberService {
 
     public void resetUserInfo(LoginMemberInfo memberInfo, ResetPersonalInfoRequest request) {
         Member member = memberRepository.findById(memberInfo.getId()).orElseThrow(() -> {
-                    throw new AuthException(HttpStatus.CONFLICT, "Email is not exists");
-                });
+            throw new AuthException(HttpStatus.CONFLICT, "Email is not exists");
+        });
         request.getApplicationType().ifPresent(member::resetApplicationType);
         request.getPassword().ifPresent(password -> reissuePwd(member, password));
     }
@@ -173,6 +176,19 @@ public class MemberService {
         final EncryptPassword encryptPassword = EncryptPassword.encryptFrom(newPwd);
         final Member member = oldMember.updatePasswordWith(encryptPassword.getEncrypted());
         saltRepository.save(new PasswordSalt(member.getId(), encryptPassword.getSalt()));
+    }
+
+    public String getMemberProfileImage(LoginMemberInfo memberInfo) {
+        final Long memberId = memberInfo.getId();
+        Optional<MemberProfileImage> memberProfileImage = memberProfileRepository.findById(memberId);
+        if (memberProfileImage.isPresent()) {
+            return memberProfileImage.get().getImageUrl();
+        }
+        return memberInfo.getApplicationType().iconImageUrl();
+    }
+
+    public void uploadProfileImage(LoginMemberInfo memberInfo, String imageUrl) {
+        memberProfileRepository.save(new MemberProfileImage(memberInfo.getId(), imageUrl));
     }
 }
 
