@@ -150,16 +150,16 @@ async function fetchMyInfo() {
     currentScore.innerText = "현재 점수 : " + responseScoreInfoValue.currentScore + "점"
     expectedPassPercent.innerText = "합격 예상 :" + responseScoreInfoValue.expectedPassPercent.toFixed(2) + "%"
 
-    if(responseScoreInfoValue.expectedPassPercent == 0) {
+    if(responseScoreInfoValue.expectedPassPercent >= 95 ) {
         expectedGrade.innerText = "예측 결과 : 합격 확실"
     }
-    if(responseScoreInfoValue.expectedPassPercent ==1) {
+    if(responseScoreInfoValue.expectedPassPercent >= 85 && responseScoreInfoValue.expectedPassPercent < 95) {
         expectedGrade.innerText = "예측 결과 : 합격 유력"
     }
-    if(responseScoreInfoValue.expectedPassPercent == 2) {
+    if(responseScoreInfoValue.expectedPassPercent >= 80 && responseScoreInfoValue.expectedPassPercent < 85) {
         expectedGrade.innerText = "예측 결과 : 탈락 예상"
     }
-    if(responseScoreInfoValue.expectedPassPercent == 3) {
+    if(responseScoreInfoValue.expectedPassPercent < 80 ) {
         expectedGrade.innerText = "예측 결과 : 탈락 유력"
     }
 }
@@ -170,8 +170,7 @@ async function monthlyRecordsGraph() {
     const yearScores = await fetch(currentDomain + "/api/score/year")
     const expectedScores = await fetch(currentDomain + "/api/score/expect")
 
-    let percentage = (100-((await expectedScores.json()).currentPercentile))
-
+    let percentage = (100-((await expectedScores.json()).currentPercentile)).toFixed();
     const container = d3.select("#gauge-container");
     const width = 256;
     const height = 214;

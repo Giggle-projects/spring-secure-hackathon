@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(passwordMachResult1,passwordMachResult2);
             // Call API to save password 여기서 저장 api 호출~~!!
             const restPassword = passwordInput.value
-            const resetApplicationTypeKey = dropdownText.textContent
+            let resetApplicationTypeKey = dropdownText.textContent
 
 
             if (resetApplicationTypeKey==="경찰직공무원(남)"){
