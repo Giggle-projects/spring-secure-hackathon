@@ -1,3 +1,4 @@
+
 import numpy as np
 import torch
 import torch.nn as nn
@@ -72,12 +73,12 @@ type_5_df=convert(type_5_df)
 type_6_df=convert(type_6_df)
 
 
-type_1_df=type_1_df.fillna(type_1_df.mean())
-type_2_df=type_2_df.fillna(type_1_df.mean())
-type_3_df=type_3_df.fillna(type_1_df.mean())
-type_4_df=type_4_df.fillna(type_1_df.mean())
-type_5_df=type_5_df.fillna(type_1_df.mean())
-type_6_df=type_6_df.fillna(type_1_df.mean())
+type_1_df=type_1_df.fillna(5)
+type_2_df=type_2_df.fillna(5)
+type_3_df=type_3_df.fillna(5)
+type_4_df=type_4_df.fillna(5)
+type_5_df=type_5_df.fillna(5)
+type_6_df=type_6_df.fillna(5)
 
 
 def set_label(df):
@@ -102,86 +103,68 @@ type_5_df = set_label(type_5_df)
 type_6_df = set_label(type_6_df)
 
 
-type_1_df=type_1_df.drop("total_score",axis=1)
-type_2_df=type_2_df.drop("total_score",axis=1)
-type_3_df=type_3_df.drop("total_score",axis=1)
-type_4_df=type_4_df.drop("total_score",axis=1)
-type_5_df=type_5_df.drop("total_score",axis=1)
-type_6_df=type_6_df.drop("total_score",axis=1)
 
-
-
-
+# Define your neural network architecture
 class LSTMModel(nn.Module):
     def __init__(self, input_size, hidden_size, num_layers, output_size):
         super(LSTMModel, self).__init__()
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True)
-        self.fc = nn.Linear(hidden_size, output_size)
+        self.fc = nn.Linear(hidden_size,output_size)
+        self.softmax = nn.Softmax()  # Apply softmax along the third dimension
+
 
     def forward(self, x):
-        out,_= self.lstm(x)
-        out = self.fc(out)  # Remove this line
-        out = torch.sigmoid(out)
+        out, _ = self.lstm(x)
+        out = self.fc(out)  # Use the last time step's output for classification
+        out = self.softmax(out)  # Apply softmax to get class probabilities
 
         return out
+type_list=[type_1_df,type_2_df,type_3_df,type_4_df,type_5_df,type_6_df]
 
-df_list=[type_1_df,type_2_df,type_3_df,type_4_df,type_5_df,type_6_df]
 num=1
-for i in df_list:
+for i in type_list:
+    # Convert pandas DataFrames to numpy arrays
+    X = i.drop(['label', 'total_score'], axis=1).to_numpy()
+    y = i['label'].to_numpy()
 
-    # Convert the DataFrame to PyTorch tensors
-    data_tensor = torch.tensor(i.drop(columns=['label']).values, dtype=torch.float32)
-    label_tensor = torch.tensor(i['label'].values, dtype=torch.float32)  # Change dtype to long
+    # Convert numpy arrays to PyTorch tensors
+    X = torch.tensor(X, dtype=torch.float32)
+    y = torch.tensor(y, dtype=torch.float32)
 
-
-
-    # Split the data into training and testing sets
-    train_size = int(0.8 * len(data_tensor))
-    train_data = data_tensor[:train_size]
-    train_labels = label_tensor[:train_size]
-    test_data = data_tensor[train_size:]
-    test_labels = label_tensor[train_size:]
-
-    # Create an instance of the LSTMModel
-    input_size = 12
     hidden_size = 64
-    num_layers = 2
-    output_size = 1
-
-    model = LSTMModel(input_size, hidden_size, num_layers, output_size)
-
-    # Define loss function and optimizer
-    criterion = nn.BCEWithLogitsLoss()  # Change to CrossEntropyLoss
+    num_layers=3
+    output_size=2
+    # Create an instance of your model
+    input_size = X.shape[1]
+    model = LSTMModel(input_size=input_size,hidden_size=hidden_size,num_layers=num_layers,output_size=output_size)
+    print(sum(p.numel() for p in  model.parameters()))
+    # Define a loss function and an optimizer
+    criterion = nn.BCELoss()  # Binary Cross-Entropy loss
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-    num_epochs = 100
+    # Training loop
+    num_epochs = 200
     for epoch in range(num_epochs):
-        model.train()
         optimizer.zero_grad()
+        outputs = model(X)
+        # Assuming outputs shape is [1389, 2]
+        predicted_probs = outputs[:, 0]
 
-        outputs = model(train_data)
-        loss = criterion(outputs.squeeze(), train_labels)  # Remove the dimension from outputs
 
+        loss = criterion(predicted_probs, y)  # Compare predicted probabilities with binary labels
         loss.backward()
         optimizer.step()
+
 
         if (epoch + 1) % 10 == 0:
             print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
 
-    # ... 이하 코드는 이전 코드와 동일하게 유지합니다 ...
-
-    # Test accuracy calculation
-    model.eval()
+    # After training, you can use this model for prediction
     with torch.no_grad():
-        test_outputs = model(test_data)
-        _, test_preds = torch.max(test_outputs, dim=1)  # Get the class predictions
+        predicted_probs = model(X)
+        predicted_labels = (predicted_probs >= 0.5).squeeze().int().numpy()
 
-    accuracy = (test_preds == test_labels).float().mean()
-    print(f'Test Accuracy: {accuracy.item():.4f}')
-
-    torch.save(model.state_dict(), 'lstm_model_'+str(num)+'.pth')
+    # Now 'predicted_labels' contains the predicted labels for each sample in the data.
+    torch.save(model.state_dict(), "./model_"+str(num)+".pth")
     num+=1
-
-
-
 

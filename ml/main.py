@@ -8,70 +8,72 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:1234"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 class LSTMModel(nn.Module):
     def __init__(self, input_size, hidden_size, num_layers, output_size):
         super(LSTMModel, self).__init__()
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True)
         self.fc = nn.Linear(hidden_size, output_size)
+        self.softmax = nn.Softmax()  # Apply softmax along the third dimension
+
 
     def forward(self, x):
+        x = x.unsqueeze(0)
+        print(x.size(),x)
         out, _ = self.lstm(x)
-        out = self.fc(out)
+        out = self.fc(out)  # Use the last time step's output for classification
+        out = self.softmax(out)  # Apply softmax to get class probabilities
 
         return out
-
 input_size = 12
-hidden_size = 64
-num_layers = 2
-output_size = 1
-model = LSTMModel(input_size, hidden_size, num_layers, output_size)
+
+model = LSTMModel(input_size=input_size,hidden_size=64,num_layers=3,output_size=2)
 
 
 def predict_single_input(input_data):
     model.eval()
     with torch.no_grad():
-        input_tensor = torch.tensor(input_data, dtype=torch.float32).view(1, -1, input_size)
+        input_tensor  = torch.tensor(input_data, dtype=torch.float32)
         output = model(input_tensor)
+        print('model output',output)
 
-        sigmoid = torch.sigmoid(output)  # Apply sigmoid to get probability values
-        _, prediction = torch.max(output, dim=2)  # Get the class indices
+        max_value = output[0][0]
 
-        predicted_class = prediction.item()
-        probability_class_1 = sigmoid.squeeze().item()  # Squeeze to remove extra dimensions and get probability for class 1
-    print(predicted_class, probability_class_1)
-    return predicted_class, probability_class_1
+
+    return max_value
 
 
 
-@app.post("/predict")
+
+@app.post("/predict/")
 async def predict(input_data: str = Form(...),type_num: int = Form(...)):
 
 
     # 모델에 대한 타입 지정을 num 에 해줘야함
     # 모델의 타입은 직렬 정보에 따라서 1 = 2 = 3 = 4 = 5 = 6 =
-    model.load_state_dict(torch.load('lstm_model_'+str(type_num)+'.pth'))
+    model.load_state_dict(torch.load('model_'+str(type_num)+'.pth'))
     model.eval()
 
     input_data = ast.literal_eval(input_data)
     # 모두 0이면 리스트에 0 추가
-    # 0 값을 제외한 리스트 생성
-    filtered_values = [value for value in input_data if value != 0]
 
-    # 0이 없을 때만 평균값 계산 및 처리
-    if filtered_values:
-    	mean_value = np.mean(filtered_values)
-    	input_data = [mean_value if value == 0 else value for value in input_data]
+    new_data=[]
+    for i in input_data:
+        if i ==0:
+            new_data.append(5)
+        else:
+            new_data.append(i)
 
-    print(f"model input data is {input_data}")
+    print(f"model input data is {new_data}")
 
-    result,result2 = predict_single_input(input_data)
-    print(result,result2)
-    return {"prediction": (1-result2)*100}
+    max_value = predict_single_input(new_data)
+    print(max_value.item())
+
+    return {"prediction":max_value.item()*100}
+
 
 if __name__ == "__main__":
     import uvicorn
