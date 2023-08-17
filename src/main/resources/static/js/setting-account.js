@@ -156,7 +156,22 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(passwordMachResult1,passwordMachResult2);
             // Call API to save password 여기서 저장 api 호출~~!!
             const restPassword = passwordInput.value
-            const resetApplicationTypeKey = dropdownText.value
+            const resetApplicationTypeKey = dropdownText.textContent
+
+
+            if (resetApplicationTypeKey==="경찰직공무원(남)"){
+                resetApplicationTypeKey="PoliceOfficerMale"
+            }
+            else if(resetApplicationTypeKey==="경찰직공무원(여)"){
+                resetApplicationTypeKey="PoliceOfficerFemale"}
+            else if(resetApplicationTypeKey==="소방직공무원(남)"){
+                resetApplicationTypeKey="FireOfficerMale"}
+            else if(resetApplicationTypeKey==="소방직공무원(여)"){
+                resetApplicationTypeKey="FireOfficerFemale"}
+            else if(resetApplicationTypeKey==="경호직공무원(남)"){
+                resetApplicationTypeKey="CorrectionalOfficerMale"}
+            else if(resetApplicationTypeKey==="경호직공무원(여)"){
+                resetApplicationTypeKey="CorrectionalOfficerFemale"}
 
 
 
