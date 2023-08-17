@@ -24,19 +24,16 @@ public class TokenFilterConfig {
     @Value("${auth.jwt.token.email.cookie:emailAuthToken}")
     private String emailAuthTokenCookieKey;
 
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
-    private final TokenSecret tokenSecret;
-
-    public TokenFilterConfig(TokenSecret tokenSecret) {
-        this.tokenSecret = tokenSecret;
+    public TokenFilterConfig(TokenService tokenService) {
+        this.tokenService = tokenService;
     }
 
     @Bean
     public FilterRegistrationBean<Filter> addAccessTokenFilter() {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new AccessTokenFilter(tokenSecret, accessTokenCookieKey, refreshTokenCookieKey, tokenService));
+        filterRegistrationBean.setFilter(new AccessTokenFilter(accessTokenCookieKey, refreshTokenCookieKey, tokenService));
         filterRegistrationBean.addUrlPatterns(
             "/html/dashboard.html",
             "/html/personal-information.html",
@@ -55,7 +52,7 @@ public class TokenFilterConfig {
     @Bean
     public FilterRegistrationBean<Filter> addEmailTokenFilter() {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new EmailAuthTokenFilter(tokenSecret, emailAuthTokenCookieKey));
+        filterRegistrationBean.setFilter(new EmailAuthTokenFilter(emailAuthTokenCookieKey, tokenService));
         filterRegistrationBean.addUrlPatterns(
             "/api/member/signUp"
         );

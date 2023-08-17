@@ -110,11 +110,4 @@ public class MemberController {
         final MemberResponse response = MemberResponse.of(loginMember);
         return ResponseEntity.ok(response);
     }
-
-    // 이후 적용
-    @GetMapping("/api/refreshToken/logIn")
-    public ResponseEntity<Void> logInByRefreshToken(@CookieValue String refreshToken, HttpServletResponse response) {
-        memberService.reissueToken(refreshToken, response);
-        return ResponseEntity.ok().build();
-    }
 }

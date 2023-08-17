@@ -26,11 +26,9 @@ public class AccessTokenFilter extends OncePerRequestFilter {
 
     private final String accessTokenCookieKey;
     private final String refreshTokenCookieKey;
-    private final TokenSecret secret;
     private final TokenService tokenService;
 
-    public AccessTokenFilter(TokenSecret secret, String accessTokenCookieKey, String refreshTokenCookieKey, TokenService tokenService) {
-        this.secret = secret;
+    public AccessTokenFilter(String accessTokenCookieKey, String refreshTokenCookieKey, TokenService tokenService) {
         this.accessTokenCookieKey = accessTokenCookieKey;
         this.refreshTokenCookieKey = refreshTokenCookieKey;
         this.tokenService = tokenService;
@@ -41,7 +39,7 @@ public class AccessTokenFilter extends OncePerRequestFilter {
         String accessToken = null;
         try {
             accessToken = getTokenFromCookies(accessTokenCookieKey, request.getCookies());
-            secret.validateToken(accessToken);
+            tokenService.validateToken(accessToken);
         } catch (AuthException e) {
             try {
                 if (accessToken == null) {

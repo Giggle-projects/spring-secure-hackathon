@@ -7,29 +7,28 @@ import se.ton.t210.exception.AuthException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
+import se.ton.t210.service.token.TokenService;
 
 import static se.ton.t210.utils.http.CookieUtils.getTokenFromCookies;
 
 public class EmailAuthTokenFilter extends OncePerRequestFilter {
 
     private final String tokenCookieKey;
-    private final TokenSecret secret;
+    private final TokenService tokenService;
 
-    public EmailAuthTokenFilter(TokenSecret secret, String tokenCookieKey) {
-        this.secret = secret;
+    public EmailAuthTokenFilter(String tokenCookieKey, TokenService tokenService) {
         this.tokenCookieKey = tokenCookieKey;
+        this.tokenService = tokenService;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             final String refreshToken = getTokenFromCookies(tokenCookieKey, request.getCookies());
-            secret.validateToken(refreshToken);
+            tokenService.validateToken(refreshToken);
         } catch (AuthException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getOutputStream().write(e.getMessage().getBytes());
