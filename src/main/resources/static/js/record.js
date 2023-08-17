@@ -111,14 +111,9 @@ function saveData() {
         })
             .then(response => response.json())
             .then(result => {
-                if (result.prediction === 1) {
-                    noError_sAlert("데이터가 저장되었습니다.\n결과: 합격");
-                    //location.reload();
-                } else {
-                    noError_sAlert("데이터가 저장되었습니다.\n결과: 불합격");
-                    //location.reload();
+                    noError_sAlert("데이터가 저장되었습니다.");
                 }
-            })
+            )
             .catch(error => {
                 console.error("에러 발생:", error);
                 sAlert("데이터 저장 중에 오류가 발생했습니다.");
