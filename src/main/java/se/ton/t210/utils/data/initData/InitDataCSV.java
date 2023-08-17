@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class InitDataCSV {
 
-    private static final int UNIT_COUNT = 10_000_000;
+    private static final int UNIT_COUNT = 100_000;
 
     private final CsvLineStrategy csvLineStrategy;
     private final String fileName;

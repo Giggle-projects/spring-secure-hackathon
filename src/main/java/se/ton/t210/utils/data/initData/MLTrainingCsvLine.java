@@ -17,13 +17,23 @@ public class MLTrainingCsvLine implements CsvLineStrategy {
     @Override
     public String retrieveNewLine() {
         setColumnElement();
-        return String.join(",",
-                String.valueOf(id),
-                String.valueOf(userId / 12),
-                applicationTypeName,
-                randomNum(5, 50),
-                String.valueOf(month)
-        );
+        if (id < 7000) {
+            return String.join(",",
+                    String.valueOf(id),
+                    String.valueOf(userId / 12),
+                    applicationTypeName,
+                    randomNum(40, 50),
+                    String.valueOf(month)
+            );
+        } else {
+            return String.join(",",
+                    String.valueOf(id),
+                    String.valueOf(userId / 12),
+                    applicationTypeName,
+                    randomNum(5, 49),
+                    String.valueOf(month)
+            );
+        }
     }
 
     private void setColumnElement() {
