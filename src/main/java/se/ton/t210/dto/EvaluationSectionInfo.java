@@ -1,6 +1,8 @@
 package se.ton.t210.dto;
 
 import lombok.Getter;
+import se.ton.t210.domain.EvaluationItem;
+import se.ton.t210.domain.EvaluationScoreSection;
 
 @Getter
 public class EvaluationSectionInfo {
@@ -17,5 +19,15 @@ public class EvaluationSectionInfo {
         this.maxScore = maxScore;
         this.minScore = minScore;
         this.evaluationScore = evaluationScore;
+    }
+
+    public static EvaluationSectionInfo of(EvaluationItem evaluationItem, float prevItemBaseScore, EvaluationScoreSection section) {
+        return new EvaluationSectionInfo(
+            evaluationItem.getId(),
+            evaluationItem.getName(),
+            prevItemBaseScore,
+            section.getSectionBaseScore(),
+            section.getEvaluationScore()
+        );
     }
 }
