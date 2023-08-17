@@ -37,7 +37,7 @@ logInBtn.addEventListener("click", async function () {
     const pwd = passwordInput.value;
 
     if (email === null || email === undefined || email === '' || pwd === null || pwd === undefined || pwd === '') {
-        alert("이메일과 비밀번호는 필수적으로 입력해야합니다.")
+        sAlert("이메일과 비밀번호는 필수적으로 입력해야합니다.")
         return;
     }
 
@@ -55,14 +55,14 @@ logInBtn.addEventListener("click", async function () {
             body: JSON.stringify(userData),
         });
         if (!response.ok) {
-            sAlert("회원 정보가 맞지 않습니다.")
+            sAlert("로그인에 실패했습니다.")
             return
             //throw new Error("회원 정보가 맞지 않습니다.");
         }
 
         window.location.href = "../html/dashboard.html";
     } catch (error) {
-        alert(error.message);
+        sAlert(error.message);
     }
 })
 
@@ -80,6 +80,15 @@ if (signUpText) {
 }
 // sAlert('custom alert example!');
 function sAlert(txt, title = 'ERROR') {
+    Swal.fire({
+        title: title,
+        text: txt,
+        confirmButtonText: '닫기'
+    });
+}
+
+// sAlert('custom alert example!');
+function NoError_sAlert(txt, title = 'Success') {
     Swal.fire({
         title: title,
         text: txt,
