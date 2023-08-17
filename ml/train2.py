@@ -142,7 +142,7 @@ for i in type_list:
             return self.length
     trainset = dataset(X,y)
     #DataLoader
-    trainloader = DataLoader(trainset,shuffle=False)
+    trainloader = DataLoader(trainset,batch_size=4,shuffle=False)
 
 
     hidden_size = 32

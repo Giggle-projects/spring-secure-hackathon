@@ -92,7 +92,8 @@ function saveData() {
     var isValidData = true;
 
     data.forEach(function(item) {
-        if (item.score.length < 5 || /\s/.test(item.score) || /[^0-9]/.test(item.score)) {
+        if (item.score.length >= 5 || /\s/.test(item.score) || /[^0-9]/.test(item.score)) {
+            console.log(item.score)
             isValidData = false;
             sAlert("데이터를 정확하게 입력하세요.");
             return; // 조건에 맞지 않으므로 더 이상 검사하지 않고 함수 종료
@@ -112,10 +113,10 @@ function saveData() {
             .then(result => {
                 if (result.prediction === 1) {
                     noError_sAlert("데이터가 저장되었습니다.\n결과: 합격");
-                    location.reload();
+                    //location.reload();
                 } else {
                     noError_sAlert("데이터가 저장되었습니다.\n결과: 불합격");
-                    location.reload();
+                    //location.reload();
                 }
             })
             .catch(error => {
@@ -321,6 +322,10 @@ function noError_sAlert(txt, title = 'Success',) {
         title: title,
         text: txt,
         confirmButtonText: '닫기'
+    }).then((result) => {
+              if (result.isConfirmed) {
+                  location.reload();
+              }
     });
 }
 
