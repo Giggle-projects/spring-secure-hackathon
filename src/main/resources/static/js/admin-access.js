@@ -10,7 +10,7 @@ const sortBySelection = document.getElementById('sortBy');
 const dateFromSelection = document.getElementById('dateFrom');
 const dateToSelection = document.getElementById('dateTo');
 
-let pageSize = 10
+let pageSize = 20
 let currentPage = 1;
 let users = []
 let hiPage =1
@@ -53,13 +53,11 @@ pageSizeSelection.addEventListener("change", (event) => {
   fetchAndDisplayUsers().then(() => {});
 });
 
-// Function to fetch and display products based on the current page and search query
 async function fetchAndDisplayUsers() {
-    pageSize = pageSizeSelection.options[pageSizeSelection.selectedIndex].value;
-    currentPage = 1;
+    currentPage = 1; // Reset current page to 1 when fetching new data
     users = await fetchUser();
-    await displayUsers()
-    await updatePagination()
+    await displayUsers();
+    await updatePagination();
 }
 
 async function fetchUser() {
@@ -91,12 +89,14 @@ async function fetchUser() {
 
 // Function to display products in the table
 async function displayUsers() {
-    hiPage += 100
     tableBody.innerHTML = '';
-    for(let index = 0; index < users.length; index++) {
-        const user = users[index]
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+
+    for (let index = startIndex; index < endIndex && index < users.length; index++) {
+        const user = users[index];
         const row = document.createElement('tr');
-        row.id = `user-${user.id}`
+        row.id = `user-${user.id}`;
         row.innerHTML = `
           <td>${user.dateTime}</td>
           <td>${user.memberName}</td>
@@ -109,21 +109,27 @@ async function displayUsers() {
 
 async function updatePagination() {
     pagination.innerHTML = '';
-    if(currentPage > 10) {
+
+    const totalPages = Math.ceil(users.length / pageSize);
+    const maxVisiblePages = 10;
+
+    const startPage = Math.max(currentPage - Math.floor(maxVisiblePages / 2), 1);
+    const endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+
+    if (currentPage > 1) {
         const leftArrow = document.createElement('a');
         leftArrow.href = '#';
         leftArrow.textContent = '<<';
         leftArrow.className = "pagination-link";
         leftArrow.addEventListener('click', async () => {
-            currentPage = startPage - 1;
-            endPage = currentPage
-            startPage = startPage - pageCount
-            await updatePagination()
+            currentPage--;
+            await updatePagination();
+            await displayUsers();
         });
         pagination.appendChild(leftArrow);
     }
 
-    for (let pageNumber = hiPage; pageNumber <= hiPage+10; pageNumber++) {
+    for (let pageNumber = startPage; pageNumber <= endPage; pageNumber++) {
         const link = document.createElement('a');
         link.href = '#';
         link.textContent = pageNumber;
@@ -133,24 +139,26 @@ async function updatePagination() {
         }
         link.addEventListener('click', async () => {
             currentPage = pageNumber;
-            await updatePagination()
+            await updatePagination();
+            await displayUsers();
         });
-
         pagination.appendChild(link);
     }
-    const rightArrow = document.createElement('a');
-    rightArrow.href = '#';
-    rightArrow.textContent = '>>';
-    rightArrow.className = "pagination-link";
-    rightArrow.addEventListener('click', async () => {
-        currentPage = currentPage + 100;
-        hiPage = hiPage+10
-        startPage = currentPage
-        endPage = startPage + users.length / pageSize -1
-        await updatePagination()
-    });
-    pagination.appendChild(rightArrow);
+
+    if (currentPage < totalPages) {
+        const rightArrow = document.createElement('a');
+        rightArrow.href = '#';
+        rightArrow.textContent = '>>';
+        rightArrow.className = "pagination-link";
+        rightArrow.addEventListener('click', async () => {
+            currentPage++;
+            await updatePagination();
+            await displayUsers();
+        });
+        pagination.appendChild(rightArrow);
+    }
 }
+
 
 // Initial fetch and display of products
 fetchAndDisplayUsers();
