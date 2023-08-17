@@ -29,13 +29,25 @@ async function fetchMyInfo() {
 
     // 아이콘 추가하기 코드
     // 불러오 이용자 이미지를 여기에 넣어주세요
-    image_data=''
-    if (!(image_data)){
-        imgElement.src = "../files/586-frame.svg";
-    }
-    else{
-        imgElement.src = "../files/586-frame.svg";
-    }
+    var image_data;
+
+    await fetch(currentDomain + "/api/member/profile/image")
+        .then(response => response.json())
+        .then(data => {
+            image_data = data.url;
+            alert(image_data)
+        })
+        .catch(error => {
+            console.error("Error fetching data:", error);
+        });
+
+
+        imgElement.src = image_data;
+    // if (!(image_data)) {
+    //     imgElement.src = "../files/586-frame.svg";
+    // } else {
+    //     imgElement.src = "../files/586-frame.svg";
+    // }
 
 //    if (responseMemberInfoValue.applicationTypeName === "경찰직공무원(남)" || responseMemberInfoValue.applicationTypeName === "경찰직공무원(여)") {
 //        imgElement.src = "../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
@@ -57,13 +69,13 @@ async function showRadarChart() {
     }
     const scores = await responseScore.json()
     const data = {
-        labels:  scores.map(function(element){
+        labels: scores.map(function (element) {
             return element.evaluationItemName;
         }),
         datasets: [
             {
                 label: "나",
-                data: scores.map(function(element){
+                data: scores.map(function (element) {
                     return element.evaluationScore;
                 }),
                 backgroundColor: "rgba(66, 135, 245, 0.5)",
@@ -123,13 +135,13 @@ async function showBarChart() {
     const scoresMe = await responseScoreMe.json()
     const scoresTop = await responseScoreTop.json()
 
-    var bar_labels = (scoresMe).map(function(element){
+    var bar_labels = (scoresMe).map(function (element) {
         return element.evaluationItemName;
     });
-    var myScore = (scoresMe).map(function(element){
+    var myScore = (scoresMe).map(function (element) {
         return element.evaluationScore;
     });
-    var top30Score = (scoresTop).map(function(element){
+    var top30Score = (scoresTop).map(function (element) {
         return element.evaluationScore;
     });
 
@@ -144,7 +156,7 @@ async function showBarChart() {
                 backgroundColor: "rgba(66, 135, 245, 0.5)",
                 borderColor: "rgba(66, 135, 245, 1)",
                 borderWidth: 1
-            },{
+            }, {
                 label: '상위 30%',
                 data: top30Score,
                 backgroundColor: "rgba(66, 135, 245, 0.2)",

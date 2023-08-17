@@ -18,6 +18,7 @@ import se.ton.t210.utils.http.CookieUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalTime;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -164,6 +165,9 @@ public class MemberService {
     }
 
     private void reissuePwd(Member oldMember, String newPwd) {
+        if(Objects.equals(newPwd, "")) {
+            return;
+        }
         if (oldMember.getEmail().equals(newPwd)) {
             throw new IllegalArgumentException("Password can't be same with email");
         }
@@ -180,7 +184,7 @@ public class MemberService {
 
     public String getMemberProfileImage(LoginMemberInfo memberInfo) {
         final Long memberId = memberInfo.getId();
-        Optional<MemberProfileImage> memberProfileImage = memberProfileRepository.findById(memberId);
+        Optional<MemberProfileImage> memberProfileImage = memberProfileRepository.findByMemberId(memberId);
         if (memberProfileImage.isPresent()) {
             return memberProfileImage.get().getImageUrl();
         }
