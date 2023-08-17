@@ -56,6 +56,7 @@ async function fetchMyInfo() {
 //    } else if (responseMemberInfoValue.applicationTypeName === "교정직공무원(남)" || responseMemberInfoValue.applicationTypeName === "교정직공무원(여)") {
 //        imgElement.src = "../files/type_icon3.png";// 교정직 이미지 경로로 변경
 //    }
+    console.log(responseScoreInfoValue.score, responseScoreInfoValue.maxScore)
     currentScore.innerText = "현재 점수 : " + responseScoreInfoValue.score + "점"
     maxScore.innerText = "최고 점수 : " + responseScoreInfoValue.maxScore + "점"
 }

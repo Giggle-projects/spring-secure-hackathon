@@ -10,15 +10,16 @@ emailInput.addEventListener("input", updateMergedEmail);
 let mail_result = 0
 
 // 정규식
-const regex = /^[a-z0-9]+$/i;  // 대소문자 구분 없이 검사하는 정규식
+const regex = /^[a-z0-9.@]+$/i;  // 대소문자 구분 없이 검사하는 정규식
 
 function updateMergedEmail() {
-    const email = emailInput.value;
+    let email = emailInput.value;
     let errorMessage = '';
+
 
     if (!email) {
         errorMessage = "이메일을 입력하세요.";
-    } else if (!email.includes("@")) {
+    } else if (email !== email.replaceAll(' ','')) { // 공백이 포함되거나 마지막 문자가 공백인 경우
         errorMessage = "올바른 이메일 주소를 입력하세요.";
     } else {
         const parts = email.split("@");
@@ -28,6 +29,10 @@ function updateMergedEmail() {
         if (!regex.test(emailFront)) {
             errorMessage = "올바른 이메일 앞 부분을 입력하세요.";
         }
+        else if (!regex.test(emailAfterAt)){
+            errorMessage = "올바른 이메일 뒷 부분을 입력하세요.";
+        }
+
     }
 
     if (errorMessage) {

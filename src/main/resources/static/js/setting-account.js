@@ -180,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const input_imageData = getImageData(uploadedImage);
 
-            if (!(dropdown_activate_flag==1) && !(password_activate_flag==1){//드랍다운 변경 안함,비번 병경 안함
+            if (!(dropdown_activate_flag==1) && !(password_activate_flag==1)){//드랍다운 변경 안함,비번 병경 안함
                 // 회원가입 - 서버에 요청
                 const userData = {
                     password: restPassword,
