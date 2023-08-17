@@ -86,6 +86,10 @@ public class Member {
         }
     }
 
+    public void updateMember(String password) {
+        this.password = password;
+    }
+
     public Member updatePasswordWith(String password) {
         return new Member(
                 this.id,

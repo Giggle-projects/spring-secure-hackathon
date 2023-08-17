@@ -7,7 +7,6 @@ const dropdownText = dropdown.querySelector(".text704");
 const dropdownContent = dropdown.querySelector(".dropdown-content");
 const nameInput = document.getElementById("full-name")
 const emailInput = document.getElementById("email")
-const imgElement = document.querySelector('uploadedImage');
 const image = document.getElementById('image');
 const uploadedImage = document.getElementById('uploadedImage');
 // Password validation
@@ -19,9 +18,8 @@ const passwordResult2 = document.getElementById("password-2-error");
 let passwordMachResult1 = true;
 let passwordMachResult2 = true;
 
-let dropdown_activate_flag=0
-let password_activate_flag=0
-
+let dropdown_activate_flag = 0
+let password_activate_flag = 0
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -29,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // application type 드롭 다운 데이터 처리
     dropdownText.addEventListener("click", function () {
         dropdown.classList.toggle("active");
-        dropdown_activate_flag=1;
+        dropdown_activate_flag = 1;
     });
 
     dropdownContent.addEventListener("click", function (event) {
@@ -77,17 +75,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-
     function checkPasswordValidity() {
-
         if (passwordMachResult2) {
             if (!(passwordInput.value === passwordInput2.value)) {
                 passwordResult2.textContent = "비밀번호가 일치하지 않습니다.";
-                passwordResult2.style.color="red";
+                passwordResult2.style.color = "red";
                 passwordMachResult1 = 0;
-            }
-            else{
-                passwordMachResult1=1;
+            } else {
+                passwordMachResult1 = 1;
             }
         }
         const password = passwordInput.value;
@@ -96,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const lengthRegex = /^.{9,16}$/;
         const alphanumericRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
-        if (password){
+        if (password) {
             if (!lengthRegex.test(password)) {
                 errorMessage = "비밀번호는 9자 이상 16자 이하로 입력하세요.";
                 passwordMachResult1 = 0;
@@ -112,12 +107,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         passwordResult.textContent = errorMessage || "비밀번호가 유효합니다.";
 
-        if (passwordResult.textContent ==="비밀번호가 유효합니다."){
-            passwordResult.style.color='black';
+        if (passwordResult.textContent === "비밀번호가 유효합니다.") {
+            passwordResult.style.color = 'black';
             passwordMachResult1 = 1;
-        }
-        else{
-            passwordResult.style.color='red';
+        } else {
+            passwordResult.style.color = 'red';
             passwordMachResult1 = 0;
         }
     }
@@ -128,19 +122,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (password1 === password2) {
             passwordResult2.textContent = "비밀번호가 일치합니다.";
-            passwordResult2.style.color='black';
+            passwordResult2.style.color = 'black';
             passwordMachResult2 = 1;
         } else {
             passwordResult2.textContent = "비밀번호가 일치하지 않습니다.";
             passwordMachResult2 = 0;
-            passwordResult2.style.color='red';
+            passwordResult2.style.color = 'red';
         }
     }
 
 
-
     function handlePasswordInput() {
-        password_activate_flag=1
+        password_activate_flag = 1
         checkPasswordValidity();
         checkPasswordMatch();
     }
@@ -152,65 +145,35 @@ document.addEventListener("DOMContentLoaded", function () {
     signUpBtn.addEventListener("click", async function () {
 
 
-        if(!(passwordMachResult1 && passwordMachResult2)) {
+        if (!(passwordMachResult1 && passwordMachResult2)) {
             sAlert("비밀번호가 유효하지 않습니다.")
             return;
         } else {
-            console.log(passwordMachResult1,passwordMachResult2);
+            console.log(passwordMachResult1, passwordMachResult2);
             // Call API to save password 여기서 저장 api 호출~~!!
             const restPassword = passwordInput.value
             let resetApplicationTypeKey = dropdownText.textContent
 
 
-            if (resetApplicationTypeKey==="경찰직공무원(남)"){
-                resetApplicationTypeKey="PoliceOfficerMale"
+            if (resetApplicationTypeKey === "경찰직공무원(남)") {
+                resetApplicationTypeKey = "PoliceOfficerMale"
+            } else if (resetApplicationTypeKey === "경찰직공무원(여)") {
+                resetApplicationTypeKey = "PoliceOfficerFemale"
+            } else if (resetApplicationTypeKey === "소방직공무원(남)") {
+                resetApplicationTypeKey = "FireOfficerMale"
+            } else if (resetApplicationTypeKey === "소방직공무원(여)") {
+                resetApplicationTypeKey = "FireOfficerFemale"
+            } else if (resetApplicationTypeKey === "경호직공무원(남)") {
+                resetApplicationTypeKey = "CorrectionalOfficerMale"
+            } else if (resetApplicationTypeKey === "경호직공무원(여)") {
+                resetApplicationTypeKey = "CorrectionalOfficerFemale"
             }
-            else if(resetApplicationTypeKey==="경찰직공무원(여)"){
-                resetApplicationTypeKey="PoliceOfficerFemale"}
-            else if(resetApplicationTypeKey==="소방직공무원(남)"){
-                resetApplicationTypeKey="FireOfficerMale"}
-            else if(resetApplicationTypeKey==="소방직공무원(여)"){
-                resetApplicationTypeKey="FireOfficerFemale"}
-            else if(resetApplicationTypeKey==="경호직공무원(남)"){
-                resetApplicationTypeKey="CorrectionalOfficerMale"}
-            else if(resetApplicationTypeKey==="경호직공무원(여)"){
-                resetApplicationTypeKey="CorrectionalOfficerFemale"}
 
             //
-
-            const input_imageData = getImageData(uploadedImage);
-
-            if (!(dropdown_activate_flag==1) && !(password_activate_flag==1)){//드랍다운 변경 안함,비번 병경 안함
-                // 회원가입 - 서버에 요청
-                const userData = {
-                    password: restPassword,
-                    applicationType: resetApplicationTypeKey,
-                    imageData: input_imageData  // 이미지 데이터 추가
-                };
-                try {
-                    const response = await fetch(currentDomain + "/api/reset/userInfo", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(userData),
-                    });
-                    if (!response.ok) {
-                        const data = await response.text();
-                        throw new Error(data || "회원 정보 수정 실패");
-                    }
-                    noError_sAlert("회원정보 수정이 완료되었습니다.");
-                } catch (error) {
-                    sAlert("수정에 실패했습니다.");
-                    }
-
-            }
-
-            // 회원가입 - 서버에 요청
+            // 유저 정보 업데이트
             const userData = {
                 password: restPassword,
                 applicationType: resetApplicationTypeKey,
-                imageData: input_imageData  // 이미지 데이터 추가
             };
             try {
                 const response = await fetch(currentDomain + "/api/reset/userInfo", {
@@ -231,11 +194,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-
-
-
     const imageContainer = document.getElementById('imageContainer');
-    const uploadedImage = document.getElementById('uploadedImage');
     const imageInput = document.getElementById('imageInput');
 
     imageContainer.addEventListener('click', () => {
@@ -243,15 +202,31 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // 유효성 검사하기
-    imageInput.addEventListener('change', (event) => {
+    imageInput.addEventListener('change', async (event) => {
         const selectedImage = event.target.files[0];
 
         if (selectedImage) {
             // Check if the selected file is an image
             if (selectedImage.type.startsWith('image/')) {
-                console.log("image url", URL.createObjectURL(selectedImage));
-                uploadedImage.src = URL.createObjectURL(selectedImage);
-                uploadedImage.alt = "Uploaded Image";
+                const formData = new FormData();
+                formData.append('file', selectedImage);
+
+                try {
+                    const response = await fetch(currentDomain + '/upload/image', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        noError_sAlert("이미지 업로드가 완료되었습니다.")
+                    } else {
+                        console.error('Error:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                }
+                location.reload();
+
             } else {
                 alert("Please select a valid image file.");
                 imageInput.value = ''; // Clear the input field
@@ -348,7 +323,6 @@ async function fetchMemberInfo() {
 }
 
 
-
 async function fetchApplicationTypeName() {
     const applicationTypeDropDownContent = document.getElementById("applicationTypeDropDownContent");
 
@@ -384,6 +358,7 @@ function noError_sAlert(txt, title = 'Success',) {
         confirmButtonText: '닫기'
     });
 }
+
 fetchApplicationTypeName()
 fetchMemberInfo()
 
@@ -429,5 +404,21 @@ logoutContainer.addEventListener("click", async function (e) {
     window.location.href = '../html/sign-in.html'; // 로그인 페이지로 리다이렉트 예시
 });
 
-// ... (이전 코드 생략)
+async function loadImage() {
+    var image_data;
 
+    await fetch(currentDomain + "/api/member/profile/image")
+        .then(response => response.json())
+        .then(data => {
+            image_data = data.url;
+        })
+        .catch(error => {
+            console.error("Error fetching data:", error);
+        });
+
+    uploadedImage.src = image_data;
+}
+
+loadImage()
+
+// ... (이전 코드 생략)

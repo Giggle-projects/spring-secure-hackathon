@@ -178,10 +178,11 @@ public class MemberService {
             throw new IllegalArgumentException("비밀번호 형식이 올바르지 않습니다.");
         }
         final EncryptPassword encryptPassword = EncryptPassword.encryptFrom(newPwd);
-        final Member member = oldMember.updatePasswordWith(encryptPassword.getEncrypted());
-        memberRepository.save(member);
-        saltRepository.deleteAllByMemberId(member.getId());
-        saltRepository.save(new PasswordSalt(member.getId(), encryptPassword.getSalt()));
+        oldMember.updateMember(encryptPassword.getEncrypted());
+//        final Member member = oldMember.updatePasswordWith(encryptPassword.getEncrypted());
+        memberRepository.save(oldMember);
+        saltRepository.deleteAllByMemberId(oldMember.getId());
+        saltRepository.save(new PasswordSalt(oldMember.getId(), encryptPassword.getSalt()));
     }
 
     public String getMemberProfileImage(LoginMemberInfo memberInfo) {
@@ -194,6 +195,8 @@ public class MemberService {
     }
 
     public void uploadProfileImage(LoginMemberInfo memberInfo, String imageUrl) {
+        memberProfileRepository.findByMemberId(memberInfo.getId())
+                        .ifPresent((memberProfileRepository::delete));
         memberProfileRepository.save(new MemberProfileImage(memberInfo.getId(), imageUrl));
     }
 }

@@ -35,6 +35,7 @@ public class UploadController {
             amazonS3Client.putObject(bucket, originalFilename, multipartFile.getInputStream(), metadata);
             String image = amazonS3Client.getUrl(bucket, originalFilename).toString();
             memberService.uploadProfileImage(loginInfo, image);
+            System.out.println(image);
             return ResponseEntity.ok(image);
         } catch (Exception e) {
             e.printStackTrace();
