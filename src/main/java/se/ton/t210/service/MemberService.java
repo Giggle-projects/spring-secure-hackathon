@@ -73,9 +73,9 @@ public class MemberService {
         }
 
         final EncryptPassword encryptPassword = EncryptPassword.encryptFrom(request.getPassword());
-        final Member member = request.toEntity()
-                .updatePasswordWith(encryptPassword.getEncrypted());
+        final Member member = request.toEntity().updatePasswordWith(encryptPassword.getEncrypted());
         memberRepository.save(member);
+        saltRepository.deleteAllByMemberId(member.getId());
         saltRepository.save(new PasswordSalt(member.getId(), encryptPassword.getSalt()));
 
         final MemberTokens tokens = tokenService.issue(member.getEmail());
@@ -179,6 +179,8 @@ public class MemberService {
         }
         final EncryptPassword encryptPassword = EncryptPassword.encryptFrom(newPwd);
         final Member member = oldMember.updatePasswordWith(encryptPassword.getEncrypted());
+        memberRepository.save(member);
+        saltRepository.deleteAllByMemberId(member.getId());
         saltRepository.save(new PasswordSalt(member.getId(), encryptPassword.getSalt()));
     }
 
