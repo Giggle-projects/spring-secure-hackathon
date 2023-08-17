@@ -1,41 +1,28 @@
-const currentDomain = window.location.origin
+// const currentDomain = window.location.origin
+const currentDomain = "http://localhost:8080"
 
 const tableBody = document.getElementById('table-body');
 const pagination = document.getElementById('pagination');
 
 const userNameInput = document.getElementById('userName');
 const pageSizeSelection = document.getElementById('pageSize');
-const minScoreSelection = document.getElementById('minScore');
-const maxScoreSelection = document.getElementById('maxScore');
 const sortBySelection = document.getElementById('sortBy');
+const dateFromSelection = document.getElementById('dateFrom');
+const dateToSelection = document.getElementById('dateTo');
 
-let pageSize = 10
-let pageCount = 5
-let startPage = 1;
+let pageSize = 20
 let currentPage = 1;
-let endPage = startPage + pageCount -1;
-let startUserRead;
-let lastUserRead;
 let users = []
+let hiPage =1
 
-function blockButtonEventHandler(productId) {
-    const orderUrl = currentDomain + "/api/admin/users"
-    const data = {
-        productId: productId,
-        userId: 1,
-        quantity: 1
-    }
-    axios({
-        method: "post",
-        url: currentDomain + orderUrl,
-        params: data
-    }).then(() => {
-        window.location.reload();
-    }).catch(function () {
-        if (confirm("Error")) {
-            window.location.reload();
+function blockButtonEventHandler(memberId) {
+    const orderUrl = currentDomain + "/api/admin/block/users?memberId="+memberId
+    const response = fetch(orderUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
         }
-    })
+    });
 }
 
 userNameInput.addEventListener("keydown", function(event) {
@@ -48,65 +35,36 @@ userNameInput.addEventListener("change", function(event) {
     fetchAndDisplayUsers().then(() => {});
 });
 
-minScoreSelection.addEventListener("change", (event) => {
-    if(maxScoreSelection.value !== '' && minScoreSelection.value > maxScoreSelection.value) {
-        alert("invalid score search range")
-        minScoreSelection.value = maxScoreSelection.value
-        return
-    }
-    fetchAndDisplayUsers().then(() => {});
-});
-
-maxScoreSelection.addEventListener("change", (event) => {
-    if(minScoreSelection.value !== '' && minScoreSelection.value > maxScoreSelection.value) {
-        alert("invalid score search range")
-        maxScoreSelection.value = minScoreSelection.value
-        return
-    }
-    fetchAndDisplayUsers().then(() => {});
-});
-
 sortBySelection.addEventListener("change", (event) => {
-  fetchAndDisplayUsers().then(() => {});
+    fetchAndDisplayUsers().then(() => {});
 });
 
 pageSizeSelection.addEventListener("change", (event) => {
-  fetchAndDisplayUsers().then(() => {});
+    fetchAndDisplayUsers().then(() => {});
 });
-
-// Function to fetch and display products based on the current page and search query
 async function fetchAndDisplayUsers() {
-    pageSize = pageSizeSelection.options[pageSizeSelection.selectedIndex].value;
-    startPage = 1;
-    currentPage = 1;
-    endPage = startPage + pageCount -1;
-    startUserRead = undefined;
-    lastUserRead = undefined
-    users = await fetchProducts();
-    startUserRead = users[0];
-    lastUserRead = users[users.length-1]
-    endPage = startPage + users.length / pageSize -1
-    displayUsers()
-    updatePagination()
+    currentPage = 1; // Reset current page to 1 when fetching new data
+    pageSize = parseInt(pageSizeSelection.value); // Update pageSize based on selection
+    users = await fetchUser();
+    await displayUsers();
+    await updatePagination();
 }
 
-async function fetchProducts() {
-    try {
-        const containsName = userNameInput.value.trim();
-        const minScore = minScoreSelection.value.trim();
-        const maxScore = maxScoreSelection.value.trim();
-        const sortBy = sortBySelection.options[sortBySelection.selectedIndex].value;
-        const pageSize = pageSizeSelection.options[pageSizeSelection.selectedIndex].value;
-        const fetchSize = pageSize * pageCount;
 
-        const fetchUrl = currentDomain + "/api/admin/users/cursor/?"
+async function fetchUser() {
+    try {
+        const memberName = userNameInput.value.trim();
+        const dateFrom = dateFromSelection.value.trim();
+        const dateTo = dateToSelection.value.trim();
+        const sortBy = sortBySelection.options[sortBySelection.selectedIndex].value;
+
+        const fetchUrl = currentDomain + "/api/admin/users/access?"
         let response = await fetch(fetchUrl + new URLSearchParams({
-            containsName: containsName,
-            minScore: minScore,
-            maxScore: maxScore,
-            pageSize: fetchSize,
-            productSortType : sortBy,
-            sortBy: sortBy
+            memberName: memberName,
+            size: pageSize, // Use the updated pageSize
+            dateFrom: dateFrom,
+            dateTo: dateTo,
+            sort: sortBy
         }));
         if (!response.ok) {
             throw new Error('Error fetching scores.');
@@ -119,103 +77,55 @@ async function fetchProducts() {
     }
 }
 
-async function fetchNextProducts() {
-    try {
-        const containsName = userNameInput.value.trim();
-        const minScore = minScoreSelection.value.trim();
-        const maxScore = maxScoreSelection.value.trim();
-        const sortBy = sortBySelection.options[sortBySelection.selectedIndex].value;
-        const fetchSize = pageSize * pageCount;
-
-        const fetchUrl = currentDomain +  "/api/admin/users/cursor/?"
-        let response = await fetch(fetchUrl + new URLSearchParams({
-            containsName: containsName,
-            minScore: minScore,
-            maxScore: maxScore,
-            pageSize: fetchSize,
-            cursorUserId: lastProductRead.id,
-            cursorUserName : lastProductRead.name,
-            cursorUserScore : lastProductRead.score,
-            productSortType : sortBy,
-            sortBy: sortBy
-        }));
-        if (!response.ok) {
-            throw new Error('Error fetching users.');
-        }
-        return await response.json();
-    } catch (error) {
-        console.log(error)
-        alert('Error fetching users.')
-        return [];
-    }
-}
-
-async function fetchPrevUsers() {
-    try {
-        const containsName = userNameInput.value.trim();
-        const minScore = minScoreSelection.value.trim();
-        const maxScore = maxScoreSelection.value.trim();
-        const sortBy = sortBySelection.options[sortBySelection.selectedIndex].value;
-        const fetchSize = pageSize * pageCount;
-
-        const fetchUrl = currentDomain + "/api/admin/users/cursor/prev?"
-        let response = await fetch(fetchUrl + new URLSearchParams({
-            containsName: containsName,
-            minScore: minScore,
-            maxScore: maxScore,
-            pageSize: fetchSize,
-            cursorUserId: startUserRead.id,
-            cursorUserName: startUserRead.name,
-            cursorUserScore: cursorUserScore.price,
-            cursorUserDate: cursorUserDate.quantity,
-            productSortType : sortBy,
-            sortBy: sortBy
-        }));
-        if (!response.ok) {
-            throw new Error('Error fetching products.');
-        }
-        return await response.json();
-    } catch (error) {
-        console.log(error)
-        alert('Error fetching products.')
-        return [];
-    }
-}
-
 // Function to display products in the table
-async function displayProducts() {
+async function displayUsers() {
     tableBody.innerHTML = '';
-    for(let index = 0; index < pageSize; index++) {
-        const productIndex = ((currentPage -1) % pageCount ) * pageSize + index
-        const user = products[productIndex]
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+
+    for (let index = startIndex; index < endIndex && index < users.length; index++) {
+        const user = users[index];
         const row = document.createElement('tr');
-        row.id = `user-${user.id}`
+        row.id = `user-${user.id}`;
         row.innerHTML = `
-          <td>${user.id}</td>
-          <td>${user.name}</td>
-          <td>${user.price}</td>
-          <td>${user.quantity}</td>
-          <td><button onclick="orderButtonEventHandler(${user.id})">Order</button></td>`;
+          <td>${user.dateTime}</td>
+          <td>${user.memberId}</td>
+          <td>${user.memberName}</td>
+          <td>${user.memberEmail}</td>
+          <td>${user.memberEncryptedPassword}</td>
+          <td><button onclick="blockButtonEventHandler(${user.memberId})">Block</button></td>`;
         tableBody.appendChild(row);
     }
 }
+function navigateToPage(option) {
+    if (option === "data") {
+        // Navigate to the data page (replace with the actual URL)
+        window.location.href = "./admin-data.html";
+    } else if (option === "email") {
+        // Navigate to the email page (replace with the actual URL)
+        window.location.href = "./admin-access.html";
+    }
+}
+
 
 async function updatePagination() {
     pagination.innerHTML = '';
-    if(startPage >= pageCount) {
+
+    const totalPages = Math.ceil(users.length / pageSize);
+    const maxVisiblePages = 10;
+
+    const startPage = Math.max(currentPage - Math.floor(maxVisiblePages / 2), 1);
+    const endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+
+    if (currentPage > 1) {
         const leftArrow = document.createElement('a');
         leftArrow.href = '#';
         leftArrow.textContent = '<<';
         leftArrow.className = "pagination-link";
         leftArrow.addEventListener('click', async () => {
-            currentPage = startPage - 1;
-            endPage = currentPage
-            startPage = startPage - pageCount
-            products = await fetchPrevProducts();
-            startProductRead = products[0];
-            lastProductRead = products[products.length-1]
-            await displayProducts();
-            await updatePagination()
+            currentPage--;
+            await updatePagination();
+            await displayUsers();
         });
         pagination.appendChild(leftArrow);
     }
@@ -230,30 +140,27 @@ async function updatePagination() {
         }
         link.addEventListener('click', async () => {
             currentPage = pageNumber;
-            await displayProducts();
-            await updatePagination()
+            await updatePagination();
+            await displayUsers();
         });
         pagination.appendChild(link);
     }
 
-    if(products.length >= pageSize * pageCount) {
+    if (currentPage < totalPages) {
         const rightArrow = document.createElement('a');
         rightArrow.href = '#';
         rightArrow.textContent = '>>';
         rightArrow.className = "pagination-link";
         rightArrow.addEventListener('click', async () => {
-            currentPage = endPage + 1;
-            startPage = currentPage
-            products = await fetchNextProducts()
-            startProductRead = products[0];
-            lastProductRead = products[products.length-1]
-            endPage = startPage + products.length / pageSize -1
-            await displayProducts()
-            await updatePagination()
+            currentPage++;
+            await updatePagination();
+            await displayUsers();
         });
         pagination.appendChild(rightArrow);
     }
 }
 
+
 // Initial fetch and display of products
 fetchAndDisplayUsers();
+updatePagination()

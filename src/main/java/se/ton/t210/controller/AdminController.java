@@ -21,8 +21,8 @@ public class AdminController {
     }
 
     @GetMapping("/api/admin/users/access")
-    public ResponseEntity<List<AccessDateTimeResponse>> usersMember(Pageable pageable, AccessDateTimeFilter filter) {
-        final List<AccessDateTimeResponse> responses = adminService.findAll(pageable, filter);
+    public ResponseEntity<List<AccessDateTimeResponse>> usersMember() {
+        final List<AccessDateTimeResponse> responses = adminService.findAll();
         return ResponseEntity.ok(responses);
     }
 

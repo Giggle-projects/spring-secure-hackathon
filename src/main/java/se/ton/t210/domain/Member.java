@@ -19,11 +19,9 @@ public class Member {
     @Id
     private Long id;
 
-    @Convert(converter = SymmetricEncryptionConverter.class)
     @NotNull
     private String name;
 
-    @Convert(converter = SymmetricEncryptionConverter.class)
     @Email
     @NotNull
     private String email;

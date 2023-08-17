@@ -11,7 +11,7 @@ public class PageController {
 
     @GetMapping("/admin")
     public String admin() {
-        return "redirect:/html/admin.html";
+        return "redirect:/html/admin-access.html";
     }
 
     @GetMapping("/html/application-information")

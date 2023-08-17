@@ -15,24 +15,16 @@ let currentPage = 1;
 let users = []
 let hiPage =1
 
-function blockButtonEventHandler(productId) {
-    const orderUrl = currentDomain + "/api/admin/users"
-    const data = {
-        productId: productId,
-        userId: 1,
-        quantity: 1
-    }
-    axios({
-        method: "post",
-        url: currentDomain + orderUrl,
-        params: data
-    }).then(() => {
-        window.location.reload();
-    }).catch(function () {
-        if (confirm("Error")) {
-            window.location.reload();
+function blockButtonEventHandler(memberId) {
+    const orderUrl = currentDomain + "/api/admin/block/users?memberId="+memberId
+    const response = fetch(orderUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
         }
-    })
+    });
+    sAlert("부정사용자 등록")
+
 }
 
 userNameInput.addEventListener("keydown", function(event) {
@@ -99,10 +91,11 @@ async function displayUsers() {
         row.id = `user-${user.id}`;
         row.innerHTML = `
           <td>${user.dateTime}</td>
+          <td>${user.memberId}</td>
           <td>${user.memberName}</td>
           <td>${user.memberEmail}</td>
           <td>${user.memberEncryptedPassword}</td>
-          <td><button onclick="blockButtonEventHandler(${user.id})">Block</button></td>`;
+          <td><button onclick="blockButtonEventHandler(${user.memberId})">Block</button></td>`;
         tableBody.appendChild(row);
     }
 }
@@ -173,3 +166,12 @@ async function updatePagination() {
 // Initial fetch and display of products
 fetchAndDisplayUsers();
 updatePagination()
+
+// sAlert('custom alert example!');
+function noError_sAlert(txt, title = 'Success',) {
+    Swal.fire({
+        title: title,
+        text: txt,
+        confirmButtonText: '닫기'
+    });
+}

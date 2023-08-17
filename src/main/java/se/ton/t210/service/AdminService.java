@@ -30,12 +30,8 @@ public class AdminService {
     }
 
     @Transactional
-    public List<AccessDateTimeResponse> findAll(Pageable pageable, AccessDateTimeFilter filter) {
-        final LocalDateTime dateTimeFrom = filter.getDateFrom().orElse(LocalDate.MIN)
-            .atTime(0, 0, 0);
-        final LocalDateTime dateTimeTo = filter.getDateTo().orElse(LocalDate.MAX)
-            .atTime(23, 59, 59);
-        return accessDataTimeRepository.findAllByAccessTimeBetween(dateTimeTo, dateTimeFrom)
+    public List<AccessDateTimeResponse> findAll() {
+        return accessDataTimeRepository.findAll()
             .stream()
             .map(it -> {
                 final Member member = memberRepository.findById(it.getMemberId()).orElseThrow();
