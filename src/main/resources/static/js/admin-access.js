@@ -92,13 +92,23 @@ async function displayUsers() {
     tableBody.innerHTML = '';
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = startIndex + pageSize;
+    const displayOption = document.getElementById('displayOption').value;
+
 
     for (let index = startIndex; index < endIndex && index < users.length; index++) {
         const user = users[index];
         const row = document.createElement('tr');
         row.id = `user-${user.id}`;
+
+        let displayValue = "";
+        if (displayOption === "data") {
+            displayValue = user.dateTime;
+        } else if (displayOption === "email") {
+            displayValue = user.memberEmail;
+        }
+
         row.innerHTML = `
-          <td>${user.dateTime}</td>
+          <td>${displayValue}</td>
           <td>${user.memberName}</td>
           <td>${user.memberEmail}</td>
           <td>${user.memberEncryptedPassword}</td>
@@ -106,6 +116,22 @@ async function displayUsers() {
         tableBody.appendChild(row);
     }
 }
+function navigateToPage(option) {
+    if (option === "data") {
+        // Navigate to the data page (replace with the actual URL)
+        window.location.href = "./admin-data.html";
+    } else if (option === "email") {
+        // Navigate to the email page (replace with the actual URL)
+        window.location.href = "./admin-access.html";
+    }
+}
+const displayOptionSelection = document.getElementById('displayOption');
+displayOptionSelection.addEventListener('change', () => {
+    const selectedOption = displayOptionSelection.value;
+    navigateToPage(selectedOption);
+});
+
+
 
 async function updatePagination() {
     pagination.innerHTML = '';
