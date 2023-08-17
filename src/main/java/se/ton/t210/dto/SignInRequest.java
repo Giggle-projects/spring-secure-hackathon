@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 public class SignInRequest {
 
+    @NotBlank
     @Email
     private String email;
 

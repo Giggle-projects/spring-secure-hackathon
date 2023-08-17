@@ -18,6 +18,8 @@ import se.ton.t210.utils.http.CookieUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Transactional
 @Service
@@ -153,8 +155,7 @@ public class MemberService {
     public void resetUserInfo(LoginMemberInfo memberInfo, ResetPersonalInfoRequest request) {
         Member member = memberRepository.findById(memberInfo.getId()).orElseThrow(() -> {
                     throw new AuthException(HttpStatus.CONFLICT, "Email is not exists");
-                }
-        );
+                });
         request.getApplicationType().ifPresent(member::resetApplicationType);
         request.getPassword().ifPresent(password -> reissuePwd(member, password));
     }
@@ -163,8 +164,15 @@ public class MemberService {
         if (oldMember.getEmail().equals(newPwd)) {
             throw new IllegalArgumentException("Password can't be same with email");
         }
+        String passwordPattern = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{9,16}";
+        Pattern pattern = Pattern.compile(passwordPattern);
+        Matcher matcher = pattern.matcher(newPwd);
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("비밀번호 형식이 올바르지 않습니다.");
+        }
         final EncryptPassword encryptPassword = EncryptPassword.encryptFrom(newPwd);
         final Member member = oldMember.updatePasswordWith(encryptPassword.getEncrypted());
         saltRepository.save(new PasswordSalt(member.getId(), encryptPassword.getSalt()));
     }
 }
+

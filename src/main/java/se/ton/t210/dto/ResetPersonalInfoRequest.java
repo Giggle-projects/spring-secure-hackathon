@@ -9,6 +9,7 @@ import java.util.Optional;
 public class ResetPersonalInfoRequest {
 
     private final Optional<ApplicationType> applicationType;
+
     private final Optional<String> password;
 
     public ResetPersonalInfoRequest(Optional<ApplicationType> applicationType, Optional<String> password) {

@@ -59,7 +59,7 @@ public class MemberController {
 
     @PostMapping("/api/reset/userInfo")
     public ResponseEntity<Void> resetUserInfo(@LoginMember LoginMemberInfo member,
-                                              @RequestBody ResetPersonalInfoRequest request) {
+                                              @RequestBody @Valid ResetPersonalInfoRequest request) {
         memberService.resetUserInfo(member, request);
         return ResponseEntity.ok().build();
     }
