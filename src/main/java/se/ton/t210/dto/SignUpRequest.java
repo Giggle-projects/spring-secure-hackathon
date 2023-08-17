@@ -26,7 +26,6 @@ public class SignUpRequest {
             message = "비밀번호는 영문, 숫자, 특수기호가 적어도 1개 이상씩 포함된 9자 ~ 16자의 비밀번호여야 합니다.")
     private String password;
 
-    @NotBlank
     private ApplicationType applicationType;
 
     public SignUpRequest() {

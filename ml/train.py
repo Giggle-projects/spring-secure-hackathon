@@ -143,7 +143,7 @@ for i in type_list:
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
     # Training loop
-    num_epochs = 200
+    num_epochs = 100
     for epoch in range(num_epochs):
         optimizer.zero_grad()
         outputs = model(X)
