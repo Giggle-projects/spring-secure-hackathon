@@ -92,9 +92,7 @@ function saveData() {
     var isValidData = true;
 
     data.forEach(function(item) {
-        console.log("item.score",item.score)
         if (item.score.length >= 5 || /\s/.test(item.score) || /[^0-9]/.test(item.score)) {
-            console.log(isValidData)
             isValidData = false;
             sAlert("데이터를 정확하게 입력하세요.");
             return; // 조건에 맞지 않으므로 더 이상 검사하지 않고 함수 종료
@@ -147,6 +145,7 @@ async function fetchMyInfo() {
     const currentScore = document.getElementById('currentScore');
     const expectedPassPercent = document.getElementById('expectedPassPercent');
     const expectedGrade = document.getElementById('expectedGrade');
+
 
     applicationType.innerText = responseMemberInfoValue.applicationTypeName
     currentScore.innerText = "현재 점수 : " + responseScoreInfoValue.currentScore + "점"
@@ -304,6 +303,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
         } else {
           errorElement.textContent = '';
         }
+         if (inputElement.value !== inputElement.value.trim()) {
+             errorElement.textContent = '공백은 허용되지 않습니다.';
+         }
       });
     });
   });

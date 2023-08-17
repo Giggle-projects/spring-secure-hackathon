@@ -80,18 +80,38 @@ document.addEventListener("DOMContentLoaded", function () {
                     body: JSON.stringify(validAuthApiData),
                 });
                 if (!response.ok) {
-                    throw new Error("인증에 실패했습니다. 다시 시도해주시기 바랍니다.");
+                    sAlert("인증에 실패했습니다. 다시 시도해주시기 바랍니다.");
                 }
                 authNumberResult.textContent = "인증이 완료되었습니다.";
-                alert(authNumberResult.textContent);
+                NoError_sAlert(authNumberResult.textContent);
                 eraseCookie("userEmail");
-                window.location.href = "./setting-account.html";
+                //window.location.href = "./setting-account.html";
             } catch (error) {
-                alert(error.message);
+                sAlert(error.message);
             }
     });
 });
 
 function eraseCookie(name) {
     document.cookie = name + '=; Max-Age=0'
+}
+// sAlert('custom alert example!');
+function sAlert(txt, title = 'ERROR',) {
+    Swal.fire({
+        title: title,
+        text: txt,
+        confirmButtonText: '닫기'
+    });
+}
+
+// sAlert('custom alert example!');
+function NoError_sAlert(txt, title = 'Success') {
+    Swal.fire({
+        title: title,
+        text: txt,
+        confirmButtonText: '닫기'
+    }).then(() => {
+              // "닫기" 버튼 클릭 시 수행할 동작
+              window.location.href = "./setting-account.html";
+    });
 }
