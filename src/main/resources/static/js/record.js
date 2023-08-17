@@ -92,7 +92,9 @@ function saveData() {
     var isValidData = true;
 
     data.forEach(function(item) {
-        if (item.score.length < 5 || /\s/.test(item.score) || /[^0-9]/.test(item.score)) {
+        console.log("item.score",item.score)
+        if (item.score.length >= 5 || /\s/.test(item.score) || /[^0-9]/.test(item.score)) {
+            console.log(isValidData)
             isValidData = false;
             sAlert("데이터를 정확하게 입력하세요.");
             return; // 조건에 맞지 않으므로 더 이상 검사하지 않고 함수 종료

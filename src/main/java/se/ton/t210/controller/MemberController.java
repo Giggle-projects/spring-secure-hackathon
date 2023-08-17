@@ -110,4 +110,11 @@ public class MemberController {
         final MemberResponse response = MemberResponse.of(loginMember);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/api/member/profile/image")
+    public ResponseEntity<MemberProfileImageResponse> memberProfileImage(@LoginMember LoginMemberInfo memberInfo) {
+        final String memberProfileUrl = memberService.getMemberProfileImage(memberInfo);
+        final MemberProfileImageResponse response = new MemberProfileImageResponse(memberProfileUrl);
+        return ResponseEntity.ok(response);
+    }
 }

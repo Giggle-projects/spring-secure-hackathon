@@ -9,10 +9,18 @@ const nameInput = document.getElementById("full-name")
 const emailInput = document.getElementById("email")
 const imgElement = document.querySelector('uploadedImage');
 const image = document.getElementById('image');
+const uploadedImage = document.getElementById('uploadedImage');
+// Password validation
+const passwordInput = document.getElementById("password11");
+const passwordInput2 = document.getElementById("password22");
+const passwordResult = document.getElementById("password-1-error");
+const passwordResult2 = document.getElementById("password-2-error");
 
+let passwordMachResult1 = true;
+let passwordMachResult2 = true;
 
-
-
+let dropdown_activate_flag=0
+let password_activate_flag=0
 
 
 
@@ -21,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // application type 드롭 다운 데이터 처리
     dropdownText.addEventListener("click", function () {
         dropdown.classList.toggle("active");
+        dropdown_activate_flag=1;
     });
 
     dropdownContent.addEventListener("click", function (event) {
@@ -67,14 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Password validation
-    const passwordInput = document.getElementById("password11");
-    const passwordInput2 = document.getElementById("password22");
-    const passwordResult = document.getElementById("password-1-error");
-    const passwordResult2 = document.getElementById("password-2-error");
 
-    let passwordMachResult1 = true;
-    let passwordMachResult2 = true;
 
     function checkPasswordValidity() {
 
@@ -138,6 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     function handlePasswordInput() {
+        password_activate_flag=1
         checkPasswordValidity();
         checkPasswordMatch();
     }
@@ -173,12 +176,41 @@ document.addEventListener("DOMContentLoaded", function () {
             else if(resetApplicationTypeKey==="경호직공무원(여)"){
                 resetApplicationTypeKey="CorrectionalOfficerFemale"}
 
+            //
 
+            const input_imageData = getImageData(uploadedImage);
+
+            if (!(dropdown_activate_flag==1) && !(password_activate_flag==1){//드랍다운 변경 안함,비번 병경 안함
+                // 회원가입 - 서버에 요청
+                const userData = {
+                    password: restPassword,
+                    applicationType: resetApplicationTypeKey,
+                    imageData: input_imageData  // 이미지 데이터 추가
+                };
+                try {
+                    const response = await fetch(currentDomain + "/api/reset/userInfo", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(userData),
+                    });
+                    if (!response.ok) {
+                        const data = await response.text();
+                        throw new Error(data || "회원 정보 수정 실패");
+                    }
+                    noError_sAlert("회원정보 수정이 완료되었습니다.");
+                } catch (error) {
+                    sAlert("수정에 실패했습니다.");
+                    }
+
+            }
 
             // 회원가입 - 서버에 요청
             const userData = {
                 password: restPassword,
-                applicationType: resetApplicationTypeKey
+                applicationType: resetApplicationTypeKey,
+                imageData: input_imageData  // 이미지 데이터 추가
             };
             try {
                 const response = await fetch(currentDomain + "/api/reset/userInfo", {
@@ -306,13 +338,13 @@ async function fetchMemberInfo() {
 //    else{
 //        imgElement.src = "../files/586-frame.svg"; // 불러오 이용자 이미지를 여기에 넣어주세요
 //    }
-    if (applicationTypeStandardName === "경찰직공무원(남)" || applicationTypeStandardName === "경찰직공무원(여)") {
-        imgElement.src = "../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
-    } else if (applicationTypeStandardName === "소방직공무원(남)" || applicationTypeStandardName === "소방직공무원(여)") {
-        imgElement.src = "../files/type_icon2.jpeg"; // 소방직 이미지 경로로 변경
-    } else if (applicationTypeStandardName === "경호직공무원(남)" || applicationTypeStandardName === "경호직공무원(여)") {
-        imgElement.src = "../files/type_icon3.png";// 경호직 이미지 경로로 변경
-    }
+//    if (applicationTypeStandardName === "경찰직공무원(남)" || applicationTypeStandardName === "경찰직공무원(여)") {
+//        imgElement.src = "../files/type_icon4.png"; // 경찰직 이미지 경로로 변경
+//    } else if (applicationTypeStandardName === "소방직공무원(남)" || applicationTypeStandardName === "소방직공무원(여)") {
+//        imgElement.src = "../files/type_icon2.jpeg"; // 소방직 이미지 경로로 변경
+//    } else if (applicationTypeStandardName === "경호직공무원(남)" || applicationTypeStandardName === "경호직공무원(여)") {
+//        imgElement.src = "../files/type_icon3.png";// 경호직 이미지 경로로 변경
+//    }
 }
 
 
