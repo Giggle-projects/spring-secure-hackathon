@@ -52,13 +52,14 @@ sortBySelection.addEventListener("change", (event) => {
 pageSizeSelection.addEventListener("change", (event) => {
   fetchAndDisplayUsers().then(() => {});
 });
-
 async function fetchAndDisplayUsers() {
     currentPage = 1; // Reset current page to 1 when fetching new data
+    pageSize = parseInt(pageSizeSelection.value); // Update pageSize based on selection
     users = await fetchUser();
     await displayUsers();
     await updatePagination();
 }
+
 
 async function fetchUser() {
     try {
@@ -66,12 +67,11 @@ async function fetchUser() {
         const dateFrom = dateFromSelection.value.trim();
         const dateTo = dateToSelection.value.trim();
         const sortBy = sortBySelection.options[sortBySelection.selectedIndex].value;
-        const pageSize = pageSizeSelection.options[pageSizeSelection.selectedIndex].value;
 
         const fetchUrl = currentDomain + "/api/admin/users/access?"
         let response = await fetch(fetchUrl + new URLSearchParams({
             memberName: memberName,
-            size: pageSize,
+            size: pageSize, // Use the updated pageSize
             dateFrom: dateFrom,
             dateTo: dateTo,
             sort: sortBy
@@ -92,23 +92,13 @@ async function displayUsers() {
     tableBody.innerHTML = '';
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = startIndex + pageSize;
-    const displayOption = document.getElementById('displayOption').value;
-
 
     for (let index = startIndex; index < endIndex && index < users.length; index++) {
         const user = users[index];
         const row = document.createElement('tr');
         row.id = `user-${user.id}`;
-
-        let displayValue = "";
-        if (displayOption === "data") {
-            displayValue = user.dateTime;
-        } else if (displayOption === "email") {
-            displayValue = user.memberEmail;
-        }
-
         row.innerHTML = `
-          <td>${displayValue}</td>
+          <td>${user.dateTime}</td>
           <td>${user.memberName}</td>
           <td>${user.memberEmail}</td>
           <td>${user.memberEncryptedPassword}</td>
@@ -125,12 +115,6 @@ function navigateToPage(option) {
         window.location.href = "./admin-access.html";
     }
 }
-const displayOptionSelection = document.getElementById('displayOption');
-displayOptionSelection.addEventListener('change', () => {
-    const selectedOption = displayOptionSelection.value;
-    navigateToPage(selectedOption);
-});
-
 
 
 async function updatePagination() {
