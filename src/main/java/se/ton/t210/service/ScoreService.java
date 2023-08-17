@@ -152,6 +152,9 @@ public class ScoreService {
         int prevScore = Integer.MAX_VALUE;
         int sameStack = 0;
         for (var score : scores) {
+//            System.out.println(score.getMemberId());
+//            System.out.println(score.getScore());
+//            System.out.println(score.getYearMonth());
             final Member member = memberRepository.findById(score.getMemberId()).orElseThrow();
             if (prevScore == score.getScore()) {
                 sameStack++;

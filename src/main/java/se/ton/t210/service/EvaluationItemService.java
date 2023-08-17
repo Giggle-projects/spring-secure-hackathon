@@ -39,25 +39,19 @@ public class EvaluationItemService {
             final List<EvaluationScoreSection> sections = evaluationScoreSectionRepository.findAllByEvaluationItemId(evaluationItem.getId());
             sections.sort(Comparator.comparingDouble(EvaluationScoreSection::getSectionBaseScore));
 
-            boolean isScoreAsc = true;
-            if(sections.size() > 1){
-                isScoreAsc = sections.get(1).getSectionBaseScore() > sections.get(0).getSectionBaseScore();
+            float prevItemBaseScore = Float.MAX_VALUE;
+            for (EvaluationScoreSection section : sections) {
+                final EvaluationSectionInfo sectionInfo = new EvaluationSectionInfo(
+                    evaluationItem.getId(),
+                    evaluationItem.getName(),
+                    prevItemBaseScore,
+                    section.getSectionBaseScore(),
+                    section.getEvaluationScore()
+                );
+                evaluationSectionInfos.add(sectionInfo);
+                prevItemBaseScore = section.getSectionBaseScore() - 1;
             }
-            if(isScoreAsc) {
-                float prevItemBaseScore = Float.MAX_VALUE;
-                for (EvaluationScoreSection section : sections) {
-                    final EvaluationSectionInfo sectionInfo = EvaluationSectionInfo.of(evaluationItem, prevItemBaseScore, section);
-                    evaluationSectionInfos.add(sectionInfo);
-                    prevItemBaseScore = section.getSectionBaseScore() - 1;
-                }
-            } else {
-                float prevItemBaseScore = 0f;
-                for (EvaluationScoreSection section : sections) {
-                    final EvaluationSectionInfo sectionInfo = EvaluationSectionInfo.of(evaluationItem, prevItemBaseScore, section);
-                    evaluationSectionInfos.add(sectionInfo);
-                    prevItemBaseScore = section.getSectionBaseScore() + 1;
-                }
-            }
+            evaluationSectionsInfos.add(evaluationSectionInfos);
             evaluationSectionsInfos.add(evaluationSectionInfos);
         }
         return evaluationSectionsInfos;
