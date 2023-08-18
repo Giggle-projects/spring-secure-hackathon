@@ -1,5 +1,5 @@
-// const currentDomain = window.location.origin
-const currentDomain = "http://localhost:8080"
+const currentDomain = window.location.origin
+// const currentDomain = "http://localhost:8080"
 
 const tableBody = document.getElementById('table-body');
 const pagination = document.getElementById('pagination');
