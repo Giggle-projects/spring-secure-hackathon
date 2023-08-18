@@ -19,7 +19,8 @@ public class WebCorsConfig implements WebMvcConfigurer {
                     "https://t210.ecsimsw.com:8443",
                     "http://127.0.0.1:8443",
                     "http://127.0.0.1:8080",
-                    "http://127.0.0.1:80"
+                    "http://127.0.0.1:80",
+                    "https://t210.ecsimsw.com:8443"
                 )
                 .allowedMethods("*")
                 .allowCredentials(true);

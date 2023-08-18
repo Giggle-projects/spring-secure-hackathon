@@ -19,7 +19,7 @@ import se.ton.t210.service.MemberService;
 public class UploadController {
 
     private final AmazonS3Client amazonS3Client;
-    private final String bucket = "t210-S3-bucket";
+    private final String bucket = "nick-terraform-test-bucket";
     private final MemberService memberService;
     private final BlackListRepository blackListRepository;
 
