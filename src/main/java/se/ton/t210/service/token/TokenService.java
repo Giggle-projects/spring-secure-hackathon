@@ -29,9 +29,11 @@ public class TokenService {
     private int emailAuthTokenExpireTime;
 
     private final TokenSecret tokenSecret;
+    private final TokenCacheRepository tokenCacheRepository;
 
-    public TokenService(TokenSecret tokenSecret) {
+    public TokenService(TokenSecret tokenSecret, TokenCacheRepository tokenCacheRepository) {
         this.tokenSecret = tokenSecret;
+        this.tokenCacheRepository = tokenCacheRepository;
     }
 
     public String issueMailToken(String email) {
@@ -43,7 +45,7 @@ public class TokenService {
         final Map<String, Object> tokenPayload = Map.of(tokenKey, email);
         final String accessToken = tokenSecret.createToken(tokenPayload, accessTokenExpireTime);
         final String refreshToken = tokenSecret.createToken(tokenPayload, refreshTokenExpireTime);
-//        tokenCacheRepository.save(new TokenCache(email, accessToken, refreshToken, LocalTime.now()));
+        tokenCacheRepository.save(new TokenCache(email, accessToken, refreshToken, LocalTime.now()));
         return new MemberTokens(accessToken, refreshToken);
     }
 
@@ -61,9 +63,9 @@ public class TokenService {
     }
 
     private void validateCachedToken(String email, String accessToken, String refreshToken) {
-//        tokenCacheRepository.findById(email)
-//            .orElseThrow(() -> new AuthException(HttpStatus.UNAUTHORIZED, "Token is invalid"))
-//            .validate(accessToken, refreshToken, refreshTokenExpireTime);
+        tokenCacheRepository.findById(email)
+            .orElseThrow(() -> new AuthException(HttpStatus.UNAUTHORIZED, "Token is invalid"))
+            .validate(accessToken, refreshToken, refreshTokenExpireTime);
     }
 
     public void validateToken(String token) {
