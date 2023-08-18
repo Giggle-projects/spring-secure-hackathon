@@ -29,7 +29,7 @@ spec:
               weight: 100
       containers:
         - name: api-server
-          image: ghcr.io/giggle-projects/spring-secure-hackathon:0.0.1
+          image: ghcr.io/giggle-projects/spring-secure-hackathon:1.0.0
           envFrom:
           - configMapRef:
               name: api-server-config

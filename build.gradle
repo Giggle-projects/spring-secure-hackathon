@@ -13,7 +13,7 @@ plugins {
 }
 
 group = 'se.ton'
-version = '0.0.1'
+version = '1.0.0'
 
 java {
     sourceCompatibility = '11'
@@ -60,7 +60,7 @@ dependencies {
 jib {
     from.image = "adoptopenjdk/openjdk11:jre-11.0.10_9-alpine"
     to.image = "ghcr.io/giggle-projects/spring-secure-hackathon"
-    to.tags = ["latest"]
+    to.tags = ["latest", "1.0.0"]
     // ./gradlew jib
 }
 
