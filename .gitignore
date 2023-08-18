@@ -16,7 +16,6 @@ src/main/resources/properties/prod/s3.properties
 .idea/**/shelf
 
 bin
-redis
 
 # AWS User-specific
 .idea/**/aws.xml
